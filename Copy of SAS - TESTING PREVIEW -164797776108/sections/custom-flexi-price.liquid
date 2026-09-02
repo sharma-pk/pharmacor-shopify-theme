@@ -1,0 +1,61 @@
+<style>
+  .c123 { display: none!important; }
+  .custom-flexi-price { display: flex; width: 300px; margin: 0 auto; gap: 15px; align-items: center; }
+</style>
+
+<div class="custom-flexi-price">
+  <input type="number" value="" style="padding-top: 0px; padding-bottom: 0px; min-height: 46px;" placeholder="Enter Password">
+  <span class="custom-submit-e" style="background: #5a9d62; padding: 9px 16px; border-radius: 10px; color: #fff; cursor: pointer;">Submit</span>
+</div>
+
+<div class="custom-drop-down-main c123" style="max-width: 350px; margin: 0 auto; margin-top: 20px;">
+  <button class="toggle-button">Flexi Price</button>
+  <div class="content-area">
+    
+    {% for variant in product.variants %}
+  {% if variant.metafields.custom.flexi_price != blank %}
+    <div class="variant-block">
+        <p>{{ variant.title }}: &nbsp; <strong>{{ variant.metafields.custom.flexi_price.value }}</strong></p<br><br>
+    </div>
+    {% else %}
+    <div class="content-area-wrapper">
+      {{ product.metafields.custom.pharmacor_show_dummy_price }}
+    </div>
+    {% endif %}
+{% endfor %}
+
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".custom-submit-e").click(function () {
+      var myval = $(this).prev().val(); // Get the input value
+      var flexiparent = $(this).parent().next(); // Find the next sibling element
+      var mybuttonparent = $(this).parent().parent().prev();
+      // Check if the value is "123"
+      if (myval === "123") {
+        setTimeout(function () {
+          $(flexiparent).removeClass("c123"); // Remove the class if value matches
+          $(".custom-flexi-price").addClass("c123");
+           $(mybuttonparent).find(".apps-section").removeClass("apps-section");
+        }, 100);
+      } else {
+        alert("Invalid password!"); // Show an alert for incorrect input
+      }
+    });
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Custom Flexi Price",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Custom Flexi Price"
+      }
+    ]
+  }
+{% endschema %}

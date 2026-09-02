@@ -1,0 +1,40 @@
+<style>
+.custom-media-bottom-data{margin-top: 20px; margin-right: 4px;position: relative;}
+.toggle-button {background-color: #eee; color: #444; cursor: pointer; padding: 18px; width: 100%; border: none; text-align: left; outline: none; font-size: 15px; transition: background-color 0.4s;position: relative;}
+.toggle-button::after{content: '+';position: absolute; right: 10px; font-size: 24px; top: 12px;}
+.expanded, .toggle-button:hover { background-color: #ccc; }
+.content-area {padding: 0px; max-height: 0; overflow: hidden; background-color: white; transition: max-height 0.4s ease-out;}
+.content-area-wrapper{padding: 16px 10px;}
+.toggle-button.expanded::after{content: '-';font-size: 40px;top: 0px;}
+.drop-down-main-wrapper{{ section.id }}{{ forloop.index }}{display: flex; gap: 15px;}
+.custom-drop-down-main{width: 100%;}
+  .content-area-wrapper p{margin-bottom: 8px;}
+  @media only screen and (max-width: 600px){
+.drop-down-main-wrapper{{ section.id }}{{ forloop.index }}{flex-wrap: wrap;}
+  }
+</style>
+<div class="custom-media-bottom-data">
+  <div class="drop-down-main-wrapper{{ section.id }}{{ forloop.index }}">
+{% for block in section.blocks %}
+    {% if block.type == 'drop-down' %}
+        {% if block.settings.title != blank %}
+              <div class="custom-drop-down-main">
+                <button class="toggle-button">{{ block.settings.title }}</button>
+                <div class="content-area">
+                  <div class="content-area-wrapper">
+                    {{ block.settings.data }}
+                  </div>
+                </div>
+              </div>
+         {% endif %}
+    {% endif %}
+{% endfor %}
+      </div>
+  {% for block in section.blocks %}
+  {% if block.type == 'custom-description' %}
+    <div class="custom-description" style="line-height: 24px; margin-top: 14px; text-align: center">
+      {{ product.description }}
+    </div>
+  {% endif %}
+  {% endfor %}
+</div>

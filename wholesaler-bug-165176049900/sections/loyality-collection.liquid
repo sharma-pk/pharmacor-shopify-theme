@@ -1,0 +1,795 @@
+
+
+<div class="loyality_pro_outer" id="loyality-collection">
+<div class="welcome-box">
+ 
+
+  <div class="collections-list-wrapper">
+    <div class="collectiion_header">
+      <div class="title">
+        <h2>{{ section.settings.heading | default: collection.title }}</h2>
+      </div>
+    </div>
+
+    <div class="filters_home">
+      {%- assign active_filters_size = 0 -%}
+      {%- assign filters_type = section.settings.filters_type -%}
+      {%- for filter in collection.filters -%}
+        {%- case filter.type -%}
+          {%- when 'list', 'boolean' -%}
+            {%- assign active_filters_size = active_filters_size | plus: filter.active_values.size -%}
+          {%- when 'price_range' -%}
+            {%- if filter.min_value.value > 0 or filter.max_value.value < filter.range_max -%}
+              {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                {%- assign active_filters_size = active_filters_size | plus: 1 -%}
+              {%- endif -%}
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+
+      {% for block in section.blocks %}
+        {% assign collection = collections[block.settings.collection] %}
+      {% endfor %}
+
+      {% comment %} <div class="collection__header-row sort_with_icons">
+        {%- render 'product-filters-and-sort-bar', product_list: collection, without_filter_button: true -%}
+        <div class="sort_with_icons">
+          <div class="grid-lists-iconss">
+            <div class="list-view-btn active iocns" style="display:none">
+              <span>
+                <svg width="37" height="29" viewBox="0 0 37 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="7.70667" y="0.480713" width="28.992" height="4.40385" fill="#30623D"/>
+                  <circle cx="2.20193" cy="2.68264" r="2.20193" fill="#30623D"/>
+                  <rect x="7.70667" y="12.2243" width="28.992" height="4.40385" fill="#30623D"/>
+                  <circle cx="2.20193" cy="14.4263" r="2.20193" fill="#30623D"/>
+                  <rect x="7.70667" y="23.9679" width="28.992" height="4.40385" fill="#30623D"/>
+                  <circle cx="2.20193" cy="26.1698" r="2.20193" fill="#30623D"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div> {% endcomment %}
+    </div>
+
+    <div class="list_of_collections">
+      <div id="custom" class="custom-collection-page-tabcontent">
+
+        <style>
+          /* ── Collection Tabs ── */
+          .nav-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+          .nav-tabs button {
+            background: transparent;
+            border: 2px solid #30623d;
+            border-radius: 30px;
+            cursor: pointer;
+            padding: 10px 30px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+          }
+          .nav-tabs button:hover { background: #30623d; color: #fff; }
+          .nav-tabs button.active-tab { background: #30623d; color: #fff; }
+          .tab-section { display: none; }
+
+          .custom-btn-boxes {
+            border: 2px solid #30623d !important;
+            padding-top: 20px !important;
+            padding-bottom: 20px !important;
+            cursor: pointer !important;
+          }
+
+          @media only screen and (max-width: 767px) {
+            .wrapper_welcome { padding: 12px !important; }
+            .nav-tabs button { padding: 8px 16px; font-size: 14px; }
+          }
+        </style>
+
+        {%- comment -%} ── COLLECTION TABS ── {%- endcomment -%}
+        {% comment %} <div class="nav-tabs">
+          {% for block in section.blocks %}
+            {% assign block_collection = collections[block.settings.collection] %}
+            <button
+              class="tab-btn {% if forloop.first %}active-tab{% endif %}"
+              data-tab="tab-{{ block.id }}"
+            >
+              {%- if block.settings.custom_name != blank -%}
+                {{- block.settings.custom_name -}}
+              {%- else -%}
+                {{- block_collection.title -}}
+              {%- endif -%}
+            </button>
+          {% endfor %}
+        </div> {% endcomment %}
+
+        <div class="custom-cart-list-main">
+          <div class="custom_labels">
+            <div class="custom-list-image">Image</div>
+            <div class="custom-list-product-name">Product Name</div>
+            <div class="custom-list-wholesaler">
+              <div style="width:50%;text-align:center;">Wholesaler</div>
+              <div style="width:44%;">Strength/Pack Size</div>
+            </div>
+            {% if customer %}
+              <div class="custom-list-price">Price</div>
+              <div class="custom-list-quantity">Quantity</div>
+            {% else %}
+              <div class="custom-list-product-info">Product Info</div>
+            {% endif %}
+          </div>
+
+          {%- comment -%} ── ONE TAB PANEL PER BLOCK ── {%- endcomment -%}
+          {% for block in section.blocks %}
+            {% assign block_collection = collections[block.settings.collection] %}
+            {% if block_collection %}
+              <div
+                id="tab-{{ block.id }}"
+                class="tab-section my-collection-list-tabcontent"
+                {% if forloop.first %}style="display:block"{% endif %}
+              >
+
+                <div class="custom-product-card-list custom-product-parent" style="width:100%;">
+                  <div class="custom-product-card-list-wrap" id="products-tab-{{ block.id }}">
+                    {% paginate block_collection.products by 1000 %}
+                      {% for product in block_collection.products %}
+                     
+                       
+                          {% render 'loyality-grid-item', product: product, section: section, title: block_collection %}
+                    
+                      {% endfor %}
+                    {% endpaginate %}
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button class="loadMore btn">{{ section.settings['load-more'] }}</button>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<style>
+  .custom-collection-list .customitem { display: none; }
+  .allproductss .customitem { display: block !important; }
+  .custom-home-content .collection__item { display: none; }
+</style>
+
+<!-- ==============================
+     HOMEPAGE PRODUCT IDS
+================================= -->
+<script>
+window.HOMEPAGE_PRODUCT_IDS = [];
+{% for block in section.blocks %}
+  {% assign block_collection = collections[block.settings.collection] %}
+  {% if block_collection %}
+    {% paginate block_collection.products by 1000 %}
+      {% for product in block_collection.products %}
+        window.HOMEPAGE_PRODUCT_IDS.push("{{ product.id }}");
+      {% endfor %}
+    {% endpaginate %}
+  {% endif %}
+{% endfor %}
+</script>
+
+<script>
+(function () {
+  var ITEMS_PER_PAGE = 10;
+  var tabState = {}; // per-tab: { visibleCount }
+
+  function getItems(panel) {
+    var wrap = panel.querySelector('.custom-product-card-list-wrap');
+    return wrap ? Array.prototype.slice.call(wrap.children) : [];
+  }
+
+  function showFirstPage(panel) {
+    var items = getItems(panel);
+    var showCount = Math.min(ITEMS_PER_PAGE, items.length);
+    items.forEach(function (item, i) { item.style.display = i < showCount ? '' : 'none'; });
+    tabState[panel.id] = { visibleCount: showCount };
+    var loadMoreBtn = panel.querySelector('.loadMore');
+    if (loadMoreBtn) loadMoreBtn.style.display = items.length > ITEMS_PER_PAGE ? '' : 'none';
+  }
+
+  function loadMore(panel) {
+    var state = tabState[panel.id];
+    if (!state) return;
+    var items = getItems(panel);
+    var end = Math.min(state.visibleCount + ITEMS_PER_PAGE, items.length);
+    for (var i = state.visibleCount; i < end; i++) { items[i].style.display = ''; }
+    state.visibleCount = end;
+    if (state.visibleCount >= items.length) {
+      var loadMoreBtn = panel.querySelector('.loadMore');
+      if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+    }
+  }
+
+  // ── 1. Collection Tab switching ──
+  document.querySelectorAll('.nav-tabs .tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.nav-tabs .tab-btn').forEach(function (b) { b.classList.remove('active-tab'); });
+      document.querySelectorAll('.tab-section').forEach(function (p) { p.style.display = 'none'; });
+      btn.classList.add('active-tab');
+      var panel = document.getElementById(btn.getAttribute('data-tab'));
+      if (!panel) return;
+      panel.style.display = 'block';
+      showFirstPage(panel);
+    });
+  });
+
+  // ── 2. Load More ──
+  document.querySelectorAll('.tab-section .loadMore').forEach(function (btn) {
+    btn.style.display = 'none';
+    btn.addEventListener('click', function () { loadMore(btn.closest('.tab-section')); });
+  });
+
+  // ── 3. Search ──
+  var searchBtn = document.querySelector('.serach_btn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', function () {
+      var val = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      document.querySelectorAll('.collection__item').forEach(function (el) {
+        var t = el.querySelector('.product-card__title');
+        el.style.display = (t && t.textContent.toLowerCase().includes(val)) ? '' : 'none';
+      });
+      document.querySelectorAll('.custom_product-section, .custom-main-inner-wrap').forEach(function (el) {
+        var t = el.querySelector('.product-name');
+        el.style.display = (t && t.textContent.toLowerCase().includes(val)) ? '' : 'none';
+      });
+    });
+  }
+
+  // ── 4. Custom select menu ──
+  var optionMenu = document.querySelector('.select-menu');
+  if (optionMenu) {
+    var selectBtn = optionMenu.querySelector('.select-btn');
+    var sBtnText  = optionMenu.querySelector('.sBtn-text');
+    selectBtn.addEventListener('click', function () { optionMenu.classList.toggle('active'); });
+    optionMenu.querySelectorAll('.option').forEach(function (opt) {
+      opt.addEventListener('click', function () {
+        sBtnText.innerText = opt.querySelector('.option-text').innerText;
+        optionMenu.classList.remove('active');
+      });
+    });
+  }
+
+  // ── 5. Init: show the first page of products in the active tab on load ──
+  var firstPanel = document.querySelector('.tab-section[style*="display:block"], .tab-section[style*="display: block"]');
+  if (firstPanel) showFirstPage(firstPanel);
+
+})();
+</script>
+
+
+
+{% schema %}
+{
+  "name": "Loyality Collection",
+  "settings": [
+      {
+      "type": "header",
+      "content": "Pharmate Club Points Widget"
+    },
+    {
+      "type": "header",
+      "content": "Widget Colors"
+    },
+    {
+      "type": "color",
+      "id": "pcc_widget_bg",
+      "label": "Widget Background",
+      "default": "#eef6ee"
+    },
+    {
+      "type": "color",
+      "id": "pcc_label_color",
+      "label": "Label & Tier Name Color",
+      "default": "#30623d"
+    },
+    {
+      "type": "color",
+      "id": "pcc_badge_bg",
+      "label": "Member Badge Background",
+      "default": "#30623d"
+    },
+    {
+      "type": "color",
+      "id": "pcc_badge_text_color",
+      "label": "Member Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pcc_badge_dot_color",
+      "label": "Member Badge Dot Color",
+      "default": "#b2e78a"
+    },
+    {
+      "type": "color",
+      "id": "pcc_points_color",
+      "label": "Points Number Color",
+      "default": "#1a3d22"
+    },
+    {
+      "type": "color",
+      "id": "pcc_points_label_color",
+      "label": "Points Label Color",
+      "default": "#30623d"
+    },
+    {
+      "type": "color",
+      "id": "pcc_bar_track_color",
+      "label": "Progress Bar Track Color",
+      "default": "#daeeda"
+    },
+    {
+      "type": "color",
+      "id": "pcc_bar_fill_color",
+      "label": "Progress Bar Fill Color",
+      "default": "#30623d"
+    },
+    {
+      "type": "color",
+      "id": "pcc_bar_dot_color",
+      "label": "Progress Bar Milestone Dot Color",
+      "default": "#a8cba8"
+    },
+    {
+      "type": "color",
+      "id": "pcc_footer_border_color",
+      "label": "Footer Divider Color",
+      "default": "#d0e8d0"
+    },
+    {
+      "type": "color",
+      "id": "pcc_redeem_btn_color",
+      "label": "Redeem Button Color",
+      "default": "#1a3d22"
+    },
+    {
+      "type": "color",
+      "id": "pcc_to_label_color",
+      "label": "\"To reach...\" Label Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "pcc_to_pts_color",
+      "label": "Target Points Text Color",
+      "default": "#1a3d22"
+    },
+    {
+      "type": "color",
+      "id": "pcc_border_color",
+      "label": "Widget Border Color",
+      "default": "#d0e8d0"
+    },
+    {
+      "type": "range",
+      "id": "pcc_border_width",
+      "label": "Widget Border Width",
+      "min": 0,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Widget Content"
+    },
+    {
+      "type": "text",
+      "id": "smile_public_key",
+      "label": "Smile.io Public API Key",
+      "info": "Optional fallback if widget events don't fire. Find this in Smile.io → Settings → API."
+    },
+    {
+      "type": "text",
+      "id": "club_name",
+      "label": "Club Name",
+      "default": "PHARMATE CLUB"
+    },
+    {
+      "type": "text",
+      "id": "points_label",
+      "label": "Points Label",
+      "default": "pill points"
+    },
+    {
+      "type": "text",
+      "id": "tier1_name",
+      "label": "Tier 1 Name",
+      "default": "Silver"
+    },
+    {
+    "id":"tier1-color",
+    "type":"color",
+    "label":"Tier1 Color"
+    },
+    {
+      "type": "number",
+      "id": "tier1_pts",
+      "label": "Tier 1 Points Threshold",
+      "default": 500
+    },
+    {
+      "type": "text",
+      "id": "tier2_name",
+      "label": "Tier 2 Name",
+      "default": "Gold"
+    },
+     {
+    "id":"tier2-color",
+    "type":"color",
+    "label":"Tier2 Color"
+    },
+    {
+      "type": "number",
+      "id": "tier2_pts",
+      "label": "Tier 2 Points Threshold",
+      "default": 1000
+    },
+    {
+      "type": "text",
+      "id": "tier3_name",
+      "label": "Tier 3 Name",
+      "default": "Platinum"
+    },
+     {
+    "id":"tier3-color",
+    "type":"color",
+    "label":"Tier3 Color"
+    },
+    {
+      "type": "number",
+      "id": "tier3_pts",
+      "label": "Tier 3 Points Threshold",
+      "default": 2000
+    },
+    {
+      "type": "number",
+      "id": "tier2_spend",
+      "label": "Gold Spend Threshold ($)",
+      "default": 5000,
+      "info": "Amount customer must spend in the calendar year to maintain Gold. Match your Smile.io setting."
+    },
+    {
+      "type": "number",
+      "id": "tier3_spend",
+      "label": "Platinum Spend Threshold ($)",
+      "default": 15000,
+      "info": "Amount customer must spend in the calendar year to maintain Platinum. Match your Smile.io setting."
+    },
+    {
+      "type": "url",
+      "id": "redeem_link",
+      "label": "Redeem Points Link"
+    },
+    {
+      "type": "text",
+      "id": "redeem_text",
+      "label": "Redeem Points Button Text",
+      "default": "Redeem points"
+    },
+    {
+      "type": "select",
+      "id": "filters_type",
+      "label": "Filters type",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "Sidebar"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "horizontal",
+      "info": "Used only for desktop"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "manage_orders_title",
+      "label": "Manage Orders Title",
+      "default": "Manage Orders"
+    },
+
+    {
+      "type": "text",
+      "id": "order-history-1",
+      "label": "Manage Orders 1st Link Title",
+      "default": "Manage Orders "
+    },
+    {
+      "type": "url",
+      "id": "orders_link",
+      "label": "Orders Page Link"
+    },
+    {
+      "type": "text",
+      "id": "order-history-2",
+      "label": "Manage Orders 2nd Link Title",
+      "default": "Reorder"
+    },
+    {
+      "type": "url",
+      "id": "reorder_link",
+      "label": "Reorder Page Link"
+    },
+    {
+      "type": "text",
+      "id": "order-history-3",
+      "label": "Manage Orders 3rd Link Title",
+      "default": "Manage Subscriptions"
+    },
+    {
+      "type": "url",
+      "id": "subscriptions_link",
+      "label": "Subscriptions Page Link"
+    },
+
+    {
+      "type": "text",
+      "id": "benefits_title",
+      "label": "Benefits Title",
+      "default": "Benefits"
+    },
+    {
+      "type": "text",
+      "id": "benefits_text",
+      "label": "Benefits Text",
+      "default": "Unlock extra savings and convenience with"
+    },
+    {
+      "type": "text",
+      "id": "benefits_title-1",
+      "label": "Benefits Title 1st",
+      "default": "Loyalty Rewards"
+    },
+    {
+      "type": "url",
+      "id": "loyalty_link",
+      "label": "Loyalty Rewards Link"
+    },
+    {
+      "type": "text",
+      "id": "benefits_title-2",
+      "label": "Benefits Title 2nd",
+      "default": "Savings Extras"
+    },
+    {
+      "type": "url",
+      "id": "savings_link",
+      "label": "Savings Extras Link"
+    },
+
+    {
+      "type": "text",
+      "id": "contact_title",
+      "label": "Contact Us Title",
+      "default": "Contact Us"
+    },
+    {
+      "type": "text",
+      "id": "contact_title-description",
+      "label": "Contact Us Description",
+      "default": "We’re here to help, contact us anytime with your enquiries"
+    },
+    {
+      "type": "url",
+      "id": "chat_link",
+      "label": "Chat Link"
+    },
+    {
+      "type": "text",
+      "id": "contact-us-1",
+      "label": "Contact Us 1st Title",
+      "default": "Chat with our Bot"
+    },
+    {
+      "type": "url",
+      "id": "email_link",
+      "label": "Contact Us 1st URL"
+    },
+    {
+      "type": "text",
+      "id": "contact-us-2",
+      "label": "Contact Us 1st Title",
+      "default": "Email Us"
+    },
+    {
+      "type": "text",
+      "id": "email_link2",
+      "label": "Contact Us 2nd URL"
+    },
+    {
+      "type": "text",
+      "id": "contact-us-3",
+      "label": "Contact Us 3rd Title",
+      "default": "Call Us"
+    },
+    {
+      "type": "text",
+      "id": "call_link1",
+      "label": "Contact Us 3rd URL"
+    },
+    {
+      "type": "text",
+      "id": "contact-us-4",
+      "label": "Contact Us 4th Title",
+      "default": "Whats App"
+    },
+    {
+      "type": "text",
+      "id": "call_link22",
+      "label": "Contact Us 4th URL"
+    },
+    {
+      "type": "text",
+      "id": "load-more",
+      "label": "Load More Button Text",
+      "default": "Load More"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "See All Products"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
+          "type": "text",
+          "id": "custom_name",
+          "label": "Custom Collection Name"
+        },
+        {
+          "type": "select",
+          "id": "variant_picker",
+          "label": "Variant picker",
+          "options": [
+            {
+              "value": "radio",
+              "label": "Buttons"
+            },
+            {
+              "value": "select",
+              "label": "Dropdown"
+            }
+          ],
+          "default": "radio"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Loyality Collection"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .select-menu {
+    max-width: 330px;
+    margin: 50px auto;
+  }
+  .select-menu .select-btn {
+    display: flex;
+    height: 55px;
+    background: #fff;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 8px;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .select-menu .options {
+    position: absolute;
+    width: 330px;
+    overflow-y: auto;
+    max-height: 295px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation-name: fadeInDown;
+    -webkit-animation-name: fadeInDown;
+    animation-duration: 0.35s;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 0.35s;
+    -webkit-animation-fill-mode: both;
+  }
+  .select-menu .options .option {
+    display: flex;
+    height: 55px;
+    cursor: pointer;
+    padding: 0 16px;
+    border-radius: 8px;
+    align-items: center;
+    background: #fff;
+  }
+  .select-menu .options .option:hover {
+    background: #f2f2f2;
+  }
+  .select-menu .options .option i {
+    font-size: 25px;
+    margin-right: 12px;
+  }
+  .select-menu .options .option .option-text {
+    font-size: 18px;
+    color: #333;
+  }
+
+  .select-btn i {
+    font-size: 25px;
+    transition: 0.3s;
+  }
+
+  .select-menu.active .select-btn i {
+    transform: rotate(-180deg);
+  }
+  .select-menu.active .options {
+    display: block;
+    opacity: 0;
+    z-index: 10;
+    animation-name: fadeInUp;
+    -webkit-animation-name: fadeInUp;
+    animation-duration: 0.4s;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 0.4s;
+    -webkit-animation-fill-mode: both;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      transform: translate3d(0, 30px, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+  }
+  @keyframes fadeInDown {
+    from {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+    to {
+      transform: translate3d(0, 20px, 0);
+      opacity: 0;
+    }
+  }
+</style>

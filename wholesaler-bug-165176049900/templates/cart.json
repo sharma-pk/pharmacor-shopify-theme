@@ -1,0 +1,99 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "cart-template": {
+      "type": "cart-template",
+      "settings": {
+        "heading": "Shopping cart",
+        "order_summary_heading": "Order Summary",
+        "show_gift_wrap_button": false,
+        "show_shipping_bar": false,
+        "amount": 0,
+        "message": "",
+        "congratulatory_message": "",
+        "bar_color": "#e9e9e9",
+        "fill_color": "#4d71f9",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "featured-products": {
+      "type": "featured-products",
+      "disabled": true,
+      "settings": {
+        "heading": "Featured products",
+        "product_list": [
+          "amlodipine",
+          "antifungal-cream-50g-1",
+          "aspirin",
+          "atorvastatin",
+          "cal-care",
+          "cephalexin",
+          "cefuroxime-axetil"
+        ],
+        "product-banner": "banner",
+        "products_in_row": "3",
+        "banner_image": "shopify://shop_images/Bulk_Buy_1.svg",
+        "banner_heading": "Banner heading",
+        "banner_subheading": "Banner subheading",
+        "button_label": "Shop Now",
+        "button_url": "",
+        "text_color": "#ffffff",
+        "overlay_color": "rgba(0, 0, 0, 0.4)",
+        "button_color": "#ffffff",
+        "button_background_color": "rgba(0,0,0,0)",
+        "button_border_color": "#ffffff",
+        "button_hover_color": "#000000",
+        "button_hover_background": "#ffffff",
+        "button_hover_border": "#ffffff",
+        "container_width": "inherit",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 30
+      }
+    },
+    "173631422685a57490": {
+      "type": "apps",
+      "blocks": {
+        "smile_io_smile_landing_page_earning_rule_highlight_JEQG7Y": {
+          "type": "shopify://apps/smile-io/blocks/smile-landing-page-earning-rule-highlight/2fae4e25-1841-4ea2-bc02-bd548478c4f6",
+          "settings": {
+            "primary_colour": "#333333",
+            "secondary_colour": "#ffffff",
+            "image": "shopify://shop_images/Bulk_Buy_1_f7de78a5-8c34-4f84-ab78-b82a587d9f30.svg",
+            "title_text": "Earn points for every order placed",
+            "description_text": "The more you spend, the more you save.",
+            "button_text": "Ways to earn"
+          }
+        }
+      },
+      "block_order": [
+        "smile_io_smile_landing_page_earning_rule_highlight_JEQG7Y"
+      ],
+      "disabled": true,
+      "settings": {
+        "container_width": "inherit",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    }
+  },
+  "order": [
+    "cart-template",
+    "featured-products",
+    "173631422685a57490"
+  ]
+}

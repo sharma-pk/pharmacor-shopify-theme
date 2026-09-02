@@ -1,0 +1,109 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Sales rep subscriptions dashboard
+	NOT LINKED YET — standalone, not added to any template or nav.
+	No backend endpoint exists for this yet (out of scope per SUBSCRIPTION_STATUS.md).
+	Static/sample markup only, ready to wire up once a data source exists.
+------------------------------------------------------------------------------
+{%- endcomment -%}
+{%- style -%}
+.rep-dash { width: 92%; max-width: 1000px; margin: 24px auto 60px; }
+.rep-dash__filters { display: flex; gap: 12px; margin-bottom: 20px; }
+.rep-dash__filters select {
+  flex: 1; padding: 10px 12px; border: 1px solid #d7ded8; border-radius: 8px; font-size: 14px;
+}
+.rep-dash table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.rep-dash th {
+  text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .03em;
+  color: #6b7a70; padding: 10px 12px; border-bottom: 1px solid #e3e8e4;
+}
+.rep-dash td { padding: 12px; border-bottom: 1px solid #eef1ee; vertical-align: middle; }
+.rep-dash select.rep-dash__account {
+  width: 100%; padding: 6px 8px; border: 1px solid #d7ded8; border-radius: 6px; font-size: 13px;
+}
+.rep-badge {
+  display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+.rep-badge--active { background: #e6f2e8; color: #30623D; }
+.rep-badge--freecycle { background: #fff2df; color: #a8650e; }
+.rep-badge--cancelled { background: #f3e6e6; color: #8a2f2f; }
+{%- endstyle -%}
+
+<div class="rep-dash">
+  <div class="rep-dash__filters">
+    <select id="repDashFilterRep">
+      <option value="">Rep: all</option>
+    </select>
+    <select id="repDashFilterRegion">
+      <option value="">Region: all</option>
+    </select>
+    <select id="repDashFilterProduct">
+      <option value="">Product: all</option>
+    </select>
+  </div>
+
+  <table id="repDashTable">
+    <thead>
+      <tr>
+        <th>Rep</th>
+        <th>Region</th>
+        <th>Account</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% comment %} Sample rows — replace once a real data source is wired up {% endcomment %}
+      <tr data-rep="J. Smith" data-region="West">
+        <td>J. Smith</td>
+        <td>West</td>
+        <td>
+          <select class="rep-dash__account">
+            <option>West Boston Pharmacy</option>
+          </select>
+        </td>
+        <td><span class="rep-badge rep-badge--active">Active</span></td>
+      </tr>
+      <tr data-rep="M. Rao" data-region="North">
+        <td>M. Rao</td>
+        <td>North</td>
+        <td>
+          <select class="rep-dash__account">
+            <option>Grove Plaza</option>
+          </select>
+        </td>
+        <td><span class="rep-badge rep-badge--freecycle">Free cycle used</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+(function () {
+  const table = document.getElementById("repDashTable");
+  if (!table) return;
+
+  function applyFilters() {
+    const rep = document.getElementById("repDashFilterRep").value;
+    const region = document.getElementById("repDashFilterRegion").value;
+    table.querySelectorAll("tbody tr").forEach((row) => {
+      const matchesRep = !rep || row.dataset.rep === rep;
+      const matchesRegion = !region || row.dataset.region === region;
+      row.style.display = matchesRep && matchesRegion ? "" : "none";
+    });
+  }
+
+  document.getElementById("repDashFilterRep").addEventListener("change", applyFilters);
+  document.getElementById("repDashFilterRegion").addEventListener("change", applyFilters);
+})();
+</script>
+
+{% schema %}
+{
+	"name": "Sales rep dashboard",
+	"presets": [
+		{
+			"name": "Sales rep dashboard"
+		}
+	]
+}
+{%- endschema -%}

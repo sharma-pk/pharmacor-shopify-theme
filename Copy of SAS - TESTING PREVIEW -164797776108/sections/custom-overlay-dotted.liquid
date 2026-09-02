@@ -1,0 +1,385 @@
+
+<style>
+  .custom-section-overlay-main{width: 100%; clear: both;display: flex;justify-content: space-between;align-items: center;z-index: 1;position: relative;}
+  .custom-section-overlay-Data{width:35%;text-align: center;padding: 1.25rem 3.125rem 1.25rem 2rem;}
+  .custom-section-overlay-Data h2{font-size: 26px;font-weight: 800;}
+  .Custom-Product-Data1 h2 {
+  color: #046e82;
+  font-size: 16px;
+  font-weight: 400;
+}
+  .custom-section-overlay-Data p{font-size: 16px;font-weight: 400;margin-top: 1rem;margin-bottom: 1rem;text-align: center;}
+  .custom-section-overlay-Data a{color: #fff;background-color: #f04f36;border: 1px solid #f04f36;padding: 10px 20px;text-decoration: none;border-radius: 5px;}
+  .custom-section-overlay-Data a:hover {background: #f2614a;border: 1px solid rgb(242,97,74);}
+  .custom-section-overlay-inner{width:100%;}
+  .custom-section-overlay-banner-image{position: relative;}
+  .custom-overlay-image{width: 100%;}
+  .custom-section-overlay-heading{}
+  .custom-overlay-image img{width: 100%;}
+
+.custom-dot-1{position: absolute; left: {{section.settings.space-left-1}}%;top: {{ section.settings.space-top-1 }}%; transform: translate3d(-10.5%, -33.3%, 0);width: 32px;height: 32px;background-color: white; border: 1px solid #000; border-radius: 50%;outline: none;box-shadow: none;transition: background-color .15s cubic-bezier(.4,0,.2,1),box-shadow .15s cubic-bezier(.4,0,.2,1);}
+.custom-dot-1-inner{display: block !important;width: 16px;height: 16px;background-color: #000;border-radius: 50%;transition: transform .15s cubic-bezier(.4,0,.2,1);transform: translate(-50%,50%); position: absolute; left: 50%; bottom: 50%;}
+
+.custom-dot-2{position: absolute;  left: {{section.settings.space-left-2}}%;top: {{ section.settings.space-top-2 }}%;transform: translate3d(-31.5%, -90.2%, 0);width: 32px;height: 32px;background-color: white; border: 1px solid #000;border-radius: 50%;outline: none;box-shadow: none;transition: background-color .15s cubic-bezier(.4,0,.2,1),box-shadow .15s cubic-bezier(.4,0,.2,1);}
+.custom-dot-2-inner{display: block !important;width: 16px;height: 16px;background-color: #000;border-radius: 50%;transition: transform .15s cubic-bezier(.4,0,.2,1);transform: translate(-50%,50%); position: absolute; left: 50%; bottom: 50%;}
+
+.custom-dot-3{position: absolute;left: {{section.settings.space-left-3}}%;top: {{ section.settings.space-top-3 }}%; transform: translate3d(-51%, -54.6%, 0);width: 32px;height: 32px;background-color: white; border: 1px solid #000;border-radius: 50%;outline: none;box-shadow: none;transition: background-color .15s cubic-bezier(.4,0,.2,1),box-shadow .15s cubic-bezier(.4,0,.2,1);}
+.custom-dot-3-inner{display: block !important;width: 16px;height: 16px;background-color: #000;border-radius: 50%;transition: transform .15s cubic-bezier(.4,0,.2,1);transform: translate(-50%,50%); position: absolute; left: 50%; bottom: 50%;}
+
+.custom-dot-4{position: absolute;left: {{section.settings.space-left-4 }}%;top: {{ section.settings.space-top-4 }}%;  transform: translate3d(-85.7%, -43.8%, 0);width: 32px;height: 32px;background-color: white; border: 1px solid #000;border-radius: 50%;outline: none;box-shadow: none;transition: background-color .15s cubic-bezier(.4,0,.2,1),box-shadow .15s cubic-bezier(.4,0,.2,1);}
+.custom-dot-4-inner{display: block !important;width: 16px;height: 16px;background-color: #000;border-radius: 50%;transition: transform .15s cubic-bezier(.4,0,.2,1);transform: translate(-50%,50%); position: absolute; left: 50%; bottom: 50%;}
+
+.tablinks {
+  cursor: pointer;
+}
+.custom-product-site{display:none;}
+.custom-product-site-2{display:none;}
+.custom-product-site-inner-1{box-shadow: 0 1px 4px #8080801c;width: 250px;background: #fff;position: absolute;top: 25px;left: -78px;padding: 10px;margin-bottom: 6px;}
+.custom-product-site-inner-2{box-shadow: 0 1px 4px #8080801c;width: 250px;background: #fff;position: absolute;top: 25px;left: -78px;padding: 10px;margin-bottom: 6px;}
+.custom-product-site-inner-3{box-shadow: 0 1px 4px #8080801c;width: 250px;background: #fff;position: absolute;top: 25px;left: -78px;padding: 10px;margin-bottom: 6px;}
+.custom-product-site-inner-4{box-shadow: 0 1px 4px #8080801c;width: 250px;background: #fff;position: absolute;top: 25px;left: -78px;padding: 10px;margin-bottom: 6px;}
+ 
+  .custom-product-site-data{width: 100%;display: flex;gap: 10px;}
+  .custom-product-site-data-image{width: 112px;}
+  .custom-product-site-data-image img{width: 100%;}
+  .custom-product-data{width: 60%;}
+  .custom-product-site-data h3{font-size: 18px;font-weight: 400;color:black;}
+  .custom-product-data-inner{padding-left: 5px;}
+  .custom-view-product a{font-size: 14px; text-decoration: none; color: #000;}
+ .custom-view-product a:hover{font-size: 15px; text-decoration: underline; color: #000;}
+.custom-product-site a{text-decoration: none; color: #000;}
+
+.custom-section-overlay-main .active{display:block!important;}
+.Custom-Overlay-Data-Button {
+  padding: 20px 0px;
+}
+ @media only screen and (max-width: 800px){
+   .custom-section-overlay-main {flex-direction: column-reverse;}
+   .custom-section-overlay-Data{width:100%;}
+.custom-section-overlay-inner{width:100%;}
+ }
+  
+
+
+  @media only screen and (max-width: 767px){
+    .custom-dot-1{width: 20px; height: 20px;}
+    .custom-dot-2{width: 20px; height: 20px;}
+    .custom-dot-3{width: 20px; height: 20px;}
+  .custom-dot-4{width: 20px; height: 20px;}
+    .custom-dot-1-inner{width: 10px; height: 10px;}
+    .custom-dot-2-inner{width: 10px; height: 10px;}
+    .custom-dot-3-inner{width: 10px; height: 10px;}
+    .custom-dot-4-inner{width: 10px; height: 10px;}
+.custom-product-site-inner-1{width:300px;left: -68px;}
+.custom-product-site-inner-2{width:300px;left: -68px;}
+.custom-product-site-inner-3{width:300px;left: -68px;;}
+.custom-product-site-inner-4{width:300px;left: -68px;}
+  }
+
+            .image-1{width: 20%;}
+
+
+
+
+              
+/* .ringring {
+    border: 3px solid #62bd19;
+    -webkit-border-radius: 30px;
+    height: 25px;
+    width: 25px;
+    -webkit-animation: pulsate 1s ease-out;
+    -webkit-animation-iteration-count: infinite; 
+    opacity: 1;
+}
+@-webkit-keyframes pulsate {
+    0% {-webkit-transform: scale(0.4, 0.1); opacity: 1;}
+    50% {opacity: 1.0;}
+    100% {-webkit-transform: scale(1.5, 1.5); opacity: 1;}
+} */
+
+</style>
+{% if section.settings.bg-image != blank %}
+<div class="custom-section-overlay-main page-width customgap">
+
+<div class="custom-section-overlay-inner"> 
+    <div class="custom-section-overlay-banner-image">
+      <div class="custom-section-box-desktop">
+        <div class="custom-overlay-image">
+          <img src="{{ section.settings.bg-image | img_url: 'master' }}">
+        </div>
+             <div class="custom-section-overlay-heading">
+           {% assign product = all_products[section.settings.product-1] %}
+              <a href="{{ product.url }}" class="custom-dot-1 tablinks" onclick="openCity(event, 'custom-1')">
+               {% if section.settings.product-1 !=blank %}
+                    <div class="custom-product-site tabcontent" id="custom-1">
+                      <div class="custom-product-site-inner-1">
+                        
+                         {% if product %}
+                           <div class="custom-product-site-data">
+                             <div class="custom-product-site-data-image">
+                                <img src="{{ product.featured_image | img_url: 'medium' | format: 'jpg' }}">
+                             </div>
+                               <div class="Custom-Product-Data1"
+                                 data-wpd-product-handle="{{ product.handle }}"         
+                                data-wpd-variant-id="{{ product.selected_or_first_available_variant.id }}"         
+                                data-wpd-variant-price="{{ product.selected_or_first_available_variant.price }}"        
+                                data-wpd-variant-compare-at-price="{{ product.selected_or_first_available_variant.compare_at_price }}"
+                                data-wpd-product-collection-ids="{% assign wpdProductCollectionIds = product.collections | map:'id' %}{{ wpdProductCollectionIds | join:',' }}"        
+                                data-wpd-product-id="{{ product.id }}">
+                                 <h3>{{ product.title }}</h3>
+                                 <h2>{{ product.price | money }}</h2>
+                               </div>
+                           </div>
+                         {%endif%}
+                      </div>
+                    </div>
+                  {% endif %}
+                
+                <div class="custom-dot-1-inner"></div>
+                </a>
+               {% assign product = all_products[section.settings.product-2] %}
+                <a href="{{ product.url }}" class="custom-dot-2 tablinks" onclick="openCity(event, 'custom-2')">
+                  {% if section.settings.product-2 !=blank %}
+                    <div class="custom-product-site tabcontent" id="custom-2">
+                      <div class="custom-product-site-inner-2">
+                        
+                         {% if product %}
+                           <div class="custom-product-site-data">
+                             <div class="custom-product-site-data-image">
+                                <img src="{{ product.featured_image | img_url: 'medium' | format: 'jpg' }}">
+                             </div>
+                             <div class="Custom-Product-Data1"
+                               data-wpd-product-handle="{{ product.handle }}"         
+                                data-wpd-variant-id="{{ product.selected_or_first_available_variant.id }}"         
+                                data-wpd-variant-price="{{ product.selected_or_first_available_variant.price }}"        
+                                data-wpd-variant-compare-at-price="{{ product.selected_or_first_available_variant.compare_at_price }}"
+                                data-wpd-product-collection-ids="{% assign wpdProductCollectionIds = product.collections | map:'id' %}{{ wpdProductCollectionIds | join:',' }}"        
+                                data-wpd-product-id="{{ product.id }}">
+                             <h3>{{ product.title }}</h3>
+                             <h2>{{ product.price | money }}</h2>
+                               </div>
+                           </div>
+                         {%endif%}
+                      </div>
+                    </div>
+                  {% endif %}
+                  
+                  
+                  <div class="custom-dot-2-inner"></div>
+                  
+                </a>
+               {% assign product = all_products[section.settings.product-3] %}
+                <a href="{{ product.url }}" class="custom-dot-3 tablinks" onclick="openCity(event, 'custom-3')"><div class="custom-dot-3-inner"></div>
+                  {% if section.settings.product-3 !=blank %}
+                    <div class="custom-product-site tabcontent" id="custom-3">
+                      <div class="custom-product-site-inner-3">
+                        
+                         {% if product %}
+                           <div class="custom-product-site-data">
+                             <div class="custom-product-site-data-image">
+                                <img src="{{ product.featured_image | img_url: 'medium' | format: 'jpg' }}">
+                             </div>
+                           <div class="Custom-Product-Data1"
+                             data-wpd-product-handle="{{ product.handle }}"         
+                              data-wpd-variant-id="{{ product.selected_or_first_available_variant.id }}"         
+                              data-wpd-variant-price="{{ product.selected_or_first_available_variant.price }}"        
+                              data-wpd-variant-compare-at-price="{{ product.selected_or_first_available_variant.compare_at_price }}"
+                              data-wpd-product-collection-ids="{% assign wpdProductCollectionIds = product.collections | map:'id' %}{{ wpdProductCollectionIds | join:',' }}"        
+                              data-wpd-product-id="{{ product.id }}">
+                             <h3>{{ product.title }}</h3>
+                             <h2>{{ product.price | money }}</h2>
+                               </div>
+                           </div>
+                         {%endif%}
+                      </div>
+                    </div>
+                  {% endif %}
+                </a>
+               {% assign product = all_products[section.settings.product-4] %}
+                 <a href="{{ product.url }}" class="custom-dot-4 tablinks" onclick="openCity(event, 'custom-4')"><div class="custom-dot-4-inner"></div>
+                  {% if section.settings.product-4 !=blank %}
+                    <div class="custom-product-site tabcontent" id="custom-4">
+                      <div class="custom-product-site-inner-4">
+                        
+                         {% if product %}
+                             <div class="custom-product-site-data">
+                               <div class="custom-product-site-data-image">
+                                  <img src="{{ product.featured_image | img_url: 'medium' | format: 'jpg' }}">
+                               </div>
+                            <div class="Custom-Product-Data1">
+                             <h3>{{ product.title }}</h3>
+                             <h2>{{ product.price | money }}</h2>
+                               </div>
+                             </div>
+                         {%endif%}
+                      </div>
+                    </div>
+                  {% endif %}
+                </a>
+            </div>
+      </div>
+    </div>
+  </div> 
+</div> 
+
+{% endif %}
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  
+  // Hide all tabcontent
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  
+  // Remove "active" class from all tablinks
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  
+  // Display the current tab and add "active" class to the hovered element
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Add hover event listeners to the dots
+window.onload = function() {
+  var tablinks = document.getElementsByClassName("tablinks");
+  for (var i = 0; i < tablinks.length; i++) {
+    tablinks[i].addEventListener("mouseover", function(event) {
+      openCity(event, this.getAttribute("onclick").match(/'([^']+)'/)[1]);
+    });
+  }
+}
+</script>
+
+
+{% schema %}
+  {
+    "name": "Custom Overlay Dotted",
+    "settings": [
+
+           {
+                "type":"image_picker",
+                "id":"bg-image",
+                "label": "Desktop Background Image"
+              },
+              {
+                "type": "product",
+                "id": "product-1",
+                "label": "Product"
+              },
+              {
+                "type": "range",
+                "id": "space-left-1",
+                "min": 10,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "1st Dot Space Left",
+                "default": 24
+              },
+       {
+                "type": "range",
+                "id": "space-top-1",
+                "min": 10,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "1st Dot Space Top",
+                "default": 21
+              },
+              {
+                "type": "product",
+                "id": "product-2",
+                "label": "Product"
+              },
+       {
+                "type": "range",
+                "id": "space-left-2",
+                "min": 10,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "2nd Dot Space Left",
+                "default": 36
+              },
+       {
+                "type": "range",
+                "id": "space-top-2",
+                "min": 10,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "2nd Dot Space Top",
+                "default": 80
+              },
+              {
+                "type": "product",
+                "id": "product-3",
+                "label": "Product"
+              },
+                 {
+                "type": "range",
+                "id": "space-left-3",
+                "min": 10,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "3rd Dot Space Left",
+                "default": 64
+              },
+       {
+                "type": "range",
+                "id": "space-top-3",
+                "min": 10,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "3rd Dot Space Top",
+                "default": 30
+              },
+              {
+                "type": "product",
+                "id": "product-4",
+                "label": "Product"
+              },
+        {
+                "type": "range",
+                "id": "space-left-4",
+                "min": 10,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "4th Dot Space Left",
+                "default": 85
+              },
+       {
+                "type": "range",
+                "id": "space-top-4",
+                "min": 10,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "4th Dot Space Top",
+                "default": 58
+              }
+    
+      ],
+  "presets":[
+    {
+    "name": "Custom Overlay Dotted",
+    "category": "section"
+    }
+  ]
+      
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

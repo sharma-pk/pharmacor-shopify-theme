@@ -1,0 +1,1560 @@
+<style>
+  .collection__header-row {
+    max-width: 1432px;
+    margin: 0 auto;
+  }
+  .custom-cart-list-main {
+    padding-top: 20px;
+  }
+  .custom-quantity-items {
+    position: absolute;
+    bottom: -9px;
+    right: 16%;
+  }
+  .custom-list-wholesaler {
+    position: relative;
+  }
+  .cstom__container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  }
+  #mainCollection {
+    padding-top: 24px;
+  }
+  .th_wl_button .th_wl_icon, .th_wl_button_after .th_wl_icon {
+    margin-right: 0;
+    width: 20px;
+    height: 20px;
+    border: solid 1px;
+    border-radius: 100%;
+    padding: 2px;
+  }
+  .product-quantity__wrapper{position: relative;}
+  .cstom__container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .custom-list-wholesaler select {
+    max-width: 180px;
+  }
+  .custom-main-inner-wrap.collection__item.customitem.product-item.custom-list- {
+  	position: relative;
+  }
+  .custom_product-section .quantity-container {
+    position: absolute;
+    right: 30%;
+    top: -22px;
+    z-index: 10;
+  }
+  .last-order-details {
+    font-size: 12px;
+    color: #30623d;
+    font-weight: normal;
+  }
+      .custom_add_to-Cart_button[disabled] {background-color: #84b189;}
+      .custom-list-product-name {display: flex; justify-content: space-between;}
+      .customquickview {cursor: pointer;}
+      .backorder-order{display: none;}
+      .my-collection-list-tab button {color: #5a9d62;}
+      .custom_labels {display: grid; grid-template-columns: 11% 17% 22% 6% 0%;justify-content: start;font-weight: bold;margin: 50px 0 !important;font-size: 14px;gap: 20px;}
+      .custom_product-section {display: grid;  grid-template-columns: 0.8fr 1.2fr 2.2fr 0.7fr 2.2fr!important;justify-content: start;align-items: center;padding:0 10px 0 10px;border-radius: 5px;background-color: #fff;gap: 12px; min-height: 106px;}
+      .custom_product-section img {width: 100%; height: auto;}
+      .product-name {
+          font-family: Neutrif Studio;
+        font-weight: 600;
+        font-size: 22px;
+        line-height: normal;
+        letter-spacing: 0;
+        vertical-align: middle;
+        color:#1E1E1E;
+        {% comment %} text-align: left; {% endcomment %}
+          }
+          .custom_badge {
+          display: inline-block;
+          color: white;
+          font-size: 12px;
+          border-radius: 3px;
+          margin-bottom: 5px;
+          }
+          .custom_product-section a{color: #000; text-decoration: none;}
+          .custom-product-card-list-wrap{display: flex; flex-wrap: wrap; gap: 10px;}
+          .custom-list-wholesaler{display: flex; gap: 0px;}
+          .custom-list-wholesaler select{padding-left: 13px; padding-right: 50px;width: auto;}
+          .custom-list-price{text-align: center;}
+          .custom-list-quantity{text-align: center;}
+          .custom_dropdown {
+          padding: 0px;
+          font-family: Neutrif Studio;
+        font-weight: 400;
+        font-size: 18px;
+        line-height:normal;
+        letter-spacing: 0;
+        color: #30623D;
+        border:none;
+
+          }
+         .custom_price-section  .price.price--on-sale .price__sale{
+         flex-direction: column;    display: flex;  width:100%;margin: 0 !important;
+        }
+        .custom_price-section  .price.price--on-sale span.price__olds{
+        max-width: 100%;
+        display: flex;
+        width: 100%;
+    }
+       .custom_price-section  span.data-wpd-hide.price-item.price-item--regular{
+        font-size:14px;
+        text-align:center;
+    }
+     .custom_price-section  .price .price-item.price-item--sale{
+        font-size:20px;
+        text-align:left;
+            display: flex;
+            width:100%;
+
+    }
+  .custom-sale-pricee{  font-size:12px;}
+          .custom_price-section {
+          text-align: right;
+          font-size: 14px;
+          }
+          .custom_list-price {
+          text-decoration: line-through;
+          color: #999;
+          }
+          .custom_your-price {
+          font-weight: bold;
+          }
+          .custom_profit {
+          color: #4caf50;
+          }
+          .custom_quantity {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;flex-wrap: wrap;
+          }
+          .custom_quantity button {
+          width: 25px;
+          height: 25px;
+          border: 1px solid #ccc;
+          background-color: #f9f9f9;
+          cursor: pointer;
+          }
+          .custom_quantity input {
+          width: 65px;
+          text-align: center;
+          border: 1px solid #ccc;
+          border-radius: 3px;
+          padding: 0px;
+          height: 10px;
+          min-height: 26px;
+          }
+          .custom_more-info {
+          text-align: center;
+          color: blue;
+          cursor: pointer;
+          text-decoration: underline;
+          }
+          .custom_wapper {display: flex;gap: 20px;  justify-content: center;}
+          .custom-list-image{height: 250px;}
+          .custom-list-product-info{width: 110px;}
+          .custom_add_to-Cart_button{width: 100px; padding: 10px 10px; background: #5a9d62; color: #fff; border-radius: 10px;}
+          .my-pop-data p{display: flex; padding-bottom: 8px; gap: 0px; border-bottom: 2px solid #000; justify-content: space-between; margin-top: 8px;padding-right: 10px;}
+          .my-pop-data p .metafield-multi_line_text_field{width: 50%;text-align: right;}
+          .custom_product-section .product-add-to-cart__button{display:none;}
+          .my-pop-data p strong{width: 50%;}
+          .custom-hidden-class{display: none;}
+          .custom-product-info{position: fixed; top: 0; left: 0; z-index: 13;width: 100%; height: 100%;background: #00000052;padding: 10px;}
+
+          .my-metafields{background: #30623d; padding: 6px 12px; position: relative; top: -10px; color: #b2e78a; border-radius: 10px;font-size: 14px;}
+
+          .custom-product-info-wrap{ display: flex; align-items: center; justify-content: center;border-radius: 10px; border: 2px solid #fff; background: #fff;padding: 30px 15px; min-height: 501px; max-width: 600px;z-index: 99; position: relative;margin: 0 auto; top: 10%; bottom: 25%;}
+          .custom-carttt {display: inline-block;min-width: 190px; border: 2px solid #30623D; font-family: Neutrif Studio; font-weight: 500; font-size: 15px; line-height: 100%; letter-spacing: .8px; text-align: center; border-radius:50px; background: transparent !important; color: #30623D; width: 90% !important; max-width: 90% !important;padding-left: 30px; padding-right: 30px; cursor: pointer;}
+
+                 @media only screen and (max-width: 1400px){
+                  .custom_product-section {grid-template-columns: 8% 13% 28% 8% 28%!important;display: grid !important;}
+                 }
+
+
+  @media only screen and (min-width: 810px) and (max-width: 1024px) {
+  .custom_product-section{gap: 0px;padding: 0;}
+  .welcome-box {
+    padding: 16px!important;
+  }
+  .custom_price-section .price .price-item.price-item--sale {
+    font-size: 16px;
+  }
+  .plus-only {
+  	width: 25px!important;
+  	height: 25px!important;
+  	font-size: 16px!important;
+  }
+  .quantityselector button {
+  	width: 25px!important;
+  	height: 25px!important;
+  	font-size: 16px!important;
+  }
+  .custom_dropdown {
+    font-size: 14px;
+  }
+  .custom-product-card-list-wrap {
+    padding-top: 24px;
+  }
+  .my-metafields {
+    font-size: 9px;
+  }
+  .custom_product-section {
+      display: grid !important;
+      grid-template-columns: 0.8fr 1.2fr 2.2fr 0.7fr 2.2fr!important;
+    }
+
+  }
+
+    .custom_product-section .product-quantity__container {
+        width: 100%;
+    }
+    .custom_product-section input[type="number"]{
+        min-height: 45px;
+        text-align:center;
+    }
+  @media only screen and (max-width: 810px){
+  .grid-lists-iconss .iocns {
+    border-radius: 50px;
+    width: 45px;
+    transition: .3s all ease-in-out;
+    height: 45px;
+    position: relative;
+    top: 14px;
+  }
+  .th_wl_col_btn {
+    position: relative;
+    top: -8px;
+  }
+  .custom-list-wholesaler {
+    width: 304px;
+  }
+  .custom_product-section {
+  grid-template-columns: 15% 25% auto 15% 30% !important;
+  }
+  .custom-list-product-name {
+    width: 170px!important;
+  }
+  .custom-product-info-wrap{ display: flex; align-items: center; justify-content: center;border-radius: 10px;overflow: scroll; overflow-y: hidden;}
+  }
+</style>
+
+{% assign apiselleritem = '' %}
+{% assign sigmaselleritem = '' %}
+{% assign symbionselleritem = '' %}
+{% assign ch2selleritem = '' %}
+
+{% assign defaulseller = false %}
+
+{% if customer %}
+  {% assign coverage_countries = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
+
+  {% for item in coverage_countries %}
+    {% assign clean_item = item | downcase | replace: ' ', '' %}
+
+    {% if clean_item contains 'api' %}
+      {% assign apiselleritem = clean_item | remove: 'api' %}
+      {% assign defaulseller = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if defaulseller == false %}
+    {% for item in coverage_countries %}
+      {% assign clean_item = item | downcase | replace: ' ', '' %}
+
+      {% if clean_item contains 'symbion' %}
+        {% assign symbionselleritem = clean_item | remove: 'symbion' %}
+        {% assign defaulseller = true %}
+        {% break %}
+      {% elsif clean_item contains 'sigma' %}
+        {% assign sigmaselleritem = clean_item | remove: 'sigma' %}
+        {% assign defaulseller = true %}
+        {% break %}
+      {% elsif clean_item contains 'ch2' %}
+        {% assign ch2selleritem = clean_item | remove: 'ch2' %}
+        {% assign defaulseller = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endif %}
+
+<div
+  class="custom-main-inner-wrap collection__item customitem product-item custom-list-{{ forloop.index }}"
+  style="width: 100%;"
+  data-title="{{ product.title }}"
+  data-product-id="{{ product.id }}"
+  data-price="{{ product.price | money_without_currency | replace: ',', '' }}"
+  myvarientid="{{ variant.id }}"
+  data-created="{{ product.created_at }}"
+>
+  {% comment %}
+     {% assign customer_tier = customer.metafields.pharmacor_discounts.pricing_tier.value | strip %}
+
+    {% for variant in product.variants %}
+
+      {%- comment -%} === Wholesale Price === {%- endcomment -%}
+      {% assign raw_prices = variant.metafields.pharmacor_discounts.custom_wholesale_price.value %}
+      {% assign wholesale_prices = raw_prices | parse_json %}
+      {% assign tier_price = blank %}
+
+      {% if customer_tier and wholesale_prices %}
+        {% assign tier_price = wholesale_prices[customer_tier] %}
+      {% endif %}
+
+      {%- comment -%} === Volume Discount Tiers === {%- endcomment -%}
+      {% assign volume_raw = variant.metafields.pharmacor_discounts.volume_discount_tiers.value %}
+      {% assign volume_tiers = volume_raw | parse_json %}
+
+      {% assign volume_qty = blank %}
+      {% assign volume_discount = blank %}
+      {% assign volume_discount_price = blank %}
+
+      {% if volume_tiers and volume_tiers.size > 0 %}
+        {% assign first_tier = volume_tiers[0] %}
+
+        {%- comment -%} FORCE numeric values {%- endcomment -%}
+        {% assign volume_qty = first_tier.quantityThreshold | plus: 0 %}
+        {% assign volume_discount = first_tier.discountPercent | plus: 0 %}
+        {% assign clean_tier_price = tier_price | plus: 0 %}
+
+        {% if clean_tier_price > 0 %}
+          {% assign base_price = clean_tier_price | times: 100 %}
+        {% else %}
+          {% assign base_price = variant.price | plus: 0 %}
+        {% endif %}
+
+        {% assign discount_amount = base_price | times: volume_discount | divided_by: 100 %}
+        {% assign volume_discount_price = base_price | minus: discount_amount %}
+      {% endif %}
+
+      {%- comment -%} === First Tier Input === {%- endcomment -%}
+      <input
+        type="hidden"
+        class="procustom{{ variant.id | handleize }} {{ variant.title | handleize }}"
+        compareprice="{{ variant.compare_at_price | money }}"
+        varienrprice="{{ variant.price | money }}"
+        varientquentity="{{ variant.inventory_quantity }}"
+        myvarientid="{{ variant.id }}"
+        varienrcompprice="{{ variant.compare_at_price | money }}"
+        customwholesaleprice="{{ tier_price }}"
+        variantprofit="
+          {% if variant.compare_at_price > variant.price %}
+            {% assign price_difference = variant.compare_at_price | minus: variant.price %}
+            {% assign profit_percentage = price_difference | times: 100.0 | divided_by: variant.compare_at_price %}
+            {{ profit_percentage | round: 2 }}%
+          {% endif %}
+        "
+        volumeqty="{{ volume_qty }}"
+        volumediscount="{{ volume_discount }}"
+        volumediscountprice="{{ volume_discount_price | money }}"
+      >
+
+      {%- comment -%} === Additional Tier Inputs === {%- endcomment -%}
+      {% if volume_tiers and volume_tiers.size > 1 %}
+        {% for tier in volume_tiers offset:1 %}
+
+          {% assign volume_qty = tier.quantityThreshold | plus: 0 %}
+          {% assign volume_discount = tier.discountPercent | plus: 0 %}
+          {% assign clean_tier_price = tier_price | plus: 0 %}
+
+          {% if clean_tier_price > 0 %}
+            {% assign base_price = clean_tier_price | times: 100 %}
+          {% else %}
+            {% assign base_price = variant.price | plus: 0 %}
+          {% endif %}
+
+          {% assign discount_amount = base_price | times: volume_discount | divided_by: 100 %}
+          {% assign volume_discount_price = base_price | minus: discount_amount %}
+
+          <input
+            type="hidden"
+            class="procustom{{ variant.id | handleize }} {{ variant.title | handleize }}"
+            compareprice="{{ variant.compare_at_price | money }}"
+            varienrprice="{{ variant.price | money }}"
+            varientquentity="{{ variant.inventory_quantity }}"
+            myvarientid="{{ variant.id }}"
+            varienrcompprice="{{ variant.compare_at_price | money }}"
+            customwholesaleprice="{{ tier_price }}"
+            variantprofit="
+              {% if variant.compare_at_price > variant.price %}
+                {% assign price_difference = variant.compare_at_price | minus: variant.price %}
+                {% assign profit_percentage = price_difference | times: 100.0 | divided_by: variant.compare_at_price %}
+                {{ profit_percentage | round: 2 }}%
+              {% endif %}
+            "
+            volumeqty="{{ volume_qty }}"
+            volumediscount="{{ volume_discount }}"
+            volumediscountprice="{{ volume_discount_price | money }}"
+          >
+        {% endfor %}
+      {% endif %}
+
+    {% endfor %}
+  {% endcomment %}
+      {% assign hidden_value = '' %}
+  {% assign customer_tier = customer.metafields.pharmacor_discounts.pricing_tier.value | strip %}
+
+  {% for variant in product.variants %}
+    {% assign raw_prices = variant.metafields.pharmacor_discounts.custom_wholesale_price.value %}
+    {% assign wholesale_prices = raw_prices | parse_json %}
+    {% assign tier_price = blank %}
+    {% if customer_tier and wholesale_prices %}
+      {% assign tier_price = wholesale_prices[customer_tier] %}
+    {% endif %}
+
+    {% assign volume_raw = variant.metafields.pharmacor_discounts.volume_discount_tiers.value %}
+    {% assign volume_tiers = volume_raw | parse_json %}
+
+    {% if tier_price or volume_tiers.size > 0 %}
+      {% for tier in volume_tiers %}
+        {% assign base_price = variant.price | money_without_currency %}
+        {% assign discount_amount = base_price | times: tier.discountPercent | divided_by: 100 %}
+        {% assign volume_discount_price_raw = base_price | minus: discount_amount %}
+        {% assign volume_discount_price_cents = volume_discount_price_raw | times: 100 | floor %}
+        {% assign volume_discount_price = volume_discount_price_cents | divided_by: 100.0 %}
+
+        <input
+          type="hidden"
+          class="procustom{{ variant.id | handleize }} {{ variant.title | handleize }}"
+          compareprice="{{ variant.compare_at_price | money }}"
+          varienrprice="{{ variant.price | money }}"
+          varientquentity="{{ variant.inventory_quantity }}"
+          myvarientid="{{ variant.id }}"
+          varienrcompprice="{{ variant.compare_at_price | money }}"
+          customwholesaleprice="{{ tier_price }}"
+          variantprofit="
+            {% if variant.compare_at_price > variant.price %}
+              {% assign price_difference = variant.compare_at_price | minus: variant.price %}
+              {% assign profit_percentage = price_difference | times: 100.0 | divided_by: variant.compare_at_price %}
+              {{ profit_percentage | round: 2 }}%
+            {% endif %}
+          "
+          volumeqty="{{ tier.quantityThreshold }}"
+          volumediscount="{{ tier.discountPercent }}"
+          volumediscountprice="{{ volume_discount_price }}"
+        >
+      {% endfor %}
+    {% else %}
+      <input
+        type="hidden"
+        class="procustom{{ variant.id | handleize }} {{ variant.title | handleize }}"
+        compareprice="{{ variant.compare_at_price | money }}"
+        varienrprice="{{ variant.price | money }}"
+        varientquentity="{{ variant.inventory_quantity }}"
+        myvarientid="{{ variant.id }}"
+        varienrcompprice="{{ variant.compare_at_price | money }}"
+        customwholesaleprice="{{ variant.price | money }}"
+        variantprofit="
+          {% if variant.compare_at_price > variant.price %}
+            {% assign price_difference = variant.compare_at_price | minus: variant.price %}
+            {% assign profit_percentage = price_difference | times: 100.0 | divided_by: variant.compare_at_price %}
+            {{ profit_percentage | round: 2 }}%
+          {% endif %}
+        "
+        volumeqty=""
+        volumediscount=""
+        volumediscountprice=""
+      >
+    {% endif %}
+  {% endfor %}
+  {% for variant in product.variants %}
+    <input
+      type="hidden"
+      class="procustom{{ variant.id | handleize }} {{ variant.title | handleize }}"
+      compareprice="{{ variant.compare_at_price | money }}"
+      varienrprice="{{ variant.price | money }}"
+      varientquentity="{{ variant.inventory_quantity }}"
+      myvarientid="{{ variant.id }}"
+      varienrcompprice="{{ variant.compare_at_price | money }}"
+      customwholesaleprice="{{ variant.price | money }}"
+      variantprofit="
+        {% if variant.compare_at_price > variant.price %}
+          {% assign price_difference = variant.compare_at_price | minus: variant.price %}
+          {% assign profit_percentage = price_difference | times: 100.0 | divided_by: variant.compare_at_price %}
+          {{ profit_percentage | round: 2 }}%
+        {% endif %}
+      "
+      volumeqty=""
+      volumediscount=""
+      volumediscountprice=""
+    >
+  {% endfor %}
+
+  <div class="custom_product-section">
+    <div class="custom-list-image">
+      {% comment %}
+        {% assign discount_value = product.price | times: 100 | divided_by: product.compare_at_price %}
+        <span
+          class="price__discount data-wpd-hide discount-item{{ product.id }}"
+          style="display: flex!important; order: 3;"
+          data-product-price-discount
+        >
+          {{ 100 | minus: discount_value }}%
+          {% if template.name == 'collection' %}
+            <span class="off_text">Off</span>
+          {% endif %}
+        </span>
+      {% endcomment %}
+      {% assign discount_value = product.price | times: 100 | divided_by: product.compare_at_price %}
+      {% assign discount_percent = 100 | minus: discount_value | abs %}
+
+      <span
+        class="price__discount data-wpd-hide discount-item{{ product.id }}"
+        style="display:flex!important; order:3;"
+        data-product-price-discount
+      >
+        {{ discount_percent | round }}%
+        {% if template.name == 'collection' %}
+          <span class="off_text">Off</span>
+        {% endif %}
+      </span>
+      <a href="{{ product.url }}">
+        {% if product.featured_image %}
+          <img
+            src="{{ product.featured_image | image_url: width: 130 }}"
+            srcset="
+              {{ product.featured_image | image_url: width: 130 }} 130w,
+              {{ product.featured_image | image_url: width: 260 }} 260w,
+              {{ product.featured_image | image_url: width: 390 }} 390w
+            "
+            sizes="(max-width: 768px) 130px, 130px"
+            alt="{{ product.featured_image.alt | escape }}"
+            width="130"
+            height="{{ 130 | divided_by: product.featured_image.aspect_ratio | round }}"
+            style="padding:10px; width:100%;"
+          >
+        {% else %}
+          <img
+            src="{{ product.featured_image | asset_url }}"
+            width="130"
+            height="130"
+            alt="No image"
+          >
+        {% endif %}
+      </a>
+      <div
+        class="th_wl_col_btn"
+        data-product_id="{{product.id}}"
+        data-variant_id="{{product.selected_or_first_available_variant.id}}"
+      ></div>
+    </div>
+    <div class="custom-list-product-name">
+      <a href="{{ product.url }}">
+        {% assign selected_variant = product.selected_or_first_available_variant %}
+        {% assign raw_tiers = selected_variant.metafields.pharmacor_discounts.volume_discount_tiers.value %}
+        {% assign tiers = raw_tiers | parse_json %}
+        {% comment %}
+          {% if tiers and tiers.size > 0 %}
+            <span class="my-metafields">
+              MOQ Offer
+              {% assign first = true %}
+              {% for tier in tiers %}
+                {% if tier.tierName == 'All Customers' %}
+                  {% unless first %} & {% endunless %}
+                  {{ tier.quantityThreshold }}+
+                  {% assign first = false %}
+                {% endif %}
+              {% endfor %}
+            </span>
+          {% endif %}
+        {% endcomment %}
+        <div class="product-name">
+          {{ product.title }}
+        </div>
+        {% if customer %}
+          {% assign target_variant = product.selected_or_first_available_variant %}
+          {% assign target_sku = target_variant.sku %}
+          {% assign last_order_date = '' %}
+          {% assign last_order_qty = 0 %}
+          {% assign found_order = false %}
+
+          {% for order in customer.orders %}
+            {% for item in order.line_items %}
+              {% if item.sku == target_sku %}
+                {% if last_order_date == '' or order.created_at > last_order_date %}
+                  {% assign last_order_date = order.created_at %}
+                  {% assign last_order_qty = item.quantity %}
+                  {% assign found_order = true %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+
+          {% if found_order %}
+            <div class="last-order-details">
+              {% comment %}<p><strong>SKU:</strong> {{ target_sku }}</p>{% endcomment %}
+              <p><span>Last Ordered Quantity:</span> {{ last_order_qty }}</p>
+              <p><span>Last Ordered Date:</span> {{ last_order_date | date: '%B %d, %Y' }}</p>
+            </div>
+          {% else %}
+
+          {% endif %}
+        {% else %}
+
+        {% endif %}
+      </a>
+ {%- assign list_sub_enabled = product.metafields.custom.subscription_option -%}
+      {%- if list_sub_enabled == true or list_sub_enabled == 'true' -%}
+        <div class="list-subscribe-save-ui" data-row-id="{{ product.id }}">
+          <div class="sub-toggle-label">Subscribe &amp; Save</div>
+          <div class="list-subscribe-buttons">
+            <button type="button" class="list-sub-btn one_time_list active" data-value="">
+              <span class="sub-radio"></span>
+              <span>One-time purchase</span>
+            </button>
+            <button type="button" class="list-sub-btn subscribe_list" data-value="6 month + 1 month free">
+              <span class="sub-radio"></span>
+              <div>
+                <div>Subscribe &amp; save</div>
+                <div class="sub-desc">Subscribe for 6 months and we'll gift you the 7th-FREE</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {% comment %}
+        <div class="customquickview" prohandle="{{ product.handle }}" data-product-card-handle="{{ product.handle }}">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#5a9d62"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="feather feather-eye"
+          >
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </div>
+      {% endcomment %}
+    </div>
+
+    <div class="custom-list-wholesaler" data-active-values="" data-active-variant="" data-values="">
+      {% assign product_variants = product.variants | json %}
+      <script type="application/json" class="product-variants-json">
+        {{ product_variants }}
+      </script>
+   
+      {% for option in product.options_with_values %}
+        {% if forloop.index == 1 %}
+          <div class="select2-quantity-wrapper">
+        {% endif %}
+
+
+          <select
+            id="mySelect{{ forloop.index }} "
+            {% if forloop.index == 1 %}
+              style="padding-right: 0px;width: 100%;"
+            {% endif %}
+            option-name="{{ option.name | handleize }}"
+            class="custom_dropdown custom-list-wholesaler custom{{ option.name | handleize }} custom{{ customindex }} customselect customselector{{product.id}}"
+          >
+            {% for value in option.values %}
+              {% assign hide_option = false %}
+
+              {% if option.name contains 'Wholesaler' %}
+                {% assign hide_option = true %}
+                {% assign value_down = value | downcase %}
+
+                {% for item in coverage_countries %}
+                  {% assign item_down = item | downcase %}
+                  {% if item_down contains value_down %}
+                    {% assign hide_option = false %}
+                    {% break %}
+                  {% endif %}
+                {% endfor %}
+
+                {% comment %} Update hidden_value only if empty {% endcomment %}
+                {% if hidden_value == '' and hide_option == false %}
+                  {% assign hidden_value = value | handleize %}
+                {% endif %}
+              {% else %}
+                {% if hidden_value == '' %}
+                  {% assign hidden_value = value | handleize %}
+                {% endif %}
+              {% endif %}
+
+              {% unless hide_option %}
+                {% assign value_handle = value | handleize %}
+                <option
+                  class="custom{{ value_handle }}{% if hidden_value == value_handle %} is-active{% endif %}"
+                  value="{{ value_handle }}"
+                >
+                  {{ value }}
+                </option>
+              {% endunless %}
+            {% endfor %}
+          </select>
+
+     
+      <input type="hidden"
+             id="wholesaler-account"
+             name="properties[Wholesaler Account]"
+             data-value-wholesale="{{ hidden_value }}">
+      <!-- Display the selected wholesaler -->
+
+    
+
+          <!-- JS to update hidden input when dropdown changes -->
+          <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const select = document.getElementById('mySelect{{ forloop.index }}');
+            const hiddenInput = document.getElementById('wholesaler-account');
+
+            // Ensure hidden input's data-value-wholesale matches initial selected option
+            hiddenInput.dataset.valueWholesale = select.value;
+
+            // Update hidden input's data-value-wholesale whenever dropdown changes
+            select.addEventListener('change', function() {
+              hiddenInput.dataset.valueWholesale = this.value;
+            });
+          });
+          </script>
+     
+
+
+        {% if forloop.index == 1 %}
+          <div style="text-align: center;" class="custom-quantity-items"></div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if customer %}
+      <div class="custom_price-section custom-list-price">
+        {% if settings['product-price-show'] %}
+          {% if customer %}
+            {%- render 'price',
+              product: product,
+              show_unit_price: show_unit_price,
+              currency_code_enabled: currency_code_enabled,
+              simplified_view: simplified_view
+            -%}
+          {% else %}
+
+          {% endif %}
+        {% else %}
+          {%- render 'price',
+            product: product,
+            show_unit_price: show_unit_price,
+            currency_code_enabled: currency_code_enabled,
+            simplified_view: simplified_view
+          -%}
+        {% endif %}
+      </div>
+    {% else %}
+
+    {% endif %}
+
+    {% if customer %}
+      <div class="product-quantity__wrapper custom-wraoer-22">
+        {% comment %}
+          <div class="product-quantity__container text">
+            <button
+              class="product-quantity__button"
+              type="button"
+              data-quantity-decrease
+              aria-label="{{ 'products.quantity.decrease' | t: product: product.title | escape }}"
+            >
+              {% render 'icons', icon: 'minus' %}
+            </button>
+            {% comment %} {% assign form_id = 'product_form_' | append: product.id | append: '_section_' | append: section.id %} {% endcomment %}
+
+            <input
+              form="{{- form_id -}}"
+              type="number"
+              {% unless additional %}
+                name="quantity"
+              {% endunless %}
+              id="Product_{{- product.id -}}-Quantity{%- if additional -%}-additional{%- endif -%}"
+              class="product-quantity__input2"
+              value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+              min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+              max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+              step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+              data-quantity-input
+              {% if additional %}
+                data-quantity-input-additional
+              {%- endif -%}
+            >
+
+            <button
+              class="product-quantity__button"
+              type="button"
+              data-quantity-increase
+              aria-label="{{ 'products.quantity.increase' | t: product: product.title | escape }}"
+            >
+              {% render 'icons', icon: 'plus' %}
+            </button>
+          </div>
+        {% endcomment %}
+        {% comment %}{%render 'quick-add2',product:product%}{% endcomment %}
+
+        {{- extra_buttons -}}
+
+        <form method="post" action="{{ routes.cart_add_url }} " style="width:100%;">
+         <style>
+{% if template.name == "product" %}
+
+.product-section .product-quantity__wrapper form {
+	margin: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: column-reverse;
+	height: fit-content;
+}
+.product-section .product-quantity .product-quantity__wrapper {
+	display: flex;
+	align-items: baseline!important;
+	gap: 32px;
+	flex-direction: column;
+}
+
+.product-options {
+	position: relative;
+	z-index: 9999999;
+}
+
+.add_to_cart_qunatitty {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 30% 66%;
+    gap: 20px;
+}
+.product-section .product-add-to-cart__button.add-to-cart{
+width:100%;}
+span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary:before,
+span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary:after{
+display:none
+}
+
+span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary {
+  width:100% !important;
+    border: 2px solid #30623D !important;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    overflow: hidden;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 32px;
+    text-decoration: none;
+    text-transform: none;
+    transition-property: opacity, color, border, background-color;
+    transition-duration: var(--timing-base);
+    cursor: pointer;
+    font-family: Neutrif Studio;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 100%;
+    letter-spacing: .8px;
+    text-align: center;
+    background: transparent;
+    color:#30623D;
+    min-height: 56px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary:hover{
+background:#30623D;
+color:#fff;
+}
+@media only screen and (min-width: 567px){
+.product-section .product-quantity .product-quantity__wrapper {
+	gap: 32px;
+
+}
+.product-quantity .product-quantity__wrapper{flex-wrap: inherit!important;}
+.customitem .product-quantity__container{width: fit-content!important;}
+.product-section .product-quantity__container{
+	position: relative;
+
+}
+.product-section .product-add-to-cart__button.add-to-cart {
+	width: 100%;
+	margin: auto;
+	margin-right: 0;
+}
+
+}
+
+
+
+.product-section .delivery-date.showproductpage{display:flex;margin:20px 0px;flex-direction: column;gap: 10px;}
+
+{% endif %}
+
+/* ============================
+   Homepage Quantity + ATC Row
+   ============================ */
+
+/* Override the theme rule that hides ATC button inside product rows */
+.custom_product-section .homepage-qty-atc-row .product-add-to-cart__button {
+  display: flex !important;
+}
+
+/* ---- Row layout ---- */
+.homepage-qty-atc-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+/* ---- Quantity selector pill ---- */
+.custom_product-section .homepage-qty-selector {
+  display: flex;
+  align-items: center;
+  border: 2px solid #30623D;
+  border-radius: 50px;
+  overflow: hidden;
+  height: 40px;
+  flex-shrink: 0;
+  background: #fff;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.custom_product-section .homepage-qty-selector:hover {
+  border-color: #245029;
+  box-shadow: 0 2px 8px rgba(48, 98, 61, 0.15);
+}
+
+/* ---- +/- buttons ---- */
+.custom_product-section .homepage-qty-btn {
+  width: 32px;
+  height: 100%;
+  border: none !important;
+  background: transparent;
+  color: #30623D;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0;
+  line-height: 1;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.custom_product-section .homepage-qty-btn:hover {
+  background-color: #30623D;
+  color: #fff;
+}
+
+.custom_product-section .homepage-qty-btn:active {
+  background-color: #245029;
+  color: #fff;
+}
+
+/* ---- Quantity input ---- */
+.custom_product-section .homepage-qty-selector input[type="number"].homepage-qty-input {
+  width: 38px !important;
+  height: 100% !important;
+  min-height: unset !important;
+  max-height: 40px !important;
+  border: none !important;
+  border-left: 1px solid #c5d8c9 !important;
+  border-right: 1px solid #c5d8c9 !important;
+  border-radius: 0 !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #1E1E1E !important;
+  background: #fff !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
+}
+
+.custom_product-section .homepage-qty-selector input[type="number"].homepage-qty-input:focus {
+  background: #f0faf2 !important;
+}
+
+.custom_product-section .homepage-qty-selector input[type="number"].homepage-qty-input::-webkit-inner-spin-button,
+.custom_product-section .homepage-qty-selector input[type="number"].homepage-qty-input::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+/* ---- Add to Cart button ---- */
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 16px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  font-size: 13px !important;
+  margin: 0 !important;
+  white-space: nowrap;
+  border-radius: 50px;
+  border: 2px solid #30623D !important;
+  background: #30623D !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+  font-family: "Neutrif Studio", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(48, 98, 61, 0.2);
+}
+
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes:hover {
+  background: #245029 !important;
+  border-color: #245029 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(48, 98, 61, 0.35);
+  transform: translateY(-1px);
+}
+
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes:active {
+  background: #1b3c20 !important;
+  border-color: #1b3c20 !important;
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(48, 98, 61, 0.2);
+}
+
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes:before,
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes:after {
+  display: none !important;
+}
+
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  fill: #fff;
+  stroke: #fff;
+}
+
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes:hover svg {
+  fill: #fff;
+  stroke: #fff;
+}
+
+/* ---- Wrapper column sizing ---- */
+.custom_product-section .product-quantity__wrapper.custom-wraoer-22 {
+  min-width: 220px !important;
+  position: static !important;
+  top: auto !important;
+}
+
+/* ---- Responsive: mobile ---- */
+@media only screen and (max-width: 810px) {
+  .homepage-qty-atc-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .custom_product-section .homepage-qty-selector {
+    width: 100%;
+    justify-content: center;
+    max-width: 160px;
+  }
+  .custom_product-section .homepage-qty-atc-row .custom-btn-boxes {
+    width: 100%;
+    flex: unset;
+  }
+  .custom_product-section .product-quantity__wrapper.custom-wraoer-22 {
+    min-width: 160px !important;
+  }
+}
+
+/* ---- Responsive: tablet ---- */
+@media only screen and (min-width: 768px) and (max-width: 1200px) {
+  .custom_product-section .product-quantity__wrapper.custom-wraoer-22 {
+    min-width: 220px !important;
+  }
+}
+</style>
+
+{% comment %}
+  Get the selected seller from the hidden input
+{% endcomment %}
+
+
+{% assign selected_seller_handle = hidden_value | downcase | strip %}
+
+{% assign seller_account_number = '' %}
+
+{% if customer %}
+  {% assign coverage_countries = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
+
+  {% for item in coverage_countries %}
+    {% assign clean_item = item | strip %}
+    {% assign clean_item_down = clean_item | downcase %}
+
+    {% case selected_seller_handle %}
+      {% when 'symbion' %}
+        {% if clean_item_down contains 'symbion' %}
+          {% assign seller_account_number = clean_item | remove_first: 'Symbion' | remove_first: 'SYMBION' | strip %}
+          {% break %}
+        {% endif %}
+      {% when 'ch2' %}
+        {% if clean_item_down contains 'ch2' %}
+          {% assign seller_account_number = clean_item | remove_first: 'Ch2' | remove_first: 'CH2' | remove_first: 'ch2'| strip %}
+          {% break %}
+        {% endif %}
+      {% when 'sigma' %}
+        {% if clean_item_down contains 'sigma' %}
+          {% assign seller_account_number = clean_item | remove_first: 'Sigma' | remove_first: 'SIGMA' | strip %}
+          {% break %}
+        {% endif %}
+      {% when 'api' %}
+        {% if clean_item_down contains 'api' %}
+          {% assign seller_account_number = clean_item | remove_first: 'Api' | remove_first: 'API' | strip %}
+          {% break %}
+        {% endif %}
+    {% endcase %}
+  {% endfor %}
+{% endif %}
+
+
+<input type="hidden" id="wholesaler-account-number-{{ forloop.index }}" name="properties[Wholesaler Account]" value="{{ seller_account_number }}">
+
+{% comment %}
+  Step 3: Output hidden inputs with the correct number
+{% endcomment %}
+<input type="hidden" name="properties[Wholesaler Account No.1]" value="{% if selected_seller_handle contains 'api' %}{{ seller_account_number }}{% endif %}" class="API">
+<input type="hidden" name="properties[Wholesaler Account No.2]" value="{% if selected_seller_handle contains 'sigma' %}{{ seller_account_number }}{% endif %}" class="Sigma">
+<input type="hidden" name="properties[Wholesaler Account No.3]" value="{% if selected_seller_handle contains 'symbion' %}{{ seller_account_number }}{% endif %}" class="Symbion">
+<input type="hidden" name="properties[Wholesaler Account No.4]" value="{% if selected_seller_handle contains 'ch2' %}{{ seller_account_number }}{% endif %}" class="Ch2">
+<input type="hidden" name="properties[Order Date]" value="">
+<input type="hidden" id="wholesaler-account-number" name="properties[Wholesaler Account]" value="{{ seller_account_number }}">
+        <input id="my-variant-profit" type="hidden" name="properties[Saving Per Item]" class="itemperdiscount" value="">
+<input id="" type="hidden" name="properties[Wholesaler Account No.]" value="">
+<style>
+  .list-subscribe-save-ui {
+    margin-top: 8px;
+  }
+  .list-subscribe-save-ui .sub-toggle-label {
+    font-size: 13px !important;
+    font-weight: 700;
+    color: #30623D;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+        text-align: left;
+  }
+  .list-subscribe-save-ui .list-sub-btn.active .sub-desc {
+    color: #fff;
+}
+  .list-subscribe-save-ui .list-subscribe-buttons {
+    display: flex;
+    {% comment %} flex-direction: column; {% endcomment %}
+    gap: 4px;
+  }
+  .list-subscribe-buttons span, .list-subscribe-buttons div {
+    font-size: 13px !important;
+}
+  .list-subscribe-save-ui .list-sub-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 50px !important;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.3;
+    width: 100%;
+  }
+  .list-subscribe-save-ui .list-sub-btn.active {
+    border-color: #2d9f54;
+    background:#2d9f54;
+    color: #fff;
+  }
+  .list-subscribe-save-ui .list-sub-btn .sub-radio {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 1.5px solid #aaa;
+    flex-shrink: 0;
+  }
+  .list-subscribe-save-ui .list-sub-btn.active .sub-radio {
+    border-color: #30623D;
+    background: #30623D;
+    box-shadow: inset 0 0 0 3px #fff;
+  }
+  .list-subscribe-save-ui .sub-desc {
+    font-size: 10px;
+    color: #888;
+    line-height: 1.2;
+    margin-top: 1px;
+  }
+  .list-subscribe-save-ui .list-sub-btn.active .sub-desc {
+    color: #fff;
+  }
+</style>
+{%- assign list_sub_enabled = product.metafields.custom.subscription_option -%}
+{%- if list_sub_enabled == true or list_sub_enabled == 'true' -%}
+  <input type="hidden" name="properties[subscription]" class="list-subscription-input" data-row-id="{{ product.id }}" value="">
+{%- endif -%}
+
+{% liquid
+  assign section_contains_quantity_block = false
+  assign gift_card_recipient_feature_active = false
+
+  if product.gift_card? and block.settings.show_gift_card_recipient
+    assign gift_card_recipient_feature_active = true
+  endif
+
+  assign button_type = block.settings.button_type
+%}
+
+{% if gift_card_recipient_feature_active %}
+  {%- assign gift_card_recipient_control_flag = 'properties[__shopify_send_gift_card_to_recipient]' -%}
+
+  <div class="recipient-form">
+    <div class="recipient-form__checkbox-field">
+      <input
+        id="Recipient-checkbox-{{ section.id }}"
+        class="checkbox recipient-form__checkbox js-recipient-form-checkbox"
+        type="checkbox"
+        name="{{ gift_card_recipient_control_flag }}"
+        disabled
+      >
+
+      <label for="Recipient-checkbox-{{ section.id }}" class="checkbox-label">
+        <span class="checkbox-label__box "></span>
+        {{ 'products.product.recipient.form.checkbox' | t }}
+      </label>
+    </div>
+
+    <div class="recipient-form__fields is-hidden js-recipient-form-fields">
+      <div class="recipient-form__field">
+        <label class="label-input" for="Recipient-email-{{ section.id }}">
+          <span class="recipient-form__label-normal">{{ 'products.product.recipient.form.email_label' | t }}</span>
+          <span class="recipient-form__label-no-js">
+            {{- 'products.product.recipient.form.email_label_optional_for_no_js_behavior' | t -}}
+          </span>
+        </label>
+
+        <input
+          class="input js-recipient-form-field"
+          id="Recipient-email-{{ section.id }}"
+          type="email"
+          placeholder="Recipient email"
+          name="properties[Recipient email]"
+          value="{{ form.email }}"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="RecipientForm-email-error-{{ section.id }}"
+          {% endif %}
+        >
+
+        <div
+          id="RecipientForm-email-error-{{ section.id }}"
+          class="error js-form-error{% unless form.errors contains 'email' %} is-hidden{% endunless %}"
+        >
+          {%- if form.errors contains 'email' -%}
+            {{ form.errors.messages.email }}.
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="recipient-form__field">
+        <label class="label-input" for="Recipient-name-{{ section.id }}">
+          {{- 'products.product.recipient.form.name_label' | t -}}
+        </label>
+
+        <input
+          class="input js-recipient-form-field"
+          autocomplete="name"
+          type="text"
+          id="Recipient-name-{{ section.id }}"
+          name="properties[Recipient name]"
+          placeholder="{{ 'products.product.recipient.form.name' | t }}"
+          value="{{ form.name }}"
+          {% if form.errors contains 'name' %}
+            aria-invalid="true"
+            aria-describedby="RecipientForm-name-error-{{ section.id }}"
+          {% endif %}
+        >
+
+        <div
+          id="RecipientForm-name-error-{{ section.id }}"
+          class="error js-form-error {% unless form.errors contains 'name' %} is-hidden{% endunless %}"
+        >
+          {%- if form.errors contains 'name' -%}
+            {{ form.errors.messages.name }}.
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="recipient-form__field">
+        {%- assign max_chars_message = 200 -%}
+        {%- assign max_chars_message_rendered = 'products.product.recipient.form.max_characters'
+          | t: max_chars: max_chars_message
+        -%}
+        {%- assign message_label_rendered = 'products.product.recipient.form.message_label' | t -%}
+
+        <label class="label-input" for="Recipient-message-{{ section.id }}">
+          {{ message_label_rendered }}
+        </label>
+
+        <textarea
+          rows="10"
+          id="Recipient-message-{{ section.id }}"
+          class="recipient-form__textarea input js-recipient-form-field"
+          name="properties[Message]"
+          maxlength="{{ max_chars_message }}"
+          placeholder="{{ 'products.product.recipient.form.message' | t }}"
+          aria-label="Max characters 200"
+          {% if form.errors contains 'message' %}
+            aria-invalid="true"
+            aria-describedby="RecipientForm-message-error-{{ section.id }}"
+          {% endif %}
+        >{{- form.message -}}</textarea>
+
+        <div class="recipient-form__input-info">{{ max_chars_message_rendered }}</div>
+
+        <div
+          id="RecipientForm-message-error-{{ section.id }}"
+          class="error js-form-error{% unless form.errors contains 'message' %} is-hidden{% endunless %}"
+        >
+          {%- if form.errors contains 'message' -%}
+            {{ form.errors.messages.message }}.
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="recipient-form__field">
+        <label class="label-input" for="Recipient-send_on-{{ section.id }}">
+          {{ 'products.product.recipient.form.send_on_label' | t }}
+        </label>
+
+        <input
+          class="input js-recipient-form-field"
+          autocomplete="off"
+          type="date"
+          id="Recipient-send_on-{{ section.id }}"
+          name="properties[Send on]"
+          pattern="\d{4}-\d{2}-\d{2}"
+          value="{{ form.send_on }}"
+          {% if form.errors contains 'send_on' %}
+            aria-invalid="true"
+            aria-describedby="RecipientForm-send_on-error-{{ section.id }}"
+          {% endif %}
+        >
+
+        <div
+          id="RecipientForm-send_on-error-{{ section.id }}"
+          class="error js-form-error {% unless form.errors contains 'send_on' %} is-hidden{% endunless %}"
+        >
+          {%- if form.errors contains 'send_on' -%}
+            {{ form.errors.messages.send_on }}.
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <input
+      type="hidden"
+      name="{{ gift_card_recipient_control_flag }}"
+      value="if_present"
+      id="Recipient-control-{{ section.id }}"
+      class="js-recipient-form-no-js-control"
+    >
+
+    <input
+      type="hidden"
+      name="properties[__shopify_offset]"
+      value=""
+      id="Recipient-timezone-offset-{{ section.id }}"
+      class="js-recipient-form-timezone-offset"
+    >
+  </div>
+{% endif %}
+{% comment %}
+   {% if product.template_suffix == 'pre-order' %}
+  	<input type="hidden" name="properties[_Pre-order]" value="true">
+  {% endif %}
+{% endcomment %}
+
+
+  
+
+  <input type="hidden" name="id" class="my-add-to-cart-value custom-idd" value="{{ product.variants.first.id }}">
+<div class="homepage-qty-atc-row">
+  <div class="homepage-qty-selector">
+    <button
+      class="homepage-qty-btn homepage-qty-decrease"
+      type="button"
+      aria-label="Decrease quantity"
+    >
+      &minus;
+    </button>
+
+    <input
+      class="homepage-qty-input custom-class-quantity"
+      type="number"
+      name="quantity"
+      value="1"
+      min="1"
+      step="1"
+      aria-label="Quantity"
+    >
+
+    <button
+      class="homepage-qty-btn homepage-qty-increase"
+      type="button"
+      aria-label="Increase quantity"
+    >
+      &plus;
+    </button>
+  </div>
+
+  <span
+    class="
+      custom-btn-boxes product-add-to-cart__button add-to-cart button button--block button--{{- button_type -}}
+    "
+    {% if product.template_suffix == 'pre-order' %}
+      data-preorder
+    {% endif %}
+  >
+    {%- render 'icons', icon: 'cart' -%}
+
+    <span class="js-product-add-to-cart-button-text">
+      {% if product.first_available_variant.available %}
+        {% if product.template_suffix == 'pre-order' %}
+          {{- 'products.product.pre_order' | t -}}
+        {% else %}
+          {{- 'products.product.add_to_cart' | t -}}
+        {% endif %}
+      {% else %}
+        {{- 'products.product.sold_out' | t -}}
+      {% endif %}
+    </span>
+  </span>
+</div>
+{% comment %}
+  <button
+  	type="submit"
+  	class="custom-btn-boxes product-add-to-cart__button add-to-cart button button--block button--{{- button_type -}}
+  			{% unless product.first_available_variant.available %}
+  				disabled
+  			{% endunless %}
+  		"
+  	{% unless product.first_available_variant.available %}
+  		disabled
+  	{% endunless %}
+  	{% if product.template_suffix == 'pre-order' %}
+  		data-preorder
+  	{% endif %}
+  >
+  	{%- render 'icons', icon: 'cart' -%}
+
+  	<span class="js-product-add-to-cart-button-text">
+  		{% if product.first_available_variant.available %}
+  			{% if product.template_suffix == 'pre-order' %}
+  				{{- 'products.product.pre_order' | t -}}
+  			{% else %}
+  				{{- 'products.product.add_to_cart' | t -}}
+  			{% endif %}
+  		{% else %}
+  			{{- 'products.product.sold_out' | t -}}
+  		{% endif %}
+  	</span>
+  </button>
+{% endcomment %}
+{% comment %}
+  {% render 'custom-product-quantity', block: block, product: product, show_label: true %}
+{% endcomment %}
+{% if block.settings.show_additional_buttons %}
+  <div class="product-add-to-cart__additional-buttons">
+    {{- form | payment_button -}}
+  </div>
+{% endif %}
+{% if customer %}
+  {% for address in customer.addresses %}
+    <!-- <p style="" class="custom-address-1">{{ customer.tags | join: ', ' }}</p> -->
+    <div class="my-cusotm-tag-main">
+      {% for tag in customer.tags %}
+        <span class="customer-tag custom-address-1" style="position: absolute; opacity: 0;">{{ tag | handleize }}</span>
+      {% endfor %}
+    </div>
+  {% endfor %}
+  <style>
+    {% if template.name == 'product' %}
+    /* .product-inventory-status{display: none;} */
+      {% endif %}
+  </style>
+{% endif %}
+
+
+
+
+        </form>
+      </div>
+    {% endif %}
+    {% if customer %}
+      <form method="post" action="{{ routes.cart_add_url }} " style="width:0%;display: none;">
+        <input
+          type="hidden"
+          name="properties[Wholesaler Account No.1]"
+          value="{% if selected_seller_handle contains 'api' %}{{ seller_account_number }}{% endif %}"
+          class="API"
+        >
+
+        <input
+          type="hidden"
+          name="properties[Wholesaler Account No.2]"
+          value="{% if selected_seller_handle contains 'sigma' %}{{ seller_account_number }}{% endif %}"
+          class="Sigma"
+        >
+        <input
+          type="hidden"
+          name="properties[Wholesaler Account No.3]"
+          value="{% if selected_seller_handle contains 'symbion' %}{{ seller_account_number }}{% endif %}"
+          class="Symbion"
+        >
+        <input
+          type="hidden"
+          name="properties[Wholesaler Account No.4]"
+          value="{% if selected_seller_handle contains 'ch2' %}{{ seller_account_number }}{% endif %}"
+          class="Ch2"
+        >
+        <input id="my-variant-profit" type="hidden" name="properties[Saving Per Item]" class="itemperdiscount" value="">
+        <input type="hidden" name="id" class="my-add-to-cart-value custom-idd" value="{{ product.variants.first.id }}">
+        <input min="1" type="hidden" class="add-to-card-input custom-quantity" id="quantity" name="quantity" value="1">
+      </form>
+    {% else %}
+      <div class="more_info">More Info</div>
+    {% endif %}
+    {% comment %}
+      <div class="custom_more-info custom-list-product-info" style="color: #000;">More info</div>
+    {% endcomment %}
+  </div>
+</div>

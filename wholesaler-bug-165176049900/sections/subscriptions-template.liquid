@@ -1,0 +1,702 @@
+{% comment %} {%- comment -%}
+------------------------------------------------------------------------------
+	Section: Addresses template
+------------------------------------------------------------------------------
+{%- endcomment -%}
+{%- style -%}
+  .addresses__user-buttons .addresses__return {
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+    font-size: calc(var(--body-font-size)* .875);
+    line-height: 1.286;
+    color: var(--color-text-primary);
+    text-decoration: none;
+}
+.addresses__user-buttons .addresses__button-link {
+    padding: 4px 0;
+    font-size: calc(var(--body-font-size)* .875);
+    line-height: 1.286;
+    border: none;
+}
+.addresses__user-buttons .addresses__return svg {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    transition: transform .3s ease;
+}
+.pause-btn {
+    background-color: #5a9d62;
+    color: #FFF;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 32px;
+  }
+.cancel-btn {
+    background-color: #333;
+    color: #FFF;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 32px;
+}
+.subscriptions .dt-layout-cell.dt-layout-full {
+    width: 100%;
+    overflow: auto;
+}
+.quantity-conatiner {
+  display: flex;
+}
+.quantity-conatiner .qty-input {
+  width: 50px;
+  text-align: center;
+  min-height: 0px;
+  padding: 0px;
+}
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-top: 2px solid #333;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+{%- endstyle -%}
+<div class="addresses__user-buttons" style="width: 80%; margin: auto;">
+	<a class="focus-visible-outline addresses__return" href="/account" aria-label="Return to account details">
+
+    <svg class="icon" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.57 5.92969L3.5 11.9997L9.57 18.0697" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M20.4999 12H3.66992" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+	
+    <span class="button-link addresses__button-link">Return to account details</span>
+	</a>
+</div>
+
+<div class="account__row1 subscriptions" style="width: 80%; margin: auto;">
+  <div class="account__col1">
+    {% if customer %}
+      {% assign subscriptions = customer.metafields.membership.subscription_orders.value %} 
+      {% assign parsed_subscriptions= subscriptions | json_parse %}
+       <table id="subscriptionTable" class="display responsive nowrap">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Start Date</th>
+            <th>Next Billing</th>
+            <th>Next Free Month</th>
+            <th>Status</th>
+            <th>Count</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in parsed_subscriptions %}
+             {% if item.status != 'cancel' %}
+              {% assign parts = item.title | split: "-" %}
+              {% assign id = parts[1] %}
+              {% assign variant_id = parts[2] %}
+              {% assign line_item_id = parts[3] %}
+
+    {% assign start_date = item.current_date | date: "%Y-%m-%d" %}
+{% assign start_year = start_date | slice: 0, 4 | plus: 0 %}
+{% assign start_month = start_date | slice: 5, 2 | plus: 0 %}
+{% assign start_day = start_date | slice: 8, 2 %}
+
+{% assign count = item.count | plus: 0 %}
+
+{%- comment -%}
+ We will start counting upcoming orders from NEXT month (compare with current month).
+ next_order_number = count + 1 (the next order to be scheduled)
+ We iterate months from (today_month + 1) forward and find the first order number that is a multiple of 7.
+{%- endcomment -%}
+
+{% assign today = 'now' | date: "%Y-%m-%d" %}
+{% assign today_year = today | slice: 0, 4 | plus: 0 %}
+{% assign today_month = today | slice: 5, 2 | plus: 0 %}
+
+{% assign first_month = today_month | plus: 1 %}
+{% assign first_year = today_year %}
+{% if first_month > 12 %}
+  {% assign first_month = first_month | minus: 12 %}
+  {% assign first_year = first_year | plus: 1 %}
+{% endif %}
+
+{% assign next_order_number = count | plus: 1 %}
+
+{%- comment -%}
+ Loop a safe number of months ahead (e.g., 60) until we find the next order number that is a multiple of 7.
+{%- endcomment -%}
+{% assign next_free_date = start_date %}
+{% for i in (0..60) %}
+  {% assign current_month_index = first_month | plus: i %}
+  {% assign added_years = current_month_index | divided_by: 12 %}
+  {% assign final_month = current_month_index | modulo: 12 %}
+  {% if final_month == 0 %}
+    {% assign final_month = 12 %}
+    {% assign added_years = added_years | minus: 1 %}
+  {% endif %}
+  {% assign year = first_year | plus: added_years %}
+
+  {% assign order_number = next_order_number | plus: i %}
+
+  {% assign mod = order_number | modulo: 7 %}
+{% if mod == 0 %}
+  {% assign month_str = final_month | prepend: "0" | slice: -2, 2 %}
+  {% assign next_free_date = year | append: "-" | append: month_str | append: "-" | append: start_day %}
+  {% break %}
+{% endif %}
+
+{% endfor %}
+{% comment %} 
+{% for n in (1..20) %}
+  {% assign months_to_add = i | times: 7 %}
+  {% assign total_months = start_month | plus: months_to_add %}
+  {% assign added_years = total_months | divided_by: 12 %}
+  {% assign final_month = total_months | modulo: 12 %}
+  {% if final_month == 0 %}
+    {% assign final_month = 12 %}
+    {% assign added_years = added_years | minus: 1 %}
+  {% endif %}
+
+  {% assign new_year = start_year | plus: added_years %}
+  {% assign new_month = final_month %}
+  {% assign month_str = new_month | prepend: "0" | slice: -2, 2 %}
+  {% assign trial_date = new_year | append: "-" | append: month_str | append: "-" | append: start_day %}
+
+  {% if trial_date > today %}
+    {% assign next_free_date = trial_date %}
+    {% break %}
+  {% endif %}
+
+  {% assign i = i | plus: 1 %}
+{% endfor %} {% endcomment %}
+
+              <tr>
+                <td>{% if item.product_title!=blank %} {{ item.product_title }} {% endif %}</td>
+                <td>{{ item.current_date }}</td>
+                <td>{{ item.next_billing }}</td>
+                <td>{{ next_free_date }}</td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.count }}</td>
+                <td>
+                  <div class="quantity-conatiner">
+                       <button type="button" onclick="decreaseQuantity({{ forloop.index0 }}, '{{ id }}')">-</button>
+                       <input type="number" class="qty-input" id="qty-{{ forloop.index0 }}" value="{{ item.quantity | default: 1 }}" min="1">
+                       <button type="button" onclick="increaseQuantity({{ forloop.index0 }}, '{{ id }}')">+</button>
+                       <button type="button" class="pause-btn" onclick="updateQuantity({{ forloop.index0 }}, '{{ item.status }}', '{{ variant_id }}', '{{ id }}', '{{ line_item_id }}')">Update</button>
+                  </div>
+                </td>
+                <td>
+                  {% if item.status == 'ACTIVE' or item.status == 'active' %}
+                    <button class="pause-btn" onclick="handlePause('{{ id }}', '{{ variant_id }}', '{{ item.quantity }}', '{{ line_item_id }}')">Pause</button>
+                  {% else %}
+                    <button class="pause-btn" onclick="handleActivate('{{ id }}', '{{ variant_id }}', '{{ item.quantity }}', '{{ line_item_id }}')">Activate</button>
+                  {% endif %}
+                  <button class="cancel-btn" onclick="handleCancel('{{ id }}', '{{ variant_id }}', '{{ item.quantity }}', '{{ line_item_id }}')">Cancel</button>
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    {% elsif request.path != '/account/login' %}
+      <!-- Redirect to login if not already there -->
+      <script>
+        window.location.href = "/account/login?return_url={{ request.path }}";
+      </script>
+    {% endif %}
+  </div>
+</div>
+<script>
+  let table = new DataTable('#subscriptionTable', {
+    searching: false,   // disables the search box
+    ordering: false,     // disables column sorting
+    lengthChange: false   // hides "Show X entries" dropdown
+  });
+  async function updateSubscriptionStatus(subscriptionId, newStatus, variant_id, quantity, line_item_id) {
+    const customerId = "{{ customer.id }}";
+    try {
+      const queryParams = new URLSearchParams({
+        customerId: customerId,
+        subscriptionId: subscriptionId,
+        newStatus: newStatus,
+        variantId: variant_id,
+        quantity: quantity,
+        line_item_id: line_item_id
+      }).toString();
+
+      //console.log("queryParams",queryParams);
+      //return;
+
+      const response = await fetch(`https://custom-subscription-zs2fg.ondigitalocean.app/api/update_subscription?${queryParams}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        console.log("success");
+        // Optionally refresh table or status
+        location.reload();
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      console.error("Error updating subscription:", error);
+      alert("Failed to update subscription.");
+    }
+  }
+
+  function handlePause(id,variant_id,quantity,line_item_id) {
+    //console.log("Pause clicked for ID:", id);
+    // Get the update button
+    const updateBtn = event.target;
+    updateBtn.disabled = true; // Disable the button
+    const originalText = updateBtn.textContent;
+    updateBtn.innerHTML = `${originalText} <span class="spinner"></span>`;
+    updateSubscriptionStatus(id, 'PAUSE', variant_id, quantity,line_item_id);
+  }
+
+  function handleActivate(id,variant_id,quantity,line_item_id){
+    //console.log("Active clicked for ID:", id);
+    // Get the update button
+    const updateBtn = event.target;
+    updateBtn.disabled = true; // Disable the button
+    const originalText = updateBtn.textContent;
+    updateBtn.innerHTML = `${originalText} <span class="spinner"></span>`;
+    updateSubscriptionStatus(id, 'ACTIVE', variant_id, quantity,line_item_id);
+  }
+
+  function handleCancel(id,variant_id,quantity,line_item_id) {
+    //console.log("Cancel clicked for ID:", id);
+    // Get the update button
+    const updateBtn = event.target;
+    updateBtn.disabled = true; // Disable the button
+    const originalText = updateBtn.textContent;
+    updateBtn.innerHTML = `${originalText} <span class="spinner"></span>`;
+    updateSubscriptionStatus(id, 'cancel', variant_id, quantity,line_item_id);
+  }
+
+  function decreaseQuantity(index, id) {
+    const input = document.getElementById('qty-' + index);
+    let value = parseInt(input.value) || 1;
+    if (value > 1) {
+      input.value = value - 1;
+    }
+  }
+  
+  function increaseQuantity(index, id) {
+    const input = document.getElementById('qty-' + index);
+    let value = parseInt(input.value) || 1;
+    input.value = value + 1;
+  }
+  function updateQuantity(index, status, variant_id, id, line_item_id) {
+    const input = document.getElementById('qty-' + index);
+    const quantity = parseInt(input.value) || 1;
+
+    // Get the update button
+    const updateBtn = event.target;
+    updateBtn.disabled = true; // Disable the button
+    const originalText = updateBtn.textContent;
+    updateBtn.innerHTML = `${originalText} <span class="spinner"></span>`;
+    
+    //console.log("Updating quantity...");
+    //console.log("index:", index);
+    //console.log("Variant ID:", variant_id);
+    //console.log("Status:", status);
+    //console.log("Quantity:", quantity);
+    //console.log("line_item_id:", line_item_id);
+   
+    // Example: Call your update function or API
+    updateSubscriptionStatus(id, status, variant_id, quantity, line_item_id);
+  }
+</script>
+{% schema %}
+{
+	"name": "Subscriptions template",
+    "presets": [
+		{
+			"name": "Subscriptions template"
+        }
+    ]
+}
+{%- endschema -%} {% endcomment %}
+
+
+
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Addresses template
+------------------------------------------------------------------------------
+{%- endcomment -%}
+{%- style -%}
+.account__row1.subscriptions {
+    padding-bottom: 50px;
+}
+  .addresses__user-buttons .addresses__return {
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+    font-size: calc(var(--body-font-size)* .875);
+    line-height: 1.286;
+    color: var(--color-text-primary);
+    text-decoration: none;
+}
+.addresses__user-buttons .addresses__button-link {
+    padding: 4px 0;
+    font-size: calc(var(--body-font-size)* .875);
+    line-height: 1.286;
+    border: none;
+}
+.addresses__user-buttons .addresses__return svg {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    transition: transform .3s ease;
+}
+.pause-btn {
+    background-color: #5a9d62;
+    color: #FFF;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 32px;
+  }
+.cancel-btn {
+    background-color: #333;
+    color: #FFF;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 32px;
+}
+.subscriptions .dt-layout-cell.dt-layout-full {
+    width: 100%;
+    overflow: auto;
+}
+.quantity-conatiner {
+  display: flex;
+}
+.quantity-conatiner .qty-input {
+  width: 50px;
+  text-align: center;
+  min-height: 0px;
+  padding: 0px;
+}
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-top: 2px solid #333;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+input.datePicker {
+    font-weight: normal;
+   min-height: 42px !important;
+    padding: 4px 10px;
+    width:155px;
+    display:flex;
+}
+@media only screen and (max-width:767px){
+  input.datePicker{
+    width:145px;
+  }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+{%- endstyle -%}
+<div class="addresses__user-buttons" style="width: 80%; margin: auto;">
+	<a class="focus-visible-outline addresses__return" href="/account" aria-label="Return to account details">
+
+    <svg class="icon" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.57 5.92969L3.5 11.9997L9.57 18.0697" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M20.4999 12H3.66992" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+	
+    <span class="button-link addresses__button-link">Return to account details</span>
+	</a>
+</div>
+
+<div class="account__row1 subscriptions" style="width: 80%; margin: auto;">
+  <div class="account__col1">
+    {% if customer %}
+      {% assign subscriptions = customer.metafields.membership.subscription_orders.value %} 
+      {% assign parsed_subscriptions= subscriptions | json_parse %}
+       <table id="subscriptionTable" class="display responsive nowrap">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Start Date</th>
+            <th>Next Billing</th>
+            <th>Next Free Month</th>
+            <th>Status</th>
+            <th>Count</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in parsed_subscriptions %}
+             {% if item.status != 'cancel' %}
+              {% assign parts = item.title | split: "-" %}
+              {% assign id = parts[1] %}
+              {% assign variant_id = parts[2] %}
+              {% assign line_item_id = parts[3] %}
+
+    {% assign start_date = item.current_date | date: "%Y-%m-%d" %}
+{% assign start_year = start_date | slice: 0, 4 | plus: 0 %}
+{% assign start_month = start_date | slice: 5, 2 | plus: 0 %}
+{% assign start_day = start_date | slice: 8, 2 %}
+
+{% assign count = item.count | plus: 0 %}
+
+{%- comment -%}
+ We will start counting upcoming orders from NEXT month (compare with current month).
+ next_order_number = count + 1 (the next order to be scheduled)
+ We iterate months from (today_month + 1) forward and find the first order number that is a multiple of 7.
+{%- endcomment -%}
+{% assign next_billing_date = item.next_billing | date: "%Y-%m-%d" %}
+{% assign billing_year = next_billing_date | slice: 0, 4 | plus: 0 %}
+{% assign billing_month = next_billing_date | slice: 5, 2 | plus: 0 %}
+{% assign billing_day = next_billing_date | slice: 8, 2 %}
+
+{% assign remainder = count | modulo: 6 %}
+
+{% if remainder == 0 %}
+  {% assign months_to_add = 6 %}
+{% else %}
+  {% assign months_to_add = 6 | minus: remainder %}
+{% endif %}
+
+{% assign total_months = billing_month | plus: months_to_add %}
+{% assign added_years = total_months | divided_by: 12 %}
+{% assign final_month = total_months | modulo: 12 %}
+
+{% if final_month == 0 %}
+  {% assign final_month = 12 %}
+  {% assign added_years = added_years | minus: 1 %}
+{% endif %}
+
+{% assign final_year = billing_year | plus: added_years %}
+{% assign month_str = final_month | prepend: "0" | slice: -2, 2 %}
+
+{% assign next_free_date = final_year | append: "-" | append: month_str | append: "-" | append: billing_day %}
+
+{% comment %} 
+{% for n in (1..20) %}
+  {% assign months_to_add = i | times: 7 %}
+  {% assign total_months = start_month | plus: months_to_add %}
+  {% assign added_years = total_months | divided_by: 12 %}
+  {% assign final_month = total_months | modulo: 12 %}
+  {% if final_month == 0 %}
+    {% assign final_month = 12 %}
+    {% assign added_years = added_years | minus: 1 %}
+  {% endif %}
+
+  {% assign new_year = start_year | plus: added_years %}
+  {% assign new_month = final_month %}
+  {% assign month_str = new_month | prepend: "0" | slice: -2, 2 %}
+  {% assign trial_date = new_year | append: "-" | append: month_str | append: "-" | append: start_day %}
+
+  {% if trial_date > today %}
+    {% assign next_free_date = trial_date %}
+    {% break %}
+  {% endif %}
+
+  {% assign i = i | plus: 1 %}
+{% endfor %} {% endcomment %}
+
+              <tr>
+                <td>{% if item.product_title!=blank %} {{ item.product_title }} {% endif %}- ({% if item.variant_title!=blank %} {{ item.variant_title }} {% endif %})</td>
+                <td>{{ item.current_date }}</td>
+                {% comment %} <td>{{ item.next_billing }}</td> {% endcomment %}
+                <td>
+                  <input type="date" value="{{ item.next_billing }}" id="next-{{ forloop.index0 }}" class="datePicker">
+                  </td>
+                <td>{{ next_free_date }}</td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.count }}</td>
+                <td>
+                  <div class="quantity-conatiner">
+                       <button type="button" onclick="decreaseQuantity({{ forloop.index0 }}, '{{ id }}')">-</button>
+                       <input type="number" class="qty-input" id="qty-{{ forloop.index0 }}" value="{{ item.quantity | default: 1 }}" min="1">
+                       <button type="button" onclick="increaseQuantity({{ forloop.index0 }}, '{{ id }}')">+</button>
+                       <button type="button" class="pause-btn" onclick="updateQuantity({{ forloop.index0 }}, '{{ item.status }}', '{{ variant_id }}', '{{ id }}', '{{ line_item_id }}', '{{ item.next_billing }}')">Update</button>
+                  </div>
+                </td>
+                <td>
+                  {% if item.status == 'ACTIVE' or item.status == 'active' %}
+                    <button class="pause-btn" onclick="handlePause('{{ id }}', '{{ variant_id }}', '{{ item.quantity }}', '{{ line_item_id }}' , '{{ item.next_billing }}')">Pause</button>
+                  {% else %}
+                    <button class="pause-btn" onclick="handleActivate('{{ id }}', '{{ variant_id }}', '{{ item.quantity }}', '{{ line_item_id }}', '{{ item.next_billing }}')">Activate</button>
+                  {% endif %}
+                  <button class="cancel-btn" onclick="handleCancel('{{ id }}', '{{ variant_id }}', '{{ item.quantity }}', '{{ line_item_id }}', '{{ item.next_billing }}')">Cancel</button>
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    {% elsif request.path != '/account/login' %}
+      <!-- Redirect to login if not already there -->
+      <script>
+        window.location.href = "/account/login?return_url={{ request.path }}";
+      </script>
+    {% endif %}
+  </div>
+</div>
+<script>
+  let table = new DataTable('#subscriptionTable', {
+    searching: false,   // disables the search box
+    ordering: false,     // disables column sorting
+    lengthChange: false   // hides "Show X entries" dropdown
+  });
+  async function updateSubscriptionStatus(subscriptionId, newStatus, variant_id, quantity, line_item_id ,next_billing) {
+    const customerId = "{{ customer.id }}";
+    try {
+      const queryParams = new URLSearchParams({
+        customerId: customerId,
+        subscriptionId: subscriptionId,
+        newStatus: newStatus,
+        variantId: variant_id,
+        quantity: quantity,
+        line_item_id: line_item_id,
+        next_billing:next_billing
+      }).toString();
+
+      //console.log("queryParams",queryParams);
+      //return;
+
+      const response = await fetch(`https://custom-subscription-zs2fg.ondigitalocean.app/api/update_subscription?${queryParams}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        console.log("success");
+        // Optionally refresh table or status
+        location.reload();
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      console.error("Error updating subscription:", error);
+      alert("Failed to update subscription.");
+    }
+  }
+
+  function handlePause(id,variant_id,quantity,line_item_id ,next_billing) {
+    //console.log("Pause clicked for ID:", id);
+    // Get the update button
+    const updateBtn = event.target;
+    updateBtn.disabled = true; // Disable the button
+    const originalText = updateBtn.textContent;
+    updateBtn.innerHTML = `${originalText} <span class="spinner"></span>`;
+    updateSubscriptionStatus(id, 'PAUSE', variant_id, quantity,line_item_id,next_billing);
+  }
+
+  function handleActivate(id,variant_id,quantity,line_item_id, next_billing){
+    //console.log("Active clicked for ID:", id);
+    // Get the update button
+    const updateBtn = event.target;
+    updateBtn.disabled = true; // Disable the button
+    const originalText = updateBtn.textContent;
+    updateBtn.innerHTML = `${originalText} <span class="spinner"></span>`;
+    updateSubscriptionStatus(id, 'ACTIVE', variant_id, quantity,line_item_id,next_billing);
+  }
+
+  function handleCancel(id,variant_id,quantity,line_item_id,next_billing) {
+    //console.log("Cancel clicked for ID:", id);
+    // Get the update button
+    const updateBtn = event.target;
+    updateBtn.disabled = true; // Disable the button
+    const originalText = updateBtn.textContent;
+    updateBtn.innerHTML = `${originalText} <span class="spinner"></span>`;
+    updateSubscriptionStatus(id, 'cancel', variant_id, quantity,line_item_id,next_billing);
+  }
+
+  function decreaseQuantity(index, id) {
+    const input = document.getElementById('qty-' + index);
+    let value = parseInt(input.value) || 1;
+    if (value > 1) {
+      input.value = value - 1;
+    }
+  }
+  
+  function increaseQuantity(index, id) {
+    const input = document.getElementById('qty-' + index);
+    let value = parseInt(input.value) || 1;
+    input.value = value + 1;
+  }
+  function updateQuantity(index, status, variant_id, id, line_item_id , next_billing) {
+    const input = document.getElementById('qty-' + index);
+    const quantity = parseInt(input.value) || 1;
+
+    const input_next = document.getElementById('next-' + index);
+    const new_next_billing = input_next.value;
+    // Get the update button
+    const updateBtn = event.target;
+    updateBtn.disabled = true; // Disable the button
+    const originalText = updateBtn.textContent;
+    updateBtn.innerHTML = `${originalText} <span class="spinner"></span>`;
+    
+    //console.log("Updating quantity...");
+    //console.log("index:", index);
+    //console.log("Variant ID:", variant_id);
+    //console.log("Status:", status);
+    //console.log("Quantity:", quantity);
+   
+    // Example: Call your update function or API
+    updateSubscriptionStatus(id, status, variant_id, quantity, line_item_id , new_next_billing);
+  }
+</script>
+<script>
+  const dateInputs = document.querySelectorAll(".datePicker");
+
+  // Local today (no timezone issue)
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
+  dateInputs.forEach(input => {
+    input.min = todayStr;
+
+    input.addEventListener("change", function () {
+      if (this.value < todayStr) {
+        this.value = "";
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+	"name": "Subscriptions template",
+    "presets": [
+		{
+			"name": "Subscriptions template"
+        }
+    ]
+}
+{%- endschema -%}
+

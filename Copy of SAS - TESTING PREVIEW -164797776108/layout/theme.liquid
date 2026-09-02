@@ -1,0 +1,3583 @@
+<!doctype html>
+<html class="no-js" lang="{{- request.locale.iso_code -}}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{- settings.color_button -}}">
+
+    {%- if settings.hide_search_engine -%}
+      <meta name="robots" content="noindex">
+    {%- endif -%}
+   {% if template contains 'product' %}
+<meta name="robots" content="noindex, nofollow">
+    {% endif %}
+    <link rel="canonical" href="{{- canonical_url -}}">
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    <title>
+      {{- seo_title | strip -}}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{- page_description | escape -}}">
+    {%- endif -%}
+
+    {%- render 'social-meta-tags' -%}
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+
+    {%- capture seo_title -%}
+			{%- if template == 'search' and search.performed == true -%}
+				{{ 'general.search.heading' | t: count: search.results_count }}: {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+			{%- else -%}
+				{{ page_title }}
+			{%- endif -%}
+
+			{%- if current_tags -%}
+				{%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+			{%- endif -%}
+
+			{%- if current_page != 1 -%}
+				&ndash; {{ 'general.meta.page' | t: page: current_page }}
+			{%- endif -%}
+
+			{%- assign escaped_page_title = page_title | escape -%}
+			{%- unless escaped_page_title contains shop.name -%}
+				&ndash; {{ shop.name }}
+			{%- endunless -%}
+		{%- endcapture -%}
+  
+    {%- render 'head-theme-meta', layout: 'theme' -%}
+
+    {%- render 'custom-variables.css' -%}
+     {{ content_for_header }}
+     
+    {{ 'main.build.css' | asset_url | stylesheet_tag }}
+ {{ 'custom-style.css' | asset_url | stylesheet_tag }}
+   {{ 'custom.css' | asset_url | stylesheet_tag }}
+    {{ 'new_custom.css' | asset_url | stylesheet_tag }}
+
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.0/js/dataTables.js"></script>
+
+
+    <style>
+     html, body {max-width: 100%;overflow-x: hidden; }
+    .wishlist_button{background: none;border: none;display: flex;align-items: center;}
+    .wishlist_button svg{border-radius: 50%;margin: 10px 0; display: flex; align-items: center;justify-content: center;cursor: pointer;padding: 3px; position: relative; left: 1px;top: 1px;}
+    .heart-filled path{fill: #000;}
+    .button-floating{position:fixed;transform:translateY(-50%);z-index:1;padding:8px;display:inline-flex;align-items:center;text-decoration:none;color:#000;background-color:#efefef;border-radius:6px 0 0 6px;transition:all .5s ease;}
+    .button-floating:hover{background-color:#000;}
+    .button-floating:hover svg,.button-floating:hover .wishlist_text{fill:#fff;color:#fff;}
+    .wishlist_text{margin:0;margin-left:7px !important;text-decoration:none;}
+       #magic-text .account__col.account__col--details{display: none !important;}
+      #magic-text .account .account__col.account__col--orders{width: 100%!important;}
+      #magic-text .account__accordion {position: relative;}
+      .custom-button-now-overlay{display: none}
+      #magic-text .custom-button-now-overlay{display: block!important;position: absolute;top: 7px;right: 40px;max-width: 100px;}
+           #magic-text .account__heading .custom-otherpage{display: none;}
+      #magic-text .account__heading .custom-mypage{display: block!important;}
+      .account__heading .custom-mypage{display: none;}
+      
+      .header-section.sticky {
+	position: fixed;
+}
+.text-center.az-load-more-wrap {
+text-align: center;
+}
+
+.price__container.loyality-price {
+    display: flex;
+}
+.loyality-price span.loyalty-points-badge {
+    min-width: 130px;
+    text-align: right;
+}
+ @media only screen and (max-width: 1024px){
+    .custom_product-section .product-card__sas-badge img {
+    bottom: 0px;
+}
+}
+  .custom_product-section .product-card__sas-badge img {
+    height: auto !important;
+    max-width: 90px;
+    position: relative;
+    bottom: 20px;
+    left: 15px;
+    justify-content: flex-start;
+    display: flex;
+}
+    </style>
+
+    {%- if template.directory == 'customers' or settings.show_shipping_rates_calculator -%}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    <script src="{{ 'wholesaler-shared.js' | asset_url }}"></script>
+    <script src="{{ 'custom-style.js' | asset_url }}" defer="defer"></script>
+    <script>
+      window.themeCore = window.themeCore || {};
+      window.themeCore.productPlaceholderImage = {{- settings.product_default_image | img_url: "master" | replace: "//", "https://" | json -}};
+      window.themeCore.productPlaceholderImageFocal = {{ settings.product_default_image.presentation.focal_point | json }};
+      {%- if settings.enable_compare_products -%}
+      	window.themeCore.compareProductsTitle = {{ settings.compare_products_heading |  json }};
+      {%- endif -%}
+      {% if settings.cart_reminder_enable %}
+      	window.themeCore.CartReminder = {
+      		config: {
+      			cookieTime: {{- settings.cart_reminder_cookie_time | json -}},
+      			displayFrequency: {{- settings.cart_reminder_display_frequency | json -}},
+      			text: {{- settings.cart_reminder_text | json -}},
+      			colorText: {{- settings.cart_reminder_color_text | json -}},
+      			colorBg: {{- settings.cart_reminder_color_bg | json -}},
+      			colorIcon: {{- settings.cart_reminder_color_icon | json -}},
+      			colorButtonClose: {{- settings.cart_reminder_color_button_close | json -}},
+      			cartType: {{- settings.cart_type | json -}},
+      			cartRoute: {{- routes.cart_url | json -}},
+      			cartLinkA11y: {{- "cart.reminder.accessibility.cart" | t | escape | json -}},
+      			cartButtonA11y: {{- "cart.reminder.accessibility.cart_drawer" | t | escape | json -}},
+      			closeButtonA11y: {{- "cart.reminder.accessibility.close_button" | t | escape | json -}}
+      		}
+      	}
+      {% endif %}
+    </script>
+
+    {%- render 'translations-methods' -%}
+    {%- render 'translations' -%}
+
+   
+
+    <script>
+      document.querySelector('html').classList.remove('no-js');
+    </script>
+    <link rel="preload" href="{{ 'datatables.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+     <noscript>{{ 'datatables.css' | asset_url | stylesheet_tag }}</noscript>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
+     <script src="{{ 'datatables.js' | asset_url }}" defer="defer"></script>
+
+    <!-- Cookie Consent -->
+    <link rel="preload" href="{{ 'cookies.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>{{ 'cookies.css' | asset_url | stylesheet_tag }}</noscript>
+
+  
+    <script src="{{ 'cookies.js' | asset_url }}" defer="defer"></script>
+    <script>
+      window.addEventListener('load', function () {
+        window.cookieconsent.initialise({
+          palette: {
+            popup: { background: '#000' },
+            button: { background: '#f1d600' },
+          },
+          theme: 'classic',
+          position: 'bottom',
+          content: {
+            message: 'This website uses cookies to ensure you get the best experience.',
+            dismiss: 'Got it!',
+            link: 'Learn more',
+            href: '/policies/privacy-policy',
+          },
+        });
+      });
+    </script>
+
+
+
+  </head>
+
+  <body class="template-{{ template | split: '.' | first }}  {% if template == 'customers/account' %}account-pages {% endif %} {% if template == "page.favourite" %}bundle-widget{% endif %}{% if template == "index" %}bundle-widget loyality-page{% endif %}{% if template == "collection.monthly-special" %}bundle-widget{% endif %}{% if template == "collection.otc-collections" %}bundle-widget{% endif %}{% if template == "collection.rx-collections" %}bundle-widget{% endif %}{% if template == "collection" %}bundle-widget{% endif %}{% if template == "page.loyalty-program" %}loyality-page{% endif %}{%if template == "page.subscriptions" %} subscription-templates{% endif %}">
+    <a
+      href="#MainContent"
+      class="skip-content-link visually-hidden"
+    >
+      {{- 'general.accessibility.skip_to_content' | t -}}
+    </a>
+
+    {%- if template.name != 'cart' and settings.cart_type == 'drawer' -%}
+      {%- sections 'header-group-with-cart-drawer' -%}
+    {%- else -%}
+      {%- sections 'header-group' -%}
+    {%- endif -%}
+
+    {%- render 'predictive-search' -%} 
+
+    {%- if settings.is_product_promo_enabled and settings.product_promo_product != blank -%}
+      {%- render 'product-promo' -%}
+    {%- endif -%}
+
+    {% if settings.is_promo_banner_enabled %}
+      {%- render 'promotion-banner' -%}
+    {% endif %}
+
+    {%- if settings.is_cookie_bar_enabled -%}
+      {%- render 'cookie-bar' -%}
+    {%- endif -%}
+
+    {%- if settings.enable_compare_products -%}
+      {%- render 'compare-products-popup-button' -%}
+    {%- endif -%}
+
+    <main id="MainContent" class="content" role="main" tabindex="-1">
+      {%- if settings.show_breadcrumbs and template.name != 'article' -%}
+        {%- render 'breadcrumbs' -%}
+      {%- endif -%}
+
+      {{ content_for_layout }}
+    </main>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var currentUrl = window.location.href;
+        var targetUrl = '{{ shop.url }}/apps/wishlist';
+        var textElement = document.getElementById('magic-text');
+        if (!textElement) return;
+
+        if (currentUrl === targetUrl) {
+          textElement.style.display = 'block'; // Show the text
+        } else {
+          textElement.style.display = 'none'; // Hide the text
+        }
+      });
+    </script>
+    {%- sections 'footer-group' -%}
+    <div style="display: none;">
+      {% for product in collections.all.products by 5000 %}
+        {% render 'customcard', product: product, hidden: true %}
+      {% endfor %}
+    </div>
+
+    {%- render 'page-preloader' -%}
+
+    {%- if settings.is_age_check_enable -%}
+      {%- render 'age-check-popup' -%}
+    {%- endif -%}
+
+    {%- if settings.is_newsletter_popup_enabled -%}
+      {%- render 'newsletter-popup' -%}
+    {%- endif -%}
+
+    {%- render 'js-objects' -%}
+
+    {%- render 'adastra' with '/src/styles/carousel.scss' -%}
+
+    {%- render 'adastra' with '/src/styles/deferred-main.scss' -%}
+
+    {% render 'js-animate-observer' %}
+
+    {%- render 'adastra' with '/src/scripts/main.js' -%}
+
+    {% if settings.enable_compare_products %}
+      {%- render 'adastra' with '/src/styles/compare-products.scss' -%}
+      {%- render 'adastra' with '/src/scripts/component-compare-products.js' -%}
+    {% endif %}
+
+    {% if settings.cart_reminder_enable %}
+      {%- render 'adastra' with '/src/styles/cart-reminder.scss' -%}
+      {%- render 'adastra' with '/src/scripts/component-cart-reminder.js' -%}
+    {% endif %}
+
+    {%- render 'adastra' with '/src/scripts/component-ar-model.js' -%}
+      <script src="{{ 'custom-data.js' | asset_url }}" defer="defer"></script>
+       <script src="{{ 'collection_cstom.js' | asset_url }}" defer="defer"></script>
+
+    {% if cart.attributes.delivery_date %}
+  <input type="hidden" name="checkout[attributes][tags]" value="Delivery Date: {{ cart.attributes.delivery_date }}" />
+{% endif %}
+    <script>
+      // Wishlist feature: Add or remove the current product from the wishlist
+      function toggleWishlist() {
+        const pdpData = {
+          productTitle: '{{ product.title }}',
+          productImg: "{{ product.featured_image | img_url: '' }}",
+          productPrice: "{{ product.price | money | remove_first: '' }}",
+          productUrl: '{{ product.url }}',
+        };
+
+        let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const isAlreadyInWishlist = wishlistData.some((item) => item.productTitle === pdpData.productTitle);
+        const wishlistButton = document.getElementsByClassName('wishlist_button')[0];
+
+        if (!isAlreadyInWishlist) {
+          wishlistData.push(pdpData);
+          localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+          // alert('Product added to wishlist:', pdpData.productTitle);
+          wishlistButton.innerHTML = `<svg class="heart-filled" width="35px" height="35px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M19.3 5.71002C18.841 5.24601 18.2943 4.87797 17.6917 4.62731C17.0891 4.37666 16.4426 4.2484 15.79 4.25002C15.1373 4.2484 14.4909 4.37666 13.8883 4.62731C13.2857 4.87797 12.739 5.24601 12.28 5.71002L12 6.00002L11.72 5.72001C10.7917 4.79182 9.53273 4.27037 8.22 4.27037C6.90726 4.27037 5.64829 4.79182 4.72 5.72001C3.80386 6.65466 3.29071 7.91125 3.29071 9.22002C3.29071 10.5288 3.80386 11.7854 4.72 12.72L11.49 19.51C11.6306 19.6505 11.8212 19.7294 12.02 19.7294C12.2187 19.7294 12.4094 19.6505 12.55 19.51L19.32 12.72C20.2365 11.7823 20.7479 10.5221 20.7442 9.21092C20.7405 7.89973 20.2218 6.64248 19.3 5.71002Z" fill="#000000"/>
+</svg>
+
+`;
+        } else {
+          wishlistData = wishlistData.filter((item) => item.productTitle !== pdpData.productTitle);
+          localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+          // alert('Product removed from wishlist:', pdpData.productTitle);
+          wishlistButton.innerHTML = `<svg width="35px" height="35px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="heart-outline">
+<rect x="0" fill="none" width="24" height="24"></rect>
+<g>
+<path d="M16.5 4.5c2.206 0 4 1.794 4 4 0 4.67-5.543 8.94-8.5 11.023C9.043 17.44 3.5 13.17 3.5 8.5c0-2.206 1.794-4 4-4 1.298 0 2.522.638 3.273 1.706L12 7.953l1.227-1.746c.75-1.07 1.975-1.707 3.273-1.707m0-1.5c-1.862 0-3.505.928-4.5 2.344C11.005 3.928 9.362 3 7.5 3 4.462 3 2 5.462 2 8.5c0 5.72 6.5 10.438 10 12.85 3.5-2.412 10-7.13 10-12.85C22 5.462 19.538 3 16.5 3z"></path>
+</g>
+</svg>
+`;
+        }
+
+        // Update the display after modifying the wishlist
+        displayWishlist();
+      }
+
+      // Remove the specified product from the wishlist
+      function removeFromWishlist(productTitle) {
+        let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlistData = wishlistData.filter((item) => item.productTitle !== productTitle);
+        localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+        // Update the display after removing from the wishlist
+        displayWishlist(pdpData);
+      }
+
+      // Display wishlist items
+      function displayWishlist(pdpData) {
+        const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+        if (wishlistData.length === 0) {
+          console.log('Wishlist is empty');
+          return;
+        }
+
+        const wishlistHtml = wishlistData
+          .map(
+            (item) => `
+            <div class="wishlist-product__list">
+                <div class="c-product">
+                <a href="${item.productUrl}">
+                    <img src="${item.productImg}" alt="${item.productTitle}">
+                    </a>
+                    <h3 class="c-product__title card__heading h5">
+                        <a class="full-unstyled-link" href="${item.productUrl}">${item.productTitle}</a>
+                    </h3>
+                    <p>${item.productPrice}</p>
+      {% comment %}<button onclick="removeFromWishlist('${item.productTitle}')">Remove</button> {% endcomment %}
+                </div>
+            </div>
+        `
+          )
+          .join('');
+
+        const wishlistBlock = document.querySelector('.js-wishlistBlock');
+
+        // Add a check to ensure the element is not null before setting innerHTML
+        if (wishlistBlock) {
+          wishlistBlock.innerHTML = wishlistHtml;
+        } else {
+          console.log('Element with class "js-wishlistBlock" not found');
+        }
+      }
+
+      // Execute this function on DOM content load
+      document.addEventListener('DOMContentLoaded', function () {
+        // Fetch the wishlist data from localStorage
+        const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+        // Set the initial button text based on whether the product is in the wishlist or not
+        const wishlistButton = document.querySelector('.wishlist_button'); // Use querySelector instead of getElementsByClassName
+        const productTitle = '{{ product.title }}';
+
+        if (wishlistButton) {
+          const isAlreadyInWishlist = wishlistData.some((item) => item.productTitle === productTitle);
+          wishlistButton.innerHTML = isAlreadyInWishlist
+            ? `<svg class="heart-filled" width="35px" height="35px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M19.3 5.71002C18.841 5.24601 18.2943 4.87797 17.6917 4.62731C17.0891 4.37666 16.4426 4.2484 15.79 4.25002C15.1373 4.2484 14.4909 4.37666 13.8883 4.62731C13.2857 4.87797 12.739 5.24601 12.28 5.71002L12 6.00002L11.72 5.72001C10.7917 4.79182 9.53273 4.27037 8.22 4.27037C6.90726 4.27037 5.64829 4.79182 4.72 5.72001C3.80386 6.65466 3.29071 7.91125 3.29071 9.22002C3.29071 10.5288 3.80386 11.7854 4.72 12.72L11.49 19.51C11.6306 19.6505 11.8212 19.7294 12.02 19.7294C12.2187 19.7294 12.4094 19.6505 12.55 19.51L19.32 12.72C20.2365 11.7823 20.7479 10.5221 20.7442 9.21092C20.7405 7.89973 20.2218 6.64248 19.3 5.71002Z" fill="#000000"/>
+</svg>`
+            : `<svg width="35px" height="35px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="heart-outline">
+
+<rect x="0" fill="none" width="24" height="24"/>
+
+<g>
+
+<path d="M16.5 4.5c2.206 0 4 1.794 4 4 0 4.67-5.543 8.94-8.5 11.023C9.043 17.44 3.5 13.17 3.5 8.5c0-2.206 1.794-4 4-4 1.298 0 2.522.638 3.273 1.706L12 7.953l1.227-1.746c.75-1.07 1.975-1.707 3.273-1.707m0-1.5c-1.862 0-3.505.928-4.5 2.344C11.005 3.928 9.362 3 7.5 3 4.462 3 2 5.462 2 8.5c0 5.72 6.5 10.438 10 12.85 3.5-2.412 10-7.13 10-12.85C22 5.462 19.538 3 16.5 3z"/>
+
+</g>
+
+</svg>
+
+`;
+        } else {
+          console.log('Element with class "wishlist_button" not found');
+        }
+
+        // Display wishlist items
+        displayWishlist();
+      });
+    </script>
+  
+
+
+
+    <script src="https://storeswlaescript.myshopify.com/cdn/shop/t/2/assets/pharma.js" defer></script>
+  
+  <script>
+  window.revertToOneTimePurchase = function () {
+    const oneTimeBtn = document.querySelector('.Subscription_buttons button.one_time');
+    if (!oneTimeBtn) return;
+    document.querySelectorAll('.Subscription_buttons button').forEach(btn => btn.classList.remove('active'));
+    oneTimeBtn.classList.add('active');
+    const form = document.querySelector('form.shopify-product-form');
+    const existingInput = form?.querySelector('[name="properties[subscription]"]');
+    if (existingInput) existingInput.remove();
+  };
+
+  document.querySelectorAll('.Subscription_buttons button').forEach(function(button) {
+    button.addEventListener('click', function () {
+        const isOneTime = this.classList.contains('one_time');
+        const form = document.querySelector('form.shopify-product-form');
+        const existingInput = form ? form.querySelector('[name="properties[subscription]"]') : null;
+
+        // mark this choice active immediately on click, regardless of whether
+        // the subscription setup modal still needs to be completed — the radio
+        // shouldn't wait on modal confirmation to reflect what was clicked
+        document.querySelectorAll('.Subscription_buttons button').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+
+        if (isOneTime) {
+            if (existingInput) existingInput.remove();
+            // clears any previously-confirmed subscription date/Renewal Anchor —
+            // safely a no-op if a subscription was never actually configured
+            if (typeof window.resetSubSetupState === 'function') {
+                window.resetSubSetupState();
+            }
+            return;
+        }
+
+        // product page: open the start-date setup modal before committing the subscription property;
+        // other pages (no modal present) keep the old immediate-set behavior
+        if (typeof window.openSubSetupModal === 'function' && document.getElementById('subSetupModal')) {
+            window.openSubSetupModal();
+            return;
+        }
+
+        if (form && !existingInput) {
+            const data_html = `<input type="hidden" name="properties[subscription]" value="6 month + 1 month free">`;
+            form.insertAdjacentHTML('beforeend', data_html);
+        }
+    });
+});
+    </script>
+    <script>
+      $(document).ready(function () {
+        $('.mygrand-child').on('click', function () {
+          $('.wholeselerinfo').hide();
+        });
+      });
+    </script>
+
+    <script>
+window.rbCartTriggerEvent = function (el) {
+  el.classList.toggle("is_hide");
+  const content = el.nextElementSibling;
+  const isVisible = content.style.display === "block";
+  content.style.display = isVisible ? "none" : "block";
+  const span = el.querySelector('.rbTriggerSpan');
+  if (span) {
+    span.innerHTML = isVisible ? 'Show' : 'Hide';
+  }
+};
+</script>
+
+<script>
+window.productData = {
+  variants: {
+    {% for v in product.variants %}
+      {{ v.id }}: {
+        price: {{ v.price }},
+        compare_at_price: {{ v.compare_at_price | default: 0 }},
+        volume_discounts: {{ v.metafields.pharmacor_discounts.volume_discount_tiers.value | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  }
+};
+</script>
+
+<script>
+   window.variantVolumeDiscounts = [
+    {% for variant in product.variants %}
+    {
+      id: {{ variant.id }},
+      tiers: {{ variant.metafields.pharmacor_discounts.volume_discount_tiers.value | json }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+</script>
+{%comment %}
+<script>
+(function ($) {
+ 
+  $(document).ready(function () {
+ 
+    console.log("✅ Order Date Script Loaded");
+ 
+    /* ---------------- FORMAT DATE ---------------- */
+    function formatDateDMY(date) {
+		const d = new Date(date);
+		const day   = String(d.getDate()).padStart(2, "0");
+		const month = String(d.getMonth() + 1).padStart(2, "0");
+		const year  = d.getFullYear();
+
+		return `${year}-${month}-${day}`; // yyyy-mm-dd
+		}
+ 
+    /* ---------------- DISPLAY ORDER DATE ---------------- */
+    function displayCartOrderDate(date) {
+      if (!date) return;
+ 
+      const formatted = formatDateDMY(date);
+ 
+      /* Update ALL cart row date values (class, not ID) */
+      document.querySelectorAll(".cart-order-date-value").forEach(function (el) {
+        el.innerText = formatted;
+      });
+ 
+      /* Also update any legacy .cart-item-order-date elements */
+      document.querySelectorAll(".cart-item-order-date").forEach(function (el) {
+        el.innerText = formatted;
+      });
+    }
+ 
+    /* ---------------- APPLY DATE TO CART ITEMS ---------------- */
+    function applyOrderDateToAllProducts(cart) {
+      const savedDate = cart.attributes?.["Order Date"];
+      if (!savedDate) return;
+ 
+      const dateValue = savedDate.split("T")[0];
+ 
+      displayCartOrderDate(dateValue);
+ 
+      const input = document.querySelector("#delivery-date");
+      if (input && input.value !== dateValue) {
+        input.value = dateValue;
+      }
+    }
+ 
+    /* ---------------- CLEAR ATTRIBUTE IF CART EMPTY ---------------- */
+    function clearOrderDateValue() {
+      fetch("/cart/update.js", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          attributes: { "Order Date": "" }
+        })
+      })
+      .then(() => {
+ 
+        $("#selected-delivery-date").html("");
+        $("#delivery-date").val("");
+ 
+        /* Clear ALL cart row date values */
+        document.querySelectorAll(".cart-order-date-value").forEach(function (el) {
+          el.innerText = "";
+        });
+ 
+        /* Also clear legacy elements */
+        document.querySelectorAll(".cart-item-order-date").forEach(function (el) {
+          el.innerText = "";
+        });
+ 
+        console.log("✔ Order Date cleared");
+      });
+    }
+ 
+    /* ---------------- LOAD ORDER DATE ---------------- */
+    function loadOrderDate() {
+      fetch("/cart.js")
+        .then(res => res.json())
+        .then(cart => {
+ 
+          const savedDate = cart.attributes?.["Order Date"];
+ 
+          /* AUTO APPLY TODAY if cart has items but no date saved */
+          if (!savedDate && cart.items.length > 0) {
+ 
+            const today = new Date().toISOString().split("T")[0];
+ 
+            $("#delivery-date").val(today);
+ 
+            displayCartOrderDate(today);
+ 
+            $("#selected-delivery-date").html(
+              `<p>Selected Order Date: <strong>${formatDateDMY(today)}</strong></p>`
+            );
+ 
+            fetch("/cart/update.js", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                attributes: { "Order Date": today }
+              })
+            });
+ 
+            console.log("📅 Auto applied Order Date:", today);
+          }
+ 
+          /* If a date is already saved, restore it */
+          if (savedDate) {
+            const dateValue = savedDate.split("T")[0];
+ 
+            $("#delivery-date").val(dateValue);
+ 
+            displayCartOrderDate(dateValue);
+ 
+            $("#selected-delivery-date").html(
+              `<p>Selected Order Date: <strong>${formatDateDMY(dateValue)}</strong></p>`
+            );
+          }
+ 
+          applyOrderDateToAllProducts(cart);
+ 
+          /* Clear if cart is empty */
+          if (cart.items.length === 0) {
+            clearOrderDateValue();
+          }
+ 
+        });
+    }
+ 
+    loadOrderDate();
+ 
+    /* ---------------- SAVE DATE ON CHANGE ---------------- */
+    $(document).on("change", "#delivery-date", function () {
+ 
+      const selectedDate = $(this).val();
+      if (!selectedDate) return;
+ 
+      displayCartOrderDate(selectedDate);
+ 
+      $("#selected-delivery-date").html(
+        `<p>Selected Order Date: <strong>${formatDateDMY(selectedDate)}</strong></p>`
+      );
+ 
+      fetch("/cart/update.js", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          attributes: { "Order Date": selectedDate }
+        })
+      })
+      .then(res => res.json())
+      .then(cart => {
+        applyOrderDateToAllProducts(cart);
+      });
+ 
+    });
+ 
+    /* ---------------- CART UPDATE OBSERVER ---------------- */
+    const observer = new MutationObserver(() => {
+      fetch("/cart.js")
+        .then(res => res.json())
+        .then(cart => {
+ 
+          applyOrderDateToAllProducts(cart);
+ 
+          if (cart.items.length === 0) {
+            clearOrderDateValue();
+          }
+ 
+        });
+    });
+ 
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+ 
+    console.log("👀 Cart observer active");
+ 
+  });
+ 
+})(jQuery);
+</script>
+{%endcomment %}
+
+<script>
+(function () {
+
+  if (window.__orderDateGlobalInit) return;
+  window.__orderDateGlobalInit = true;
+
+  /* ─── FORMAT DATE ─── */
+  function formatDateDMY(date) {
+    var d     = new Date(date);
+    var day   = String(d.getDate()).padStart(2, "0");
+    var month = String(d.getMonth() + 1).padStart(2, "0");
+    var year  = d.getFullYear();
+    return year + "-" + month + "-" + day;
+  }
+
+  /* ─── WRITE DATE TO ALL SPANS + INPUT ─── */
+  function displayCartOrderDate(date) {
+    var formatted = date ? formatDateDMY(date) : "";
+    document.querySelectorAll(".cart-order-date-value").forEach(function (el) {
+      el.innerText = formatted;
+    });
+    document.querySelectorAll(".cart-item-order-date").forEach(function (el) {
+      el.innerText = formatted;
+    });
+    var input = document.querySelector("#delivery-date");
+    if (input) input.value = formatted;
+  }
+
+  /* ─── CLEAR ORDER DATE (cart empty or clear button) ─── */
+  function clearOrderDate() {
+    fetch("/cart/update.js", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ attributes: { "Order Date": "" } })
+    }).then(function () {
+      displayCartOrderDate("");
+      console.log("✔ Order Date cleared");
+    });
+  }
+
+  /* ─── SAVE DATE TO CART ATTRIBUTE ─── */
+  function saveOrderDate(date) {
+    return fetch("/cart/update.js", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ attributes: { "Order Date": date } })
+    }).then(function (r) { return r.json(); });
+  }
+
+  /* ─── LOAD CART + APPLY / SAVE DATE ─── */
+  function loadAndApplyOrderDate() {
+    fetch("/cart.js")
+      .then(function (r) { return r.json(); })
+      .then(function (cart) {
+
+        /* Cart is empty — clear date */
+        if (cart.items.length === 0) {
+          clearOrderDate();
+          return;
+        }
+
+        var savedDate = cart.attributes && cart.attributes["Order Date"];
+
+        /* No date saved but cart has items → auto-set today */
+        if (!savedDate) {
+          var today = new Date().toISOString().split("T")[0];
+          savedDate = today;
+          saveOrderDate(today);
+          console.log("📅 Order Date auto-set to today:", today);
+        }
+
+        var dateValue = savedDate.split("T")[0];
+
+        /* Retry display a few times to handle slow drawer renders */
+        var attempts = 0;
+        var interval = setInterval(function () {
+          attempts++;
+          displayCartOrderDate(dateValue);
+          var spans = document.querySelectorAll(".cart-order-date-value");
+          var allFilled = spans.length > 0 && Array.from(spans).every(function (el) {
+            return el.innerText.trim() !== "";
+          });
+          if (allFilled || attempts >= 5) clearInterval(interval);
+        }, 500);
+
+      });
+  }
+
+  /* ─── USER PICKS A NEW DATE ─── */
+  document.addEventListener("change", function (e) {
+    if (!e.target || e.target.id !== "delivery-date") return;
+    var selectedDate = e.target.value;
+    if (!selectedDate) return;
+    displayCartOrderDate(selectedDate);
+    saveOrderDate(selectedDate).then(function () {
+      displayCartOrderDate(selectedDate);
+      console.log("📅 Order Date updated to:", selectedDate);
+    });
+  });
+
+  /* ─── CLEAR CART BUTTON ─── */
+  document.addEventListener("click", function (e) {
+    if (!e.target) return;
+    var btn = e.target.closest("#clear-cart-btn");
+    if (!btn) return;
+
+    /* Clear all cart items then clear the date */
+    fetch("/cart/clear.js", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(function (r) { return r.json(); })
+    .then(function () {
+      clearOrderDate();
+      /* Let the theme re-render the empty cart */
+      document.documentElement.dispatchEvent(
+        new CustomEvent("cart:refresh", { bubbles: true })
+      );
+      console.log("🗑 Cart cleared");
+    });
+  });
+
+  /* ─── INTERCEPT fetch() — catch /cart/add from product page ─── */
+  var _origFetch = window.fetch;
+  window.fetch = function () {
+    var args = arguments;
+    var url  = typeof args[0] === "string" ? args[0] : (args[0] && args[0].url) || "";
+    return _origFetch.apply(window, args).then(function (response) {
+      if (url.indexOf("/cart/add") !== -1) {
+        console.log("🛒 /cart/add detected — applying Order Date");
+        [300, 700, 1200, 2000].forEach(function (delay) {
+          setTimeout(loadAndApplyOrderDate, delay);
+        });
+      }
+      return response;
+    });
+  };
+
+  /* ─── MUTATION OBSERVER — theme re-renders cart drawer HTML ─── */
+  var debounce;
+  var observer = new MutationObserver(function (mutations) {
+    for (var i = 0; i < mutations.length; i++) {
+      for (var j = 0; j < mutations[i].addedNodes.length; j++) {
+        var node = mutations[i].addedNodes[j];
+        if (node.nodeType !== 1) continue;
+        if (
+          node.classList.contains("cart-item") ||
+          node.classList.contains("cart-items__body") ||
+          (node.querySelector && node.querySelector(".cart-item"))
+        ) {
+          clearTimeout(debounce);
+          debounce = setTimeout(loadAndApplyOrderDate, 200);
+          return;
+        }
+      }
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  /* ─── Theme cart events ─── */
+  ["cart:updated", "cart:refresh", "cart-drawer:open"].forEach(function (evt) {
+    document.addEventListener(evt, function () {
+      setTimeout(loadAndApplyOrderDate, 300);
+    });
+  });
+
+  /* ─── Run on page load ─── */
+  document.addEventListener("DOMContentLoaded", loadAndApplyOrderDate);
+
+  console.log("✅ Order Date Global Script ready");
+
+})();
+</script>
+<script>
+  window.wholesaleNumbersRaw = [];
+window.wholesaleParsed = [];
+
+/* ======================================
+   PARSE WHOLESALE NUMBERS FROM METAFIELD
+====================================== */
+{% assign company = customer.current_company | default: customer.company %}
+{% if company and company.metafields.custom.wholesale_account_numbers %}
+  var raw = `{{ company.metafields.custom.wholesale_account_numbers.value | strip_newlines | raw }}`;
+  try {
+    window.wholesaleNumbersRaw = JSON.parse(raw);
+  } catch (e) {
+    console.error("Invalid JSON in metafield:", raw, e);
+  }
+{% endif %}
+
+// Convert "Sigma 123456" → { brand: "Sigma", value: "123456" }
+if (Array.isArray(window.wholesaleNumbersRaw)) {
+  window.wholesaleNumbersRaw.forEach(entry => {
+    if (typeof entry === 'string' && entry.trim() !== '') {
+      const parts = entry.split(" ");
+      const brand = parts[0];
+      const number = parts.slice(1).join(" ");
+      window.wholesaleParsed.push({
+        brand: brand.trim(),
+        value: number.trim()
+      });
+    }
+  });
+}
+console.log("Parsed wholesale list:", window.wholesaleParsed);
+window.getSafeWholesalerAccount = function (brand, rawValue) {
+  var value = (rawValue || '').toString().trim();
+  if (value.length >= 10) {
+    var match = Array.isArray(window.wholesaleParsed)
+      ? window.wholesaleParsed.find(function (p) {
+          return p.brand && p.brand.toUpperCase() === brand.toUpperCase();
+        })
+      : null;
+    return match ? match.value : '';
+  }
+  return value;
+};
+</script>
+<script>
+let bundleInitialized = false;
+
+/* ===============================
+   MONEY FORMAT (expects cents)
+=============================== */
+function money(cents) {
+  return '$' + (cents / 100).toFixed(2);
+}
+
+/* ===============================
+   ENABLE ONLY BUNDLE BUTTONS
+=============================== */
+function enableButtons() {
+  const bundleArea = document.getElementById('bundle-wrapper');
+  if (!bundleArea) return;
+
+  bundleArea.querySelectorAll('button, input[type="submit"], .bundle-card input').forEach(el => {
+    el.disabled = false;
+    el.removeAttribute('aria-disabled');
+    el.classList.remove('disabled');
+  });
+}
+
+/* ===============================
+   SET BUNDLE QUANTITY (SAFE)
+=============================== */
+function setBundleQuantity() {
+  setTimeout(() => {
+    const qtyInput = document.querySelector('.custom-class-quantity, input[name="quantity"]');
+    if (!qtyInput) return;
+
+    const activeBundle = document.querySelector('.bundle-card.is-active');
+    let qty = 1;
+
+    if (activeBundle?.id?.startsWith('moq-card')) {
+      const qtyEl = activeBundle.querySelector('.bundle-text strong');
+      if (qtyEl) {
+        const match = qtyEl.innerText.match(/(\d+)\+/);
+        if (match) qty = Number(match[1]);
+      }
+    }
+
+    qtyInput.value = qty;
+    qtyInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+    setTimeout(enableButtons, 50);
+  }, 0);
+}
+
+/* ===============================
+   RESTORE ACTIVE BUNDLE (NO STORAGE)
+=============================== */
+function restoreActiveBundle() {
+  const allCards = document.querySelectorAll('.bundle-card[id^="moq-card-"]');
+
+  allCards.forEach(c => {
+    c.classList.remove('is-active');
+  });
+
+  let activeCard =
+    document.querySelector('.bundle-card input[type="radio"]:checked')?.closest('.bundle-card');
+
+  if (!activeCard) {
+    activeCard = document.getElementById('moq-card-1');
+  }
+
+  if (activeCard) {
+    activeCard.classList.add('is-active');
+    activeCard.querySelector('input')?.setAttribute('checked', true);
+  }
+}
+
+/* ===============================
+   UPDATE BUNDLE DATA
+=============================== */
+function updateBundleData(variantId) {
+
+  const v = window.productData?.variants?.[variantId];
+  const bundleWrapper = document.getElementById('bundle-wrapper');
+  if (!v || !bundleWrapper) return;
+
+  /* ===============================
+     NO VOLUME DISCOUNT
+  =============================== */
+  if (!Array.isArray(v.volume_discounts) || v.volume_discounts.length === 0) {
+    bundleWrapper.style.display = 'none';
+
+    document.querySelectorAll('.bundle-card').forEach(c => {
+      c.classList.remove('is-active');
+      c.style.display = 'none';
+    });
+
+    document.querySelector('.bundle-card')?.classList.add('is-active');
+    document.querySelector('.bundle-card')?.style.setProperty('display', '');
+
+    setBundleQuantity();
+    setTimeout(enableButtons, 50);
+    return;
+  }
+
+  bundleWrapper.style.display = '';
+
+  /* ===============================
+     SINGLE PRICE
+  =============================== */
+  const basePriceCents = v.price;
+  const compareBaseCents =
+    (v.compare_at_price && v.compare_at_price > v.price)
+      ? v.compare_at_price
+      : null;
+
+  document.getElementById('single-price').innerText = money(basePriceCents);
+
+  const singleCompareEl = document.getElementById('single-compare');
+  if (compareBaseCents) {
+    singleCompareEl.innerText = money(compareBaseCents);
+    singleCompareEl.style.display = '';
+  } else {
+    singleCompareEl.style.display = 'none';
+  }
+
+  /* ===============================
+     MOQ TIERS (FIXED + SAFE)
+  =============================== */
+
+  const allCards = document.querySelectorAll('.bundle-card[id^="moq-card-"]');
+
+  // reset all
+  allCards.forEach(card => {
+    card.style.display = 'none';
+    card.classList.remove('is-active');
+  });
+
+  if (!Array.isArray(v.volume_discounts) || v.volume_discounts.length === 0) {
+    return;
+  }
+
+  v.volume_discounts.forEach((tier, index) => {
+
+    const card = document.getElementById(`moq-card-${index + 1}`);
+    if (!card) return;
+
+    card.style.display = '';
+
+    const titleEl = card.querySelector('.bundle-text strong');
+    if (titleEl) {
+      titleEl.innerText = `${tier.quantityThreshold}+ MOQ Deal`;
+    }
+     const subEl = card.querySelector('.bundle-sub');
+      if (subEl) {
+        subEl.innerText = `You save ${tier.discountPercent}%`;
+      }
+
+    const discountMultiplier = (100 - tier.discountPercent);
+
+    const totalDiscountedCents = Math.round(
+      (basePriceCents * tier.quantityThreshold * discountMultiplier) / 100
+    );
+
+    const discountedUnitPriceCents = Math.floor(
+      totalDiscountedCents / tier.quantityThreshold
+    );
+
+    const totalCompareCents = compareBaseCents
+      ? Math.round(compareBaseCents * tier.quantityThreshold * (1 - tier.discountPercent / 100))
+      : null;
+
+    card.querySelector('.moq-price').innerText =
+      money(discountedUnitPriceCents);
+
+    const compareEl = card.querySelector('.moq-compare');
+    if (compareBaseCents) {
+      compareEl.innerText = money(compareBaseCents);
+      compareEl.style.display = '';
+    } else {
+      compareEl.style.display = 'none';
+    }
+
+    card.querySelector('.moq-total-price').innerText =
+      money(totalDiscountedCents);
+
+    const totalCompareEl = card.querySelector('.moq-total-compare');
+    if (totalCompareCents) {
+      totalCompareEl.innerText = money(totalCompareCents);
+      totalCompareEl.style.display = '';
+    } else {
+      totalCompareEl.style.display = 'none';
+    }
+  });
+
+  /* ===============================
+     FINAL RESTORE + SYNC
+  =============================== */
+
+  setTimeout(() => {
+    restoreActiveBundle();
+    setBundleQuantity();
+    enableButtons();
+  }, 0);
+
+  /* OBSERVER */
+  const observerTarget = document.getElementById('bundle-wrapper');
+  if (observerTarget && !observerTarget.__observerAdded) {
+    const observer = new MutationObserver(() => enableButtons());
+    observer.observe(observerTarget, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ['disabled', 'aria-disabled']
+    });
+    observerTarget.__observerAdded = true;
+  }
+}
+
+/* ===============================
+   INIT
+=============================== */
+document.addEventListener('DOMContentLoaded', () => {
+
+  const variantInput = document.querySelector('input[name="id"]');
+
+  if (variantInput?.value)
+    updateBundleData(variantInput.value);
+
+  if (variantInput) {
+    new MutationObserver(() => {
+      updateBundleData(variantInput.value);
+    }).observe(variantInput, {
+      attributes: true,
+      attributeFilter: ['value']
+    });
+  }
+
+  setTimeout(enableButtons, 100);
+});
+
+/* ===============================
+   VARIANT CHANGE
+=============================== */
+document.addEventListener('variant:change', e => {
+  if (e.detail?.variant?.id) {
+    updateBundleData(e.detail.variant.id);
+
+    setTimeout(() => {
+      setBundleQuantity();
+      enableButtons();
+    }, 0);
+  }
+});
+
+/* ===============================
+   BUNDLE CHANGE
+=============================== */
+document.addEventListener('change', e => {
+
+  if (e.target.name === 'bundle') {
+
+    const activeCard = e.target.closest('.bundle-card');
+
+    document.querySelectorAll('.bundle-card').forEach(card => {
+      card.classList.remove('is-active');
+      card.classList.add('bundle-active');
+    });
+
+    if (activeCard) {
+      activeCard.classList.remove('bundle-active');
+      activeCard.classList.add('is-active');
+    }
+
+    setBundleQuantity();
+    setTimeout(enableButtons, 50);
+  }
+});
+</script>
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (node.nodeType !== 1) return;
+
+                // Check if the predictive-search product row is added and active
+                const activeRow = node.matches('.js-predictive-search-result-row.is-active') 
+                    ? node 
+                    : node.querySelector('.js-predictive-search-result-row.is-active');
+
+                if (activeRow) {
+                    console.log('Predictive search product row is now visible!');
+
+                    const selectedWholeseller = localStorage.getItem('selected_wholeseller');
+                    console.log('Selected wholeseller:', selectedWholeseller);
+
+                    // Loop through all product columns
+                    const products = activeRow.querySelectorAll('.predictive-search__result-col');
+
+                    products.forEach(product => {
+                        let inputToClick = null;
+
+                        if (selectedWholeseller) {
+                            // Try to find input matching the selected wholeseller
+                            inputToClick = product.querySelector(
+                                `.radioinput.${selectedWholeseller.toLowerCase()}`
+                            );
+                        }
+
+                        // If no matching input found, select the first radio input
+                        if (!inputToClick) {
+                            inputToClick = product.querySelector('.radioinput');
+                        }
+
+                        if (inputToClick) {
+                            inputToClick.click();
+                            console.log(`Clicked radio input for product: ${inputToClick.value}`);
+                        } else {
+                            console.log('No radio input found for this product');
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+});
+
+function handleVariantChange(el){
+
+  var section = el.closest('.custom-variant');
+  if (!section) return;
+
+  // live-computed from coverage, not the header widget's cache
+  var apivalue     = getLiveWholesalerNumberForBrand('api');
+  var sigmavale    = getLiveWholesalerNumberForBrand('sigma');
+  var symbionvale  = getLiveWholesalerNumberForBrand('symbion');
+  var ch2          = getLiveWholesalerNumberForBrand('ch2');
+
+  // Collect checked radios inside this product
+  var inputs = section.querySelectorAll('input.radioinput:checked');
+  var values = [];
+  inputs.forEach(cb => values.push(cb.value));
+
+  // Build variant key
+  var joined = values.join('-')
+    .toLowerCase()
+    .replace(/[^a-z0-9\- ]+/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/-/g, '');
+
+  // Find hidden variant input
+  var matchedEl = section.querySelector('.custom' + joined);
+
+  // Always define variantInput BEFORE using
+  var variantInput = section.querySelector('#variant-id');
+
+  if (matchedEl) {
+    var val = matchedEl.value;
+
+    const price = matchedEl.getAttribute('variant-price');
+    const compareprice = matchedEl.getAttribute('compareprice');
+
+    const productCard = matchedEl.closest('.product-card');
+    const priceItemEl = productCard?.querySelector('.price-item');
+    const oldprice    = productCard?.querySelector('.price__olds span');
+
+    if (priceItemEl) priceItemEl.textContent = price;
+    if (oldprice) oldprice.textContent = compareprice;
+
+    if (variantInput) {
+      variantInput.setAttribute('data-variant-id', val);
+    }
+  }
+
+  // --- Handle wholesaler accounts (scoped to this product's own section) ---
+  applyWholesalerValue(section);
+
+  if (values.includes('API')) {
+    applyWholesalerValue(section, 'api', apivalue);
+    if (!apivalue) $(variantInput).addClass('emptybutton');
+    else $(variantInput).removeClass('emptybutton');
+  }
+  else if (values.includes('Sigma')) {
+    applyWholesalerValue(section, 'sigma', sigmavale);
+    if (sigmavale) $(variantInput).removeClass('emptybutton');
+  }
+  else if (values.includes('Symbion')) {
+    applyWholesalerValue(section, 'symbion', symbionvale);
+    if (symbionvale) $(variantInput).removeClass('emptybutton');
+  }
+  else if (values.includes('CH2')) {
+    applyWholesalerValue(section, 'ch2', ch2);
+    if (ch2) $(variantInput).removeClass('emptybutton');
+  }
+}
+
+// product page: switching the Wholesaler option radio/select never touched the .API/.Sigma/.Symbion/.Ch2 hidden inputs — wrong number went to cart
+document.addEventListener('change', function (e) {
+  var el = e.target;
+  if (!el.matches('[data-option]')) return;
+  if (!el.getAttribute('data-option').toLowerCase().includes('wholesaler')) return;
+
+  var value = (el.type === 'radio' ? (el.checked ? el.value : null) : el.value) || '';
+  if (!value) return;
+
+  var upper = value.toUpperCase();
+  var brand = upper.includes('API') ? 'api' : upper.includes('SIGMA') ? 'sigma' : upper.includes('SYMBION') ? 'symbion' : upper.includes('CH2') ? 'ch2' : '';
+  if (!brand) return;
+
+  var scope = el.form || el.closest('[data-js-product-variant]')?.closest('form') || el.closest('form');
+  if (!scope) return;
+
+  applyWholesalerValue(scope, brand, getLiveWholesalerNumberForBrand(brand));
+});
+
+window.updateMoqBadge = function(productId, radioEl) {
+  var section = radioEl.closest('.custom-variant');
+  if (!section) return;
+
+  var inputs = section.querySelectorAll('input.radioinput:checked');
+  var values = [];
+  inputs.forEach(function(r) { values.push(r.value); });
+  var key = values.join('-').toLowerCase()
+    .replace(/[^a-z0-9\- ]+/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/-/g, '');
+
+  var hidden = section.querySelector('.custom' + key);
+  if (!hidden) return;
+
+  /* find #variant-volume-discount scoped to the nearest product card */
+  var card = section.closest('.product-card') || section.parentElement;
+  var volumeBox  = card ? card.querySelector('#variant-volume-discount') : null;
+  if (!volumeBox) return;
+  var volumeText = volumeBox.querySelector('.volume-offer-text');
+  if (!volumeText) return;
+
+  volumeText.innerHTML = '';
+
+  var tiers = [];
+  try { tiers = JSON.parse(hidden.getAttribute('data-volumetiers') || '[]'); } catch(e) {}
+
+  if (tiers.length > 0) {
+    tiers.forEach(function(t) {
+      var row = document.createElement('div');
+      row.innerHTML =
+        '<span class="volume-qty">Buy ' + t.qty + '+</span>' +
+        '<span class="volume-price"><span class="volumne-arrow">→</span> $' + t.price.toFixed(2) + '</span>';
+      volumeText.appendChild(row);
+    });
+    volumeBox.style.display = '';
+  } else {
+    volumeBox.style.display = 'none';
+  }
+};
+
+
+
+
+</script>
+<script>
+/* ======================================
+   HELPER FUNCTIONS
+====================================== */
+function getSelectedValues() {
+  return Object.keys(localStorage)
+    .filter(key => key.startsWith('selected_'))
+    .map(key => localStorage.getItem(key))
+    .filter(value => typeof value === 'string' && value && value !== 'undefined');
+}
+
+// Extract account number, removing brand prefix (numbers can contain letters, so only whitespace is stripped)
+function extractAccountNumber(value, brand = '') {
+  if (!value || typeof value !== 'string') return '';
+  // Remove brand from the start (case-insensitive)
+  const cleaned = value.replace(new RegExp('^' + brand, 'i'), '');
+  return sanitizeWholesalerNumber(cleaned);
+}
+
+/* ======================================
+   GLOBAL FLAGS
+====================================== */
+window.__variantChangeInProgress = false;
+window.__refreshingCart = false;
+window.__cartQtyUpdating = false;
+window.__cartRemoveUpdating = false;
+
+/* ======================================
+   PRELOADER
+====================================== */
+function showPreloader() {
+  document.querySelector('.js-preloader')?.classList.add('is-active');
+}
+function hidePreloader() {
+  document.querySelector('.js-preloader')?.classList.remove('is-active');
+}
+
+// shown when a cart update fails (e.g. rate-limited by another app) so the customer knows to retry, instead of it failing silently
+function showCartUpdateError() {
+  console.error('[Cart] update failed — likely rate-limited, please retry');
+  document.querySelectorAll('.cart-update-error-toast').forEach(function (el) { el.remove(); });
+  var toast = document.createElement('div');
+  toast.className = 'cart-update-error-toast';
+  toast.textContent = 'Could not update your cart — please try again.';
+  toast.style.cssText = 'position:fixed;top:90px;right:20px;background:#c0392b;color:#fff;padding:14px 24px;border-radius:8px;font-size:14px;font-weight:600;z-index:999999;';
+  document.body.appendChild(toast);
+  setTimeout(function () { toast.remove(); }, 4000);
+}
+
+/* ======================================
+   CART DRAWER HELPERS
+====================================== */
+function unlockAllCartDrawerButtons() {
+  const drawer = document.querySelector('#CartDrawer');
+  if (!drawer) return;
+
+  drawer.querySelectorAll('button, [data-quantity-increase], [data-quantity-decrease]').forEach(btn => {
+    btn.disabled = false;
+    btn.removeAttribute('disabled');
+    btn.removeAttribute('aria-disabled');
+    btn.classList.remove('disabled');
+  });
+}
+
+let cartDrawerObserver = null;
+
+/* ======================================
+   REFRESH CART DRAWER
+====================================== */
+async function refreshCartDrawer() {
+  if (window.__refreshingCart) return;
+  window.__refreshingCart = true;
+
+  const drawer = document.querySelector('#CartDrawer');
+  if (!drawer) return;
+
+  cartDrawerObserver?.disconnect();
+
+  try {
+    const res = await fetch(`${location.pathname}?section_id=cart-drawer`, { cache: 'no-store' });
+    const html = await res.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const newDrawer = doc.querySelector('#CartDrawer');
+
+    if (newDrawer) {
+      drawer.innerHTML = newDrawer.innerHTML;
+      unlockAllCartDrawerButtons();
+    }
+  } finally {
+    initCartDrawerObserver();
+    window.__refreshingCart = false;
+  }
+}
+
+/* ======================================
+   CART DRAWER OBSERVER
+====================================== */
+function initCartDrawerObserver() {
+  const drawer = document.querySelector('#CartDrawer');
+  if (!drawer) return;
+
+  if (!cartDrawerObserver) {
+    cartDrawerObserver = new MutationObserver(mutations => {
+      for (let m of mutations) {
+        if (m.type === 'attributes' && ['disabled','aria-disabled'].includes(m.attributeName)) {
+          unlockAllCartDrawerButtons();
+        }
+      }
+    });
+  }
+
+  cartDrawerObserver.observe(drawer, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['disabled', 'aria-disabled']
+  });
+}
+
+/* ======================================
+   QUANTITY BUTTONS
+====================================== */
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-quantity-increase],[data-quantity-decrease]');
+  if (!btn || window.__cartQtyUpdating) return;
+
+  const input = btn.closest('.js-quantity')?.querySelector('[data-quantity-input]');
+  if (!input) return;
+
+  window.__cartQtyUpdating = true;
+
+  let qty = Number(input.value) + (btn.hasAttribute('data-quantity-increase') ? 1 : -1);
+  qty = Math.max(1, qty);
+
+  try {
+    showPreloader();
+    await fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: input.dataset.itemKey, quantity: qty })
+    });
+    await refreshCartDrawer();
+  } finally {
+    hidePreloader();
+    window.__cartQtyUpdating = false;
+  }
+});
+
+/* ======================================
+   CART MANUAL INPUT (DEBOUNCED)
+====================================== */
+let inputDebounceTimer = null;
+document.addEventListener('input', (e) => {
+  const input = e.target.closest('[data-quantity-input]');
+  if (!input) return;
+
+  const val = Number(input.value);
+  if (isNaN(val) || val < 1) return;
+  input.__lastValidQty = val;
+});
+
+document.addEventListener('blur', (e) => {
+  const input = e.target.closest('[data-quantity-input]');
+  if (!input) return;
+
+  clearTimeout(inputDebounceTimer);
+  inputDebounceTimer = setTimeout(async () => {
+    let qty = Number(input.value);
+    if (isNaN(qty) || qty < 1) qty = input.__lastValidQty || 1;
+
+    window.__cartQtyUpdating = true;
+    try {
+      showPreloader();
+      await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: input.dataset.itemKey, quantity: qty })
+      });
+      await refreshCartDrawer();
+    } finally {
+      hidePreloader();
+      window.__cartQtyUpdating = false;
+    }
+  }, 250);
+}, true);
+
+/* ======================================
+   REMOVE ITEM
+====================================== */
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.js-cart-item-remove');
+  if (!btn || window.__cartRemoveUpdating) return;
+
+  window.__cartRemoveUpdating = true;
+
+  try {
+    showPreloader();
+
+    await fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: btn.dataset.itemKey,
+        quantity: 0
+      })
+    });
+
+    await refreshCartDrawer();
+  } finally {
+    hidePreloader();
+    window.__cartRemoveUpdating = false;
+  }
+});
+
+/* ======================================
+   VARIANT CHANGE
+====================================== */
+document.addEventListener('change', async (e) => {
+  if (!e.target.matches('.cart-variant-select')) return;
+
+  const select = e.target;
+  const cartItemEl = select.closest('.cart-item');
+  const itemKey = cartItemEl?.dataset.cartItem;
+  if (!itemKey) return;
+
+  // locked per-line, not globally — changing one line must not block another line mid-flight
+  window.__variantChangeInProgressKeys = window.__variantChangeInProgressKeys || new Set();
+  if (window.__variantChangeInProgressKeys.has(itemKey)) return;
+  window.__variantChangeInProgressKeys.add(itemKey);
+
+  try {
+    const selectedText = (select.options[select.selectedIndex]?.text || '').trim();
+
+    // Detect brand using word boundaries
+    const brandMatch = selectedText.toUpperCase().match(/\b(API|SIGMA|SYMBION|CH2)\b/);
+    const brandFromSelect = brandMatch ? brandMatch[0] : '';
+
+    // Find brand mapping from wholesaleParsed if available
+    const match = Array.isArray(window.wholesaleParsed)
+      ? window.wholesaleParsed.find(item => item.brand?.toUpperCase() === brandFromSelect)
+      : null;
+
+    // Get selected values from localStorage
+    const selectedValues = getSelectedValues();
+    let wholesalerValue = '';
+
+    // if the customer explicitly picked a specific number for this brand (multi-number brands like API), honor it first
+    const chosenOverride = (typeof resolveSelectedWholesalerAccountOverride === 'function') ? resolveSelectedWholesalerAccountOverride() : null;
+    if (chosenOverride && chosenOverride.brand.toUpperCase() === brandFromSelect) {
+      wholesalerValue = chosenOverride.number;
+    }
+
+    if (!wholesalerValue && Array.isArray(selectedValues)) {
+      const found = selectedValues.find(v =>
+        typeof v === 'string' &&
+        v.toUpperCase().includes(brandFromSelect)
+      );
+      if (found) wholesalerValue = extractAccountNumber(found, brandFromSelect);
+    }
+
+    if (!wholesalerValue && match?.value) {
+      wholesalerValue = extractAccountNumber(match.value, brandFromSelect);
+    }
+
+    // Show preloader while updating
+    showPreloader();
+
+    // Get new variant ID and current cart item quantity
+    const newVariantId = Number(select.value);
+    const cartRes = await fetch('/cart.js', { cache: 'no-store' });
+    if (!cartRes.ok) { showCartUpdateError(); return; }
+    const cart = await cartRes.json();
+    const currentItem = cart.items.find(i => i.key === itemKey);
+    if (!currentItem) return;
+    const qty = currentItem.quantity;
+
+    // Set up properties with empty wholesaler accounts first
+    let props = {
+      ...currentItem.properties,
+      'Wholesaler Account No.1': '',
+      'Wholesaler Account No.2': '',
+      'Wholesaler Account No.3': '',
+      'Wholesaler Account No.4': ''
+    };
+
+    // Assign account number to correct wholesaler field
+    switch (brandFromSelect) {
+      case 'API':
+        props['Wholesaler Account No.1'] = wholesalerValue;
+        break;
+      case 'SIGMA':
+        props['Wholesaler Account No.2'] = wholesalerValue;
+        break;
+      case 'SYMBION':
+        props['Wholesaler Account No.3'] = wholesalerValue;
+        break;
+      case 'CH2':
+        props['Wholesaler Account No.4'] = wholesalerValue;
+        break;
+    }
+
+    // recomputed regardless of merge state — fixes stale/blank Saving Per Item on its own
+    if (currentItem.handle) {
+      props['Saving Per Item'] = await computeSavingPercentForVariant(currentItem.handle, newVariantId);
+    }
+
+    // normalized + deterministic regardless of merge state — same variant+wholesaler always gets the same value
+    props = normalizeLineProperties(props);
+    props._line_uid = computeLineUid(newVariantId, brandFromSelect, wholesalerValue);
+
+    // Add the new variant FIRST — if this fails (e.g. rate-limited), the original line is
+    // still untouched, so the customer never loses their cart item to a failed request.
+    const addRes = await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: newVariantId, quantity: qty, properties: props })
+    });
+    if (!addRes.ok) { showCartUpdateError(); await refreshCartDrawer(); return; }
+    const addResult = await addRes.json();
+    if (addResult.status || addResult.errors) { showCartUpdateError(); await refreshCartDrawer(); return; }
+
+    // Only now remove the old line
+    await fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: itemKey, quantity: 0 })
+    });
+
+    if (currentItem.handle) {
+      const cartAfter = await fetch('/cart.js', { cache: 'no-store' }).then(r => r.json());
+      const mergedLine = cartAfter.items.find(i => i.variant_id === newVariantId && i.properties?._line_uid === props._line_uid);
+      if (mergedLine) {
+        await recalculateSavingPerItemAfterMerge(mergedLine.key, currentItem.handle, newVariantId);
+      }
+    }
+
+    // Refresh cart drawer
+    await refreshCartDrawer();
+
+  } catch (err) {
+    showCartUpdateError();
+    await refreshCartDrawer();
+  } finally {
+    hidePreloader();
+    setTimeout(() => window.__variantChangeInProgressKeys.delete(itemKey), 300);
+  }
+});
+
+/* ======================================
+   COVERAGE RECONCILIATION
+====================================== */
+const BRAND_PROPERTY_KEYS = {
+  'Wholesaler Account No.1': 'api',
+  'Wholesaler Account No.2': 'sigma',
+  'Wholesaler Account No.3': 'symbion',
+  'Wholesaler Account No.4': 'ch2'
+};
+
+function findCoveredReplacementVariant(product, currentVariant, wholesalerOptionIndex, brandPriority) {
+  for (const brand of brandPriority) {
+    const candidate = product.variants.find((v) => {
+      const val = (v.options[wholesalerOptionIndex] || '').toLowerCase();
+      if (val.indexOf(brand) === -1) return false;
+      return v.options.every((optVal, idx) => idx === wholesalerOptionIndex || optVal === currentVariant.options[idx]);
+    });
+    if (candidate) return { variant: candidate, brand: brand };
+  }
+  return null;
+}
+
+// brand still covered but the account number may have changed — refresh it on the same line, no variant switch needed
+async function refreshStaleWholesalerNumber(item, brand, preferredOverride) {
+  const brandPropKey = Object.keys(BRAND_PROPERTY_KEYS).find((k) => BRAND_PROPERTY_KEYS[k] === brand);
+  const currentNumber = sanitizeWholesalerNumber(item.properties[brandPropKey]);
+
+  let correctNumber;
+  if (preferredOverride && preferredOverride.brand === brand) {
+    correctNumber = preferredOverride.number;
+  } else {
+    const accountEntry = window.__wholesalerCoverage.filter((c) => c.indexOf(brand) !== -1)[0] || '';
+    correctNumber = sanitizeWholesalerNumber(accountEntry.replace(new RegExp(brand, 'gi'), ''));
+  }
+
+  if (!correctNumber || currentNumber === correctNumber) return false; // nothing stale, or nothing to correct to
+
+  let props = Object.assign({}, item.properties);
+  props[brandPropKey] = correctNumber;
+  props = normalizeLineProperties(props);
+  props._line_uid = computeLineUid(item.variant_id, brand.toUpperCase(), correctNumber);
+
+  await fetch('/cart/change.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: item.key, quantity: item.quantity, properties: props })
+  });
+  return true;
+}
+
+async function reconcileCartLine(item, preferredOverride) {
+  let currentBrand = null;
+  for (const key in BRAND_PROPERTY_KEYS) {
+    if (item.properties && item.properties[key]) { currentBrand = BRAND_PROPERTY_KEYS[key]; break; }
+  }
+  if (!currentBrand) return false;
+
+  const stillCovered = window.__wholesalerCoverage.some((c) => c.indexOf(currentBrand) !== -1);
+  if (stillCovered) {
+    return await refreshStaleWholesalerNumber(item, currentBrand, preferredOverride);
+  }
+
+  if (!item.handle) return false;
+  const product = await fetch('/products/' + item.handle + '.js').then((r) => r.json());
+  const currentVariant = product.variants.find((v) => v.id === item.variant_id);
+  if (!currentVariant) return false;
+
+  const wholesalerOptionIndex = product.options.findIndex((o) => {
+    const name = typeof o === 'string' ? o : (o && o.name) || '';
+    return name.toLowerCase() === 'wholesaler';
+  });
+  if (wholesalerOptionIndex === -1) return false;
+
+  let brandPriority = ['api', 'sigma', 'symbion', 'ch2'].filter((b) => window.__wholesalerCoverage.some((c) => c.indexOf(b) !== -1));
+  if (preferredOverride && brandPriority.includes(preferredOverride.brand)) {
+    brandPriority = [preferredOverride.brand].concat(brandPriority.filter((b) => b !== preferredOverride.brand));
+  }
+
+  const replacement = findCoveredReplacementVariant(product, currentVariant, wholesalerOptionIndex, brandPriority);
+
+  if (!replacement) {
+    await fetch('/cart/change.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: item.key, quantity: 0 }) });
+    return true;
+  }
+
+  const accountEntry = window.__wholesalerCoverage.filter((c) => c.indexOf(replacement.brand) !== -1)[0] || '';
+  const accountNumber = sanitizeWholesalerNumber(accountEntry.replace(new RegExp(replacement.brand, 'gi'), ''));
+  const finalNumber = (preferredOverride && preferredOverride.brand === replacement.brand) ? preferredOverride.number : accountNumber;
+
+  let props = Object.assign({}, item.properties, {
+    'Wholesaler Account No.1': '', 'Wholesaler Account No.2': '', 'Wholesaler Account No.3': '', 'Wholesaler Account No.4': ''
+  });
+  const brandPropKey = Object.keys(BRAND_PROPERTY_KEYS).find((k) => BRAND_PROPERTY_KEYS[k] === replacement.brand);
+  props[brandPropKey] = finalNumber;
+  // compute Saving Per Item from the product data already fetched above instead of a second /products/{handle}.js call
+  const rvPrice = replacement.variant.price / 100;
+  const rvCompare = (replacement.variant.compare_at_price || 0) / 100;
+  props['Saving Per Item'] = rvCompare > rvPrice ? (((rvCompare - rvPrice) / rvCompare) * 100).toFixed(2) + '%' : '';
+  props = normalizeLineProperties(props);
+  props._line_uid = computeLineUid(replacement.variant.id, replacement.brand.toUpperCase(), finalNumber);
+
+  const addRes = await fetch('/cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: replacement.variant.id, quantity: item.quantity, properties: props })
+  });
+  if (addRes.ok) {
+    await fetch('/cart/change.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: item.key, quantity: 0 }) });
+  }
+  return true;
+}
+
+async function reconcileCartWholesalerCoverage() {
+  if (!window.__wholesalerCoverage || window.__wholesalerCoverage.length === 0) return;
+
+  try {
+    const cart = await fetch('/cart.js', { cache: 'no-store' }).then((r) => r.json());
+    const preferredOverride = (typeof resolveSelectedWholesalerAccountOverride === 'function') ? resolveSelectedWholesalerAccountOverride() : null;
+    let anyChanged = false;
+
+    for (const item of cart.items) {
+      try {
+        if (await reconcileCartLine(item, preferredOverride)) anyChanged = true;
+      } catch (e) {
+        // one line's failure shouldn't block the rest
+      }
+    }
+
+    if (anyChanged) await refreshCartDrawer();
+  } catch (e) {
+    // best-effort — never block page load on this
+  }
+}
+
+/* ======================================
+   INIT
+====================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  unlockAllCartDrawerButtons();
+  initCartDrawerObserver();
+  reconcileCartWholesalerCoverage();
+});
+
+/* Prevent invalid quantity characters */
+document.addEventListener('keydown', e => {
+  if (e.target.matches('[data-quantity-input]') && ['e','E','-','+'].includes(e.key)) {
+    e.preventDefault();
+  }
+});
+</script>
+<script>
+  window.scrollTo(0, 0);
+
+ window.addEventListener('scroll', function(e) {
+
+        // console.log(window.scrollY);
+
+        if (window.scrollY > 100) {
+
+            document.getElementsByClassName('header-section')[0].classList.add("sticky");
+
+            if($('.header-section').hasClass('sticky_animator')){
+
+                $('.header-section').removeClass('sticky_animator');
+
+            }
+
+        } else {
+
+            document.getElementsByClassName('header-section')[0].classList.remove("sticky");
+
+            if($('.header-section').hasClass('sticky_animator')==false){
+
+        $('.header-section').addClass('sticky_animator');
+
+            }
+
+        }
+
+    })
+</script>
+<script>
+
+(function() {
+
+  // Prevent multiple simultaneous cart fetches
+  let cartFetchInProgress = false;
+  let pendingCartPromise = null;
+
+  // Update cart count in DOM
+  function updateCartCount(count) {
+    document.querySelectorAll('.js-header-cart-item-count')
+      .forEach(el => el.textContent = count);
+
+    document.querySelectorAll('.header__cart-count')
+      .forEach(el => el.setAttribute('data-cart-count', count));
+  }
+
+  // Fetch cart count safely using await + lock
+  async function fetchCartCount() {
+    // If a fetch is already running, return same promise
+    if (cartFetchInProgress) {
+      return pendingCartPromise;
+    }
+
+    cartFetchInProgress = true;
+
+    pendingCartPromise = (async () => {
+      try {
+        const res = await fetch('/cart.js', { credentials: 'same-origin' });
+        const cart = await res.json();
+        updateCartCount(cart.item_count || 0);
+      } catch(e) {
+        // fail silently
+      } finally {
+        cartFetchInProgress = false;
+        pendingCartPromise = null;
+      }
+    })();
+
+    return pendingCartPromise;
+  }
+
+  // Initial load
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchCartCount();
+  });
+
+  // Observe cart drawer changes
+  const cartDrawer = document.querySelector('#CartDrawer');
+  if (cartDrawer) {
+    const observer = new MutationObserver(() => {
+      fetchCartCount();
+    });
+    observer.observe(cartDrawer, { childList: true, subtree: true });
+  }
+
+  // Add-to-cart form submit hook
+  document.querySelectorAll('form[action^="/cart/add"]').forEach(form => {
+    form.addEventListener('submit', () => {
+      setTimeout(fetchCartCount, 400);
+    });
+  });
+
+})();
+
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const cartIcon = document.querySelector(".header__icon");
+    const cartDrawer = document.querySelector(".cart-drawer");
+
+    if (cartIcon && cartDrawer) {
+      cartIcon.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // Toggle the active state
+        cartDrawer.classList.toggle("is-active");
+
+        // Optional: prevent page redirect if it's a link
+        if (cartIcon.tagName === "A" || cartIcon.closest("a")) {
+          e.stopPropagation();
+        }
+      });
+    }
+  });
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const selects = document.querySelectorAll('.custom-list-wholesaler select');
+
+  selects.forEach(select => {
+    // ====== SET DEFAULT ACTIVE ON PAGE LOAD ======
+    const selectedOption = select.options[select.selectedIndex];
+    selectedOption.classList.add('is-active'); // mark default selected option
+    select.classList.add('is-active'); // mark the select itself
+
+    // ====== DYNAMIC CHANGE EVENT ======
+    select.addEventListener('change', function() {
+      // Remove 'is-active' from all options inside this select only
+      Array.from(select.options).forEach(option => option.classList.remove('is-active'));
+
+      // Add 'is-active' to the currently selected option
+      const selectedOption = select.options[select.selectedIndex];
+      selectedOption.classList.add('is-active');
+
+      // Ensure this select has 'is-active'
+      select.classList.add('is-active');
+
+    });
+  });
+});
+</script>
+<script>
+
+/* 1️⃣ Block FORM submit inside cart drawer */
+document.addEventListener(
+  'submit',
+  function (e) {
+    const form = e.target;
+
+    const inDrawer =
+      form.closest('.cart-drawer') ||
+      form.closest('#CartDrawer') ||
+      form.closest('[data-cart-drawer]');
+
+    if (!inDrawer) return;
+
+    // 🚫 Stop redirect & submit (Enter key)
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    return false;
+  },
+  true
+);
+
+/* 2️⃣ OPTIONAL: Blur quantity on Enter (forces update nicely) */
+document.addEventListener(
+  'keydown',
+  function (e) {
+    if (e.key !== 'Enter') return;
+
+    const input = e.target;
+    const inDrawer =
+      input.closest('.cart-drawer') ||
+      input.closest('#CartDrawer') ||
+      input.closest('[data-cart-drawer]');
+
+    if (!inDrawer) return;
+
+    if (
+      input.name === 'quantity' ||
+      input.type === 'number' ||
+      input.classList.contains('custom-class-quantity')
+    ) {
+      e.preventDefault();
+      input.blur(); // 🔑 Ultra listens to blur/change
+    }
+  },
+  true
+);
+  document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('#clear-cart-btn');
+  if (!btn) return;
+
+  e.preventDefault();
+  if (window.__cartRemoveUpdating) return;
+  window.__cartRemoveUpdating = true;
+
+  try {
+    showPreloader();
+
+    await fetch('/cart/clear.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    await refreshCartDrawer();
+
+  } catch (err) {
+    console.error('Error clearing cart:', err);
+  } finally {
+    hidePreloader();
+    window.__cartRemoveUpdating = false;
+  }
+});
+</script>
+
+
+<script>
+/* ==============================
+   GLOBALS
+============================== */
+window.CUSTOMER_ID = "{{ customer.id | default: '' }}";
+
+window.INVENTORY_MAP = window.INVENTORY_MAP || {};
+window.FETCHING_PRODUCTS = window.FETCHING_PRODUCTS || {};
+
+
+/* ==============================
+   BUILD INVENTORY MAP
+============================== */
+function buildInventoryMap(apiData) {
+
+
+
+  if (!apiData || !apiData.products) return;
+
+  apiData.products.forEach(product => {
+
+    if (!product.variants) return;
+
+    product.variants.forEach(variant => {
+
+      if (!variant.variantId) return;
+
+      const match = variant.variantId.toString().match(/(\d+)$/);
+      if (!match) return;
+
+      const variantId = String(match[1]);
+
+      if (!INVENTORY_MAP[variantId]) {
+        INVENTORY_MAP[variantId] = { locations: {} };
+      }
+
+      if (Array.isArray(variant.locations)) {
+        variant.locations.forEach(loc => {
+
+          INVENTORY_MAP[variantId].locations[loc.locationName] =
+            parseInt(loc.stock) || 0;
+
+        });
+      }
+
+    });
+
+  });
+
+  document.dispatchEvent(new Event("inventoryApiReady"));
+}
+
+
+/* ==============================
+   FETCH INVENTORY
+============================== */
+function fetchInventoryForProduct(productId) {
+
+  if (!productId) return;
+  if (FETCHING_PRODUCTS[productId]) return;
+
+  FETCHING_PRODUCTS[productId] = true;
+
+  const apiUrl =
+    `https://offer.pharmacor.com.au/api/proxy/inventory-by-location` +
+    `?shop=${Shopify.shop}` +
+    `&customerId=${window.CUSTOMER_ID || ''}` +
+    `&productIds=${productId}`;
+
+
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(data => {
+      buildInventoryMap(data);
+      FETCHING_PRODUCTS[productId] = false;
+    })
+    .catch(error => {
+      console.error("Inventory API Error:", error);
+      FETCHING_PRODUCTS[productId] = false;
+    });
+}
+
+
+/* ==============================
+   UPDATE STOCK
+============================== */
+function updateStock($dropdown) {
+
+  const $productWrap = $dropdown.closest(".custom-main-inner-wrap");
+  const $stockBox = $productWrap.find(".custom-quantity-items");
+
+  if (!$productWrap.length) return;
+
+  const productId = $productWrap.data("product-id");
+
+  if (!productId) return;
+
+
+  /* =========================
+     MATCH VARIANT
+  ========================== */
+
+  let variantId = null;
+
+  $productWrap.find("input[myvarientid]").each(function () {
+
+    const inputClasses = $(this).attr("class") || "";
+    let matchAll = true;
+
+    $productWrap.find(".custom_dropdown").each(function () {
+
+      const rawVal = $(this).val();
+      if (!rawVal) {
+        matchAll = false;
+        return false;
+      }
+
+      const normalized = rawVal
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[\/\.]/g, "-");
+
+      if (!inputClasses.includes(normalized)) {
+        matchAll = false;
+        return false;
+      }
+
+    });
+
+    if (matchAll) {
+      variantId = String($(this).attr("myvarientid"));
+      return false;
+    }
+
+  });
+
+
+  if (!variantId) {
+    $stockBox.html("Out of Stock");
+    return;
+  }
+
+  /* =========================
+     CHECK INVENTORY MAP
+  ========================== */
+
+  if (!INVENTORY_MAP[variantId]) {
+    fetchInventoryForProduct(productId);
+    $stockBox.html("Loading...");
+    return;
+  }
+
+  const variantData = INVENTORY_MAP[variantId];
+
+
+  /* =========================
+     DETECT SUPPLIER
+  ========================== */
+
+  let supplier = "";
+  let supplierRaw = "";
+
+  $productWrap.find(".custom_dropdown").each(function () {
+
+    const rawVal = $(this).val();
+    if (!rawVal) return;
+
+    const cleanVal = rawVal.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+    if (cleanVal.includes("api")) {
+      supplier = "api";
+      supplierRaw = rawVal;
+    }
+    else if (cleanVal.includes("sigma")) {
+      supplier = "sigma";
+      supplierRaw = rawVal;
+    }
+    else if (cleanVal.includes("symbion")) {
+      supplier = "symbion";
+      supplierRaw = rawVal;
+    }
+    else if (cleanVal.includes("ch2")) {
+      supplier = "ch2";
+      supplierRaw = rawVal;
+    }
+
+    if (supplier) return false;
+
+  });
+
+ 
+
+  if (!supplier) {
+    $stockBox.html("");
+    return;
+  }
+
+  /* =========================
+     CALCULATE STOCK
+  ========================== */
+
+  let totalStock = 0;
+  const cleanSupplier = supplier.toLowerCase();
+
+  Object.keys(variantData.locations).forEach(loc => {
+
+    const locationOriginal = loc;
+    const locationClean = loc.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const stock = parseInt(variantData.locations[loc]) || 0;
+
+
+
+    if (locationClean.includes(cleanSupplier)) {
+  
+      totalStock += stock;
+    }
+
+  });
+
+
+  if (totalStock > 0) {
+    $stockBox.html("Stock: " + totalStock);
+  } else {
+    $stockBox.html("Out of stock");
+  }
+
+}
+
+
+/* ==============================
+   INIT
+============================== */
+$(document).ready(function () {
+
+  $(".custom_dropdown").each(function () {
+    updateStock($(this));
+  });
+
+  $(document).on("change", ".custom_dropdown", function () {
+    updateStock($(this));
+  });
+
+  document.addEventListener("inventoryApiReady", function () {
+    $(".custom_dropdown").each(function () {
+      updateStock($(this));
+    });
+  });
+
+});
+</script>
+<script>
+  if (typeof observer === 'undefined') {
+    var observer = new IntersectionObserver(() => {}); // empty callback
+  }
+
+
+</script>
+
+
+
+<script>
+$(document).ready(function () {
+
+  // ---- helper for number parsing ----
+  function parseMoney(val) {
+    return parseFloat((val || "0").replace(/[^0-9.]/g, "")) || 0;
+  }
+
+  function handleDropdownChange($dropdown) {
+
+    const $parent = $dropdown.closest('.custom-main-inner-wrap');
+
+    // ===============================
+    // Build variant key
+    // ===============================
+    let combinedValue = [];
+    $parent.find('.custom_dropdown').each(function () {
+      combinedValue.push(this.value);
+    });
+
+    combinedValue = combinedValue.join("-")
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[\/\.]/g, "-");
+
+    if (!combinedValue) return; // no .custom_dropdown found under this parent — nothing to look up
+
+    const $variantElements = $parent.find("." + combinedValue);
+
+    // ===============================
+    // Variant Data
+    // ===============================
+    let variantId = null;
+    let variantProfit = 0;
+    let variantQty = 0;
+    let variantPrice = 0;
+    let variantComparePrice = 0;
+    let tierPrice = 0;
+
+    if ($variantElements.length) {
+      const $baseEl = $variantElements.first();
+      variantId = $baseEl.attr("myvarientid");
+      variantProfit = $baseEl.attr("variantprofit");
+      variantQty = parseInt($baseEl.attr("varientquentity") || "0", 10);
+      variantPrice = parseMoney($baseEl.attr("varienrprice"));
+      variantComparePrice = parseMoney($baseEl.attr("varienrcompprice"));
+      tierPrice = parseMoney($baseEl.attr("customwholesaleprice"));
+    }
+
+    // ===============================
+    // Determine Final Display Price
+    // ===============================
+    let displayPrice = variantPrice;
+    if (tierPrice > 0) {
+      displayPrice = tierPrice;
+    }
+
+    // Fallback if variant price is missing
+    if ((!displayPrice || displayPrice <= 0) && $parent.attr("data-price")) {
+      displayPrice = parseMoney($parent.attr("data-price"));
+    }
+
+    // ===============================
+    // MOQ vs Tier Logic (Widget Control)
+    // ===============================
+    const $volumeBox = $parent.find("#variant-volume-discount");
+    const $volumeText = $volumeBox.find(".volume-offer-text");
+    $volumeText.empty();
+
+    let lowestMOQPrice = null;
+    let lowestMOQQty = null;
+
+    // Find all available MOQ offers
+    let moqTiers = [];
+    $variantElements.each(function () {
+      const qty = parseInt($(this).attr("volumeqty") || "0", 10);
+      const moqPrice = parseMoney($(this).attr("volumediscountprice"));
+
+      if (qty > 0 && moqPrice > 0) {
+        moqTiers.push({ qty: qty, price: moqPrice });
+      }
+    });
+
+    // Sort tiers by quantity ascending
+    moqTiers.sort((a, b) => a.qty - b.qty);
+
+    // ===============================
+    // DECISION LOGIC (unchanged)
+    // ===============================
+    if (tierPrice > 0 && moqTiers.length > 0) {
+
+      // If Tier better → hide MOQ widget
+      if (tierPrice <= moqTiers[0].price) {
+        $volumeBox.hide();
+      } 
+      // If MOQ better → show all MOQ tiers
+      else {
+        moqTiers.forEach(t => {
+          const row = document.createElement("div");
+          row.innerHTML = `
+            <span class="volume-qty">Buy ${t.qty}+</span>
+            <span class="volume-price">
+              <span class="volumne-arrow">→</span> $${t.price.toFixed(2)}
+            </span>
+          `;
+          $volumeText.append(row);
+        });
+        $volumeBox.show();
+      }
+
+    } 
+    else if (tierPrice > 0) {
+      // Only Tier exists
+      $volumeBox.hide();
+    } 
+    else if (moqTiers.length > 0) {
+      // Only MOQ exists → show all
+      moqTiers.forEach(t => {
+        const row = document.createElement("div");
+        row.innerHTML = `
+          <span class="volume-qty">Buy ${t.qty}+</span>
+          <span class="volume-price">
+            <span class="volumne-arrow">→</span> $${t.price.toFixed(2)}
+          </span>
+        `;
+        $volumeText.append(row);
+      });
+      $volumeBox.show();
+    } 
+    else {
+      // Neither exists
+      $volumeBox.hide();
+    }
+
+    // ===============================
+    // Saving Percentage
+    // ===============================
+    {% comment %}
+    if (variantComparePrice > displayPrice && variantComparePrice > 0) {
+      let savingPercent = Math.round(((variantComparePrice - displayPrice) / variantComparePrice) * 100);
+      if (savingPercent <= 0) savingPercent = 1;
+
+      $parent.find(".custom-sale-pricee").html("Saving: " + savingPercent + "%");
+
+      $parent.find(".price__discount")
+        .contents()
+        .filter(function () { return this.nodeType === 3; })
+        .first()
+        .replaceWith(savingPercent + "% ");
+    }
+    {%endcomment %}
+
+    // ===============================
+    // Ultra Theme Price Update
+    // ===============================
+    $parent.find(".price-item.price-item--sale").html("$" + displayPrice.toFixed(2));
+ {% comment %}
+    if (variantComparePrice > displayPrice) {
+      $parent.find(".price-item.price-item--regular").html("$" + variantComparePrice.toFixed(2)).show();
+    } else {
+      $parent.find(".price-item.price-item--regular").hide();
+    }
+ {%endcomment %}
+    $parent.find(".discount-price-item")
+      .attr("data-wpd-variant-id", variantId)
+      .html("$" + displayPrice.toFixed(2));
+
+        $parent.find(".loyalty-points-value").text(Math.round(displayPrice * 100));
+
+    // ===============================
+    // Hidden Inputs
+    // ===============================
+    $parent.find(".my-add-to-cart-value").val(variantId);
+    $parent.find("#my-variant-profit").val(variantProfit);
+  }
+
+  // ===============================
+  // Events
+  // ===============================
+  $(document).on('change', '.custom_dropdown', function () {
+    handleDropdownChange($(this));
+  });
+
+  $('.custom_dropdown').each(function () {
+    handleDropdownChange($(this));
+  });
+
+});
+</script>
+
+
+<script>
+function showTab(e, tabId) {
+  const sections = document.getElementsByClassName('tab-section');
+  const buttons = document.getElementsByClassName('tab-btn');
+
+  // Hide all sections
+  for (let i = 0; i < sections.length; i++) {
+    sections[i].style.display = 'none';
+  }
+
+  // Remove active class from all buttons
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].classList.remove('active-tab');
+  }
+
+  // Show selected tab
+  var targetTab = document.getElementById(tabId);
+  if (targetTab) targetTab.style.display = 'block';
+  e.currentTarget.classList.add('active-tab');
+}
+</script>
+<script>
+function initCustomWrappers() {
+
+  const wrappers = document.querySelectorAll('.custom-list-wrapper');
+
+  wrappers.forEach(wrapper => {
+
+    if (wrapper.dataset.initialized === "true") return;
+    wrapper.dataset.initialized = "true";
+
+    const selects = wrapper.querySelectorAll('select');
+    const jsonEl = wrapper.querySelector('.product-variants-json');
+
+    let variantsData = [];
+
+    if (jsonEl) {
+      try {
+        variantsData = JSON.parse(jsonEl.textContent);
+      } catch (e) {
+        console.error("Variant JSON parse error", e);
+      }
+    }
+
+    function updateActiveState() {
+
+      let values = [];
+      let wholesalerValue = '';
+
+      selects.forEach(select => {
+
+        select.classList.remove('is-active');
+
+        Array.from(select.options).forEach(option =>
+          option.classList.remove('is-active')
+        );
+
+        const selectedOption = select.options[select.selectedIndex];
+
+        if (selectedOption) {
+
+          selectedOption.classList.add('is-active');
+          select.classList.add('is-active');
+
+          const text = selectedOption.text.trim();
+          values.push(text);
+
+          if (select.classList.contains('customwholesaler')) {
+            wholesalerValue = text;
+          }
+        }
+
+      });
+
+      wrapper.dataset.activeValues = values.join(' | ');
+      wrapper.dataset.values = wholesalerValue;
+
+      const matchedVariant = variantsData.find(variant => {
+        return variant.options.every((opt, index) => opt === values[index]);
+      });
+
+      wrapper.dataset.activeVariant = matchedVariant
+        ? matchedVariant.id
+        : '';
+    }
+
+    updateActiveState();
+
+    selects.forEach(select => {
+      select.addEventListener('change', updateActiveState);
+    });
+
+  });
+}
+
+/* ==============================
+   INITIAL LOAD
+============================== */
+document.addEventListener('DOMContentLoaded', function () {
+  initCustomWrappers();
+});
+
+/* ==============================
+   WATCH FOR DOM REPLACEMENT
+============================== */
+(function () {
+  var observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      if (mutation.addedNodes.length > 0) {
+        initCustomWrappers();
+      }
+    });
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+})();
+</script>
+
+
+
+<script>
+(function ($) {
+  $(document).ready(function () {
+
+    /* ===============================
+       POPUP OPEN / CLOSE
+    =============================== */
+    const $body = $('body');
+
+    $body.on('click', '.custom-list-product-info', function () {
+      $(this).closest('.custom-main-inner-wrap')
+             .next()
+             .removeClass('custom-hidden-class');
+    });
+
+    $body.on('click', '.custom-close-pop', function () {
+      $(this).closest('.custom-popup-wrap')
+             .addClass('custom-hidden-class');
+    });
+
+    $body.on('click', '.mysimple-close', function () {
+      $(this).parent().addClass('custom-hidden-class');
+    });
+
+
+    /* ===============================
+       MAIN DROPDOWN SYNC
+    =============================== */
+    const $mainSelect = $('#mySelect');
+    const $wholesalerLists = $('.custom-list-wholesaler');
+
+    function handleDropdownChange() {
+      const selectedValue = $mainSelect.val();
+      if (!selectedValue) return;
+
+      $wholesalerLists.each(function () {
+        const $this = $(this);
+        if ($this.find(`option[value="${selectedValue}"]`).length) {
+          $this.val(selectedValue);
+        }
+      });
+
+      // Trigger change once
+      setTimeout(() => {
+        $wholesalerLists.trigger('change');
+      }, 50);
+    }
+
+    if ($mainSelect.length) {
+      $mainSelect.on('change', handleDropdownChange);
+      handleDropdownChange();
+    }
+
+
+    /* ===============================
+       HOVER VARIANT (Desktop Only)
+    =============================== */
+    if ($(window).width() > 992) {
+
+      const $variants = $('.custom-variant');
+      const $hoverTargets = $('.collection__item, .featured-products__col, .products-thumbnails__product');
+
+      // Hide initially
+      $variants.hide();
+
+      function bindHover() {
+        $hoverTargets.off('mouseenter mouseleave').hover(
+          function () {
+            $(this).find('.custom-variant').stop(true, true).slideDown(200);
+          },
+          function () {
+            $(this).find('.custom-variant').stop(true, true).slideUp(300);
+          }
+        );
+      }
+
+      bindHover();
+
+      // Rebind after Shopify page change
+      const pushState = history.pushState;
+      history.pushState = function () {
+        pushState.apply(history, arguments);
+        setTimeout(bindHover, 700);
+      };
+
+      $(window).on('popstate', function () {
+        setTimeout(bindHover, 700);
+      });
+    }
+
+
+    /* ===============================
+       HOMEPAGE QTY +/- BUTTONS
+    =============================== */
+    $body.on('click', '.homepage-qty-decrease', function () {
+      var $input = $(this).closest('.homepage-qty-selector').find('.homepage-qty-input');
+      var currentVal = parseInt($input.val(), 10) || 1;
+      var minVal = parseInt($input.attr('min'), 10) || 1;
+      if (currentVal > minVal) {
+        $input.val(currentVal - 1).trigger('change');
+      }
+    });
+
+    $body.on('click', '.homepage-qty-increase', function () {
+      var $input = $(this).closest('.homepage-qty-selector').find('.homepage-qty-input');
+      var currentVal = parseInt($input.val(), 10) || 1;
+      var maxVal = parseInt($input.attr('max'), 10) || 99999;
+      if (currentVal < maxVal) {
+        $input.val(currentVal + 1).trigger('change');
+      }
+    });
+
+    // Prevent quantity going below min on manual input
+    $body.on('change', '.homepage-qty-input', function () {
+      var $input = $(this);
+      var minVal = parseInt($input.attr('min'), 10) || 1;
+      var val = parseInt($input.val(), 10);
+      if (isNaN(val) || val < minVal) {
+        $input.val(minVal);
+      }
+    });
+
+
+   
+
+
+    /* ===============================
+       PRODUCT SEARCH FILTER
+    =============================== */
+    const $searchInput = $("#searchInput");
+    const $products = $(".custom-main-inner-wrap");
+
+    if ($searchInput.length) {
+      $searchInput.on("keyup", function () {
+        const query = $(this).val().toLowerCase().trim();
+
+        $products.each(function () {
+          const title = ($(this).data("title") || '').toString().toLowerCase();
+          $(this).toggleClass("myshow", title.includes(query));
+          $(this).toggleClass("myhidden", !title.includes(query));
+        });
+      });
+    }
+
+  });
+})(jQuery);
+</script>
+
+<script>
+  (function ($) {
+  $(document).ready(function () {
+
+    const $body = $('body');
+
+    /* =========================================
+       SYNC VARIANT ID WHEN DROPDOWN CHANGES
+    ========================================== */
+    $body.on('change', '.custom-list-wholesaler', function () {
+      var variantId = $(this).val();
+
+      $(this).closest('form')
+             .find('.custom-idd')
+             .val(variantId);
+    });
+
+
+    /* =========================================
+       ADD TO CART — DISABLED (2026-08-04)
+       Every section using .custom-btn-boxes (collection-grid, wellcom-search,
+       welcome, Favourites, product-template) already has its own dedicated
+       handler for this same button class. This body-level delegated handler
+       fired on EVERY .custom-btn-boxes click site-wide in addition to those,
+       causing a single click to send two separate /cart/add.js requests —
+       one from this handler (missing _line_uid/normalization) and one from
+       the correct section handler — creating two cart lines instead of one
+       merged line. Also independently buggy: it sourced the variant ID from
+       .custom-list-wholesaler (the wholesaler-account dropdown, not a variant
+       selector), which is why "Variant ID: undefined" showed up in testing.
+    ========================================== */
+    /*
+    $body.on("click", ".custom-btn-boxes", function (e) {
+
+      e.preventDefault();
+
+      var $btn = $(this);
+      if ($btn.hasClass('atc-loading')) return;
+
+      var $form = $btn.closest("form");
+
+      // ===== ALWAYS TAKE VARIANT FROM DROPDOWN =====
+      var variantId = $form.find(".custom-list-wholesaler").val();
+
+      // ===== FALLBACK (if dropdown not present) =====
+      if (!variantId) {
+        variantId = $form.find(".custom-idd").val();
+      }
+
+      var quantity = parseInt(
+        $form.find(".custom-class-quantity").val()
+      ) || 1;
+
+      console.log("=================================");
+      console.log("🛒 ADD TO CART CLICKED");
+      console.log("Variant ID:", variantId);
+      console.log("Quantity:", quantity);
+      console.log("=================================");
+
+      $btn.addClass("atc-loading");
+
+      var $btnText = $btn.find(".js-product-add-to-cart-button-text");
+      var originalText = $btnText.text();
+      $btnText.text("Adding...");
+
+      var formData = {
+        id: variantId,
+        quantity: quantity,
+        properties: {
+          "Delivery Date": $form.find("#delivery_date").val() || '',
+          "Saving Per Item": $form.find("#custom-inline-property").val() || '',
+          "Wholesaler Account No.1": $form.find(".API").val() || '',
+          "Wholesaler Account No.2": $form.find(".Sigma").val() || '',
+          "Wholesaler Account No.3": $form.find(".Symbion").val() || '',
+          "Wholesaler Account No.4": $form.find(".Ch2").val() || '',
+
+
+        }
+      };
+      var subValue = $form.find('[name="properties[subscription]"]').val();
+        if (subValue) formData.properties.subscription = subValue;
+
+      $.ajax({
+        type: "POST",
+        url: "/cart/add.js",
+        data: JSON.stringify(formData),
+        contentType: "application/json",
+        dataType: "json",
+
+        success: function (response) {
+
+          console.log("✅ Item Added:", response);
+
+          $.getJSON("/cart.js", function (cart) {
+            $(".js-header-cart-item-count")
+              .text(cart.item_count)
+              .css("display", "inline-block");
+          });
+
+          refreshCartDrawer(function () {
+            showATCNotification("Item added to cart", "success");
+
+            $("body").addClass("js-drawer-open-cart");
+          });
+        },
+
+        error: function (xhr) {
+          console.log("❌ Add To Cart Error:", xhr.responseText);
+
+        },
+
+        complete: function () {
+          $btn.removeClass("atc-loading");
+          $btnText.text(originalText);
+        }
+      });
+
+    });
+    */
+
+
+    /* =========================================
+       CART DRAWER REFRESH
+    ========================================== */
+    function refreshCartDrawer(callback) {
+
+      const $drawer = $("#CartDrawer");
+      const sectionKey = $drawer.data("section-id") || "cart-drawer";
+
+      $.ajax({
+        url: "/?sections=" + sectionKey + "&_=" + Date.now(),
+        dataType: "json",
+        success: function (res) {
+
+          if (res && res[sectionKey]) {
+            const $temp = $(res[sectionKey]);
+
+            $drawer.find(".js-cart-container")
+                   .html($temp.find(".js-cart-container").html());
+
+            $drawer.find(".cart-drawer__footer, .drawer__footer")
+                   .html($temp.find(".cart-drawer__footer, .drawer__footer").html());
+
+            if (callback) callback();
+          }
+        }
+      });
+    }
+
+
+    /* =========================================
+       TOAST NOTIFICATION
+    ========================================== */
+    function showATCNotification(message, type) {
+
+      $(".atc-toast-notification").remove();
+
+      var bgColor = type === "success" ? "#30623D" : "#c0392b";
+
+      var $toast = $('<div class="atc-toast-notification">' + message + '</div>');
+
+      $toast.css({
+        position: "fixed",
+        top: "90px",
+        right: "20px",
+        background: bgColor,
+        color: "#fff",
+        padding: "14px 24px",
+        borderRadius: "8px",
+        fontSize: "14px",
+        fontWeight: "600",
+        zIndex: "999999",
+        opacity: "0",
+        transform: "translateY(-10px)",
+        transition: "all 0.3s ease"
+      });
+
+      $("body").append($toast);
+
+      setTimeout(function () {
+        $toast.css({ opacity: "1", transform: "translateY(0)" });
+      }, 10);
+
+      setTimeout(function () {
+        $toast.css({ opacity: "0", transform: "translateY(-10px)" });
+        setTimeout(function () { $toast.remove(); }, 200);
+      }, 2000);
+    }
+
+  });
+})(jQuery);
+</script>
+   
+
+ <script>
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.cart-drawer-subscription-buttons button');
+    if (!btn) return;
+
+    var ui = btn.closest('.cart-subscription-ui');
+    if (!ui) return;
+
+    var itemKey = ui.dataset.itemKey;
+    var isOneTime = btn.classList.contains('one_time');
+
+    // Step 1: Update button appearance immediately (no waiting)
+    ui.querySelectorAll('.cart-drawer-subscription-buttons button').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    btn.classList.add('active');
+
+    // Step 2: Get fresh cart data from Shopify so we never touch other properties
+    fetch('/cart.js')
+      .then(function(r) { return r.json(); })
+      .then(function(cart) {
+        // Find this specific cart item by its key
+        var cartItem = cart.items.find(function(i) { return i.key === itemKey; });
+        if (!cartItem) return;
+
+        // Copy ALL existing properties exactly as they are (Wholesaler, Delivery Date, etc.)
+        var updatedProps = Object.assign({}, cartItem.properties || {});
+        console.log(updatedProps,"updatedProps");
+        // Only change the subscription property — nothing else
+        if (isOneTime) {
+          delete updatedProps['subscription'];  // remove subscription for one-time
+        } else {
+          updatedProps['subscription'] = '6 month + 1 month free';  // set for subscribe
+        }
+
+        // Step 3: Send updated properties back to Shopify
+        return fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: itemKey, quantity: cartItem.quantity, properties: updatedProps })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function() {
+          // Step 4: Tell the cart drawer to re-render immediately with updated data
+          if (window.themeCore && window.themeCore.EventBus) {
+            window.themeCore.EventBus.emit('cart:refresh');
+          }
+        });
+      })
+      .catch(function(err) { console.error('Cart subscription update failed:', err); });
+  });
+  </script>
+<script>
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.list-subscribe-buttons button');
+  if (!btn) return;
+  var ui = btn.closest('.list-subscribe-save-ui');
+  if (!ui) return;
+  ui.querySelectorAll('.list-subscribe-buttons button').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  var row = ui.closest('.custom-main-inner-wrap');
+  var input = row
+    ? row.querySelector('[name="properties[subscription]"]')
+    : ui.closest('form') && ui.closest('form').querySelector('[name="properties[subscription]"]');
+  if (input) input.value = btn.dataset.value;
+});
+</script>
+
+<script>
+  document.querySelectorAll('.loyality-btn').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+
+    const target = document.querySelector(this.getAttribute('href'));
+
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
+</script>
+
+
+
+
+
+
+{% if customer %}
+<style>
+  .cart-sub-setup-overlay {
+    position: fixed; inset: 0; background: rgba(20,30,24,.5); display: none;
+    align-items: center; justify-content: center; z-index: 99999; padding: 16px;
+  }
+  .cart-sub-setup-overlay.is-open { display: flex; }
+  .cart-sub-setup-modal {
+    background: #1f4a2c; border-radius: 16px; padding: 28px; max-width: 400px; width: 100%;
+  }
+  .cart-sub-setup-modal h3 { font-size: 26px; font-weight: 800; margin: 0 0 8px; color: #ecf7ee; }
+  .cart-sub-setup-modal__desc { color: #b7d3bd; font-size: 16px; font-weight: 600; margin: 0 0 16px; }
+  .cart-sub-setup-radio {
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px; font-size: 16px; font-weight: 700;
+    color: #fff; border-radius: 10px; cursor: pointer; margin-bottom: 6px;
+  }
+  .cart-sub-setup-radio.is-selected,
+  .cart-sub-setup-radio:has(input:checked) { background: #14301d; }
+  .cart-sub-setup-radio input[type="radio"] {
+    appearance: none; -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid #fff; background: transparent; flex: 0 0 auto; margin: 0; cursor: pointer;
+  }
+  .cart-sub-setup-radio input[type="radio"]:checked {
+    border-color: #f44e9b; background: #f44e9b; box-shadow: inset 0 0 0 3px #14301d;
+  }
+  .cart-sub-setup-modal__custom-date { margin: 0 16px 12px; }
+  .cart-sub-setup-modal__custom-date input[type="date"] {
+    width: 100%; padding: 10px 12px; border: 1px solid #fff; border-radius: 8px; font-size: 14px;
+    background-image: url(https://cdn.shopify.com/s/files/1/0726/4249/4700/files/calendar_1.png?v=1786617913);
+    background-repeat: no-repeat;
+    color: #fff;
+  }
+  .cart-sub-setup-modal__custom-date input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
+  .cart-sub-setup-modal__note {
+    background: #fff; border-radius: 12px; padding: 16px; font-size: 14px; color: #222;
+    margin-top: 16px;
+  }
+  .cart-sub-setup-modal__note .sub-toggle-row { display: flex; gap: 8px; margin-top: 12px; }
+  .cart-sub-setup-modal__note .sub-toggle-row button {
+    flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #d7ded8; background: #fff;
+    font-size: 13px; font-weight: 600; cursor: pointer; color: #222;
+  }
+  .cart-sub-setup-modal__note .sub-toggle-row button.is-active { background: #1f4a2c; color: #fff; border-color: #1f4a2c; }
+  .cart-sub-setup-modal__confirm {
+    width: 100%; margin-top: 20px; padding: 14px; border-radius: 10px; font-size: 15px;
+    font-weight: 700; background: #fff; color: #1f4a2c; border: none; cursor: pointer;
+  }
+  .cart-sub-setup-modal__confirm[disabled] { opacity: .6; cursor: default; }
+</style>
+
+<div class="cart-sub-setup-overlay" id="cartSubSetupModal">
+  <div class="cart-sub-setup-modal">
+    <h3>Set up your subscription</h3>
+    <p class="cart-sub-setup-modal__desc">When should it start?</p>
+
+    <label class="cart-sub-setup-radio">
+      <input type="radio" name="cartSubSetupStart" value="today" checked>
+      Start today
+    </label>
+    <label class="cart-sub-setup-radio">
+      <input type="radio" name="cartSubSetupStart" value="first_next_month">
+      1st of next month
+    </label>
+    <label class="cart-sub-setup-radio">
+      <input type="radio" name="cartSubSetupStart" value="custom">
+      Select your own date
+    </label>
+
+    <div class="cart-sub-setup-modal__custom-date" id="cartSubSetupCustomDateWrap" style="display:none;">
+      <input type="date" id="cartSubSetupCustomDate" min="{{ 'now' | date: '%Y-%m-%d' }}" value="{{ 'now' | date: '%Y-%m-%d' }}">
+    </div>
+
+    <div class="cart-sub-setup-modal__note" id="cartSubSetupAnchorNote" style="display:none;">
+      Since you picked a custom date, should future orders repeat on this date, or reset to the 1st after the first order?
+      <div class="sub-toggle-row">
+        <button type="button" data-value="repeat">Repeat on this date</button>
+        <button type="button" class="is-active" data-value="reset_to_1st">Reset to 1st</button>
+      </div>
+    </div>
+
+    <button type="button" class="cart-sub-setup-modal__confirm" id="cartSubSetupConfirm">Continue</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  if (window.__cartSubSetupInit) {
+    console.log('[cart-sub-setup] init skipped: already initialized on this page');
+    return;
+  }
+  window.__cartSubSetupInit = true;
+
+  console.log(
+    '[cart-sub-setup] script initialized. #cartSubSetupModal in DOM right now:',
+    !!document.getElementById('cartSubSetupModal'),
+    '- Subscription_button count right now:',
+    document.querySelectorAll('.cart-drawer-subscription-buttons button.Subscription_button').length
+  );
+
+  // catches the modal being closed/hidden by ANYTHING — including code
+  // outside this file entirely (another script directly toggling the class,
+  // wiping the modal's innerHTML, etc.) — not just our own closeModal()
+  (function watchModalForExternalChanges() {
+    var modalEl = document.getElementById('cartSubSetupModal');
+    if (!modalEl) return;
+    var wasOpen = modalEl.classList.contains('is-open');
+    new MutationObserver(function () {
+      var isOpenNow = modalEl.classList.contains('is-open');
+      if (wasOpen && !isOpenNow) {
+        console.trace('[cart-sub-setup] #cartSubSetupModal LOST "is-open" class — see stack above');
+      }
+      wasOpen = isOpenNow;
+    }).observe(modalEl, { attributes: true, attributeFilter: ['class', 'style'] });
+  })();
+
+  document.addEventListener('focus', function (e) {
+    if (e.target && e.target.id === 'cartSubSetupCustomDate') {
+      console.log('[cart-sub-setup] date input FOCUSED');
+    }
+  }, true);
+
+  document.addEventListener('blur', function (e) {
+    if (e.target && e.target.id === 'cartSubSetupCustomDate') {
+      console.log('[cart-sub-setup] date input BLURRED');
+    }
+  }, true);
+
+  var pendingItemKey = null;
+  var pendingVariantId = null;
+
+  function formatDate(d) { return d.toISOString().split('T')[0]; }
+  function firstOfNextMonth() {
+    var d = new Date();
+    return formatDate(new Date(d.getFullYear(), d.getMonth() + 1, 1));
+  }
+
+  // re-queried on every call rather than cached — the drawer re-renders this
+  // markup from scratch on every cart refresh, so a cached reference would
+  // silently go stale and point at a detached node
+  function getModalEls() {
+    var modal = document.getElementById('cartSubSetupModal');
+    if (!modal) return null;
+    return {
+      modal: modal,
+      anchorNote: document.getElementById('cartSubSetupAnchorNote'),
+      customDateWrap: document.getElementById('cartSubSetupCustomDateWrap'),
+      customDateInput: document.getElementById('cartSubSetupCustomDate'),
+      startRadios: modal.querySelectorAll('input[name="cartSubSetupStart"]')
+    };
+  }
+
+  function refreshSelectedRow(els) {
+    els.startRadios.forEach(function (r) {
+      r.closest('.cart-sub-setup-radio').classList.toggle('is-selected', r.checked);
+    });
+  }
+
+  function resetModal(els) {
+    els.startRadios.forEach(function (r) { r.checked = r.value === 'today'; });
+    refreshSelectedRow(els);
+    els.customDateWrap.style.display = 'none';
+    els.anchorNote.style.display = 'none';
+    if (els.customDateInput) els.customDateInput.value = formatDate(new Date());
+    els.anchorNote.querySelectorAll('.sub-toggle-row button').forEach(function (b) {
+      b.classList.toggle('is-active', b.dataset.value === 'reset_to_1st');
+    });
+  }
+
+  function openModal(itemKey, variantId) {
+    console.log('[cart-sub-setup] openModal called for item:', itemKey, '- variantId:', variantId);
+
+    var els = getModalEls();
+
+    if (!els) {
+      console.warn('[cart-sub-setup] openModal aborted: #cartSubSetupModal not found in DOM');
+      return;
+    }
+
+    pendingItemKey = itemKey;
+    pendingVariantId = variantId;
+    resetModal(els);
+    els.modal.classList.add('is-open');
+
+    // the cart drawer (#CartDrawer) is also position:fixed and stays open
+    // underneath this modal — two stacked fixed-position full-screen layers
+    // is a known source of native-picker positioning bugs on iOS Safari
+    // (the product page's identical popup never has this problem, because
+    // there the drawer is closed and only one fixed layer exists at a
+    // time). Hiding the drawer purely visually — not touching its own
+    // open/close state — removes the second layer while our modal is up.
+    var drawerEl = document.getElementById('CartDrawer');
+    if (drawerEl) drawerEl.style.display = 'none';
+
+    console.log('[cart-sub-setup] modal opened, is-open class added:', els.modal.classList.contains('is-open'));
+  }
+
+  function closeModal() {
+    console.trace('[cart-sub-setup] closeModal() called — see stack above for who called it');
+
+    var els = getModalEls();
+    if (els) els.modal.classList.remove('is-open');
+    pendingItemKey = null;
+    pendingVariantId = null;
+
+    var drawerEl = document.getElementById('CartDrawer');
+    if (drawerEl) drawerEl.style.display = '';
+  }
+
+  function dispatchCartRefresh() {
+    document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+    if (window.themeCore && window.themeCore.EventBus) {
+      window.themeCore.EventBus.emit('cart:refresh');
+    }
+
+    // the events above don't actually re-render the drawer's own markup —
+    // nothing was listening to them to re-fetch it, so a just-saved property
+    // like Delivery Date wouldn't show until something else (e.g. reopening
+    // the drawer) happened to trigger a real refresh. refreshCartDrawer()
+    // (defined elsewhere in this file) is the theme's actual drawer-content
+    // refresh — call it directly so the change is visible immediately.
+    //
+    // it guards against overlapping refreshes via window.__refreshingCart and
+    // silently no-ops if one is already running — which is exactly what
+    // happens on a subscription's very first confirm: this page also runs a
+    // wholesaler-reconciliation pass on DOMContentLoaded that calls this same
+    // function, and on a slow connection that pass can still be in flight
+    // when the customer finishes the popup. A single unchecked call would
+    // silently do nothing then — the property saves fine server-side, but
+    // the drawer never redraws to show it until something else triggers a
+    // refresh later. Retrying while it's busy avoids that.
+    function tryRefreshDrawer(attemptsLeft) {
+      if (typeof window.refreshCartDrawer !== 'function') return;
+
+      if (window.__refreshingCart) {
+        if (attemptsLeft > 0) {
+          setTimeout(function () { tryRefreshDrawer(attemptsLeft - 1); }, 300);
+        }
+        return;
+      }
+
+      window.refreshCartDrawer();
+    }
+
+    tryRefreshDrawer(6);
+  }
+
+  // updates just the one cart line's properties via the Ajax Cart API —
+  // properties are always the full merged set (existing + changed), since
+  // /cart/change.js replaces a line's properties rather than patching them
+  function updateLineProperties(itemKey, properties, activeBtnSelector) {
+    return fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: itemKey, properties: properties })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (cart) {
+        var ui = document.querySelector('.cart-subscription-ui[data-item-key="' + CSS.escape(itemKey) + '"]');
+        if (ui) {
+          ui.querySelectorAll('.Subscription_buttons button').forEach(function (b) { b.classList.remove('active'); });
+          var activeBtn = activeBtnSelector ? ui.querySelector(activeBtnSelector) : null;
+          if (activeBtn) activeBtn.classList.add('active');
+        }
+        dispatchCartRefresh();
+        return cart;
+      });
+  }
+
+  document.addEventListener('click', function (e) {
+    var subBtn = e.target.closest('.cart-drawer-subscription-buttons button.Subscription_button');
+
+    console.log('[cart-sub-setup] document click:', e.target, '-> Subscription_button match:', !!subBtn);
+
+    if (subBtn) {
+      var ui2 = subBtn.closest('.cart-subscription-ui');
+
+      console.log('[cart-sub-setup] Subscription_button clicked, closest .cart-subscription-ui:', ui2);
+
+      if (!ui2) {
+        console.warn('[cart-sub-setup] aborted: no .cart-subscription-ui ancestor found for this button');
+        return;
+      }
+      openModal(ui2.dataset.itemKey, ui2.dataset.variantId);
+      return;
+    }
+
+    var anchorToggleBtn = e.target.closest('#cartSubSetupAnchorNote .sub-toggle-row button');
+    if (anchorToggleBtn) {
+      anchorToggleBtn.parentElement.querySelectorAll('button').forEach(function (b) { b.classList.remove('is-active'); });
+      anchorToggleBtn.classList.add('is-active');
+      return;
+    }
+
+    var confirmBtn = e.target.closest('#cartSubSetupConfirm');
+    if (confirmBtn) {
+      var els = getModalEls();
+      if (!els || !pendingItemKey) return;
+      var checkedRadio = els.modal.querySelector('input[name="cartSubSetupStart"]:checked');
+      var choice = checkedRadio ? checkedRadio.value : 'today';
+      var chosenDate, anchorMode = null;
+
+      if (choice === 'today') {
+        chosenDate = formatDate(new Date());
+      } else if (choice === 'first_next_month') {
+        chosenDate = firstOfNextMonth();
+      } else {
+        chosenDate = (els.customDateInput && els.customDateInput.value) || formatDate(new Date());
+        var activeAnchorBtn = els.anchorNote.querySelector('.sub-toggle-row button.is-active');
+        anchorMode = activeAnchorBtn ? activeAnchorBtn.dataset.value : 'reset_to_1st';
+      }
+
+      var openedItemKey = pendingItemKey;
+      var variantId = pendingVariantId ? parseInt(pendingVariantId, 10) : null;
+      confirmBtn.disabled = true;
+
+      // Shopify computes a cart line's key from variant id + a hash of its
+      // properties — so ANY properties change on a line (including the
+      // wholesaler-reconciliation pass this page runs on load) changes that
+      // line's key too. openedItemKey was captured when the popup opened
+      // and can already be stale by the time Continue is clicked; posting
+      // to a key that no longer exists gets a 400 from /cart/change.js.
+      // Waiting for reconciliation to finish isn't enough on its own — we
+      // also have to re-resolve the line fresh afterward, by variant id
+      // (which never changes) rather than trusting openedItemKey.
+      console.log('[cart-sub-setup] CONFIRM clicked. openedItemKey:', openedItemKey, '- variantId:', variantId, '- chosenDate:', chosenDate, '- anchorMode:', anchorMode, '- reconcile promise pending:', !!window.__wholesalerReconcilePromise);
+
+      Promise.resolve(window.__wholesalerReconcilePromise)
+        .then(function () {
+          console.log('[cart-sub-setup] reconcile wait finished (or was never pending) — fetching /cart.js');
+          return fetch('/cart.js');
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (cart) {
+          console.log('[cart-sub-setup] /cart.js returned', cart.items.length, 'line(s). All keys:', cart.items.map(function (it) { return it.key; }));
+
+          // prefer matching by variant id (stable across property/key
+          // changes); fall back to the key we opened with only if we never
+          // had a variant id to go on (e.g. stale drawer markup)
+          var line = variantId
+            ? cart.items.find(function (it) { return it.variant_id === variantId; })
+            : cart.items.find(function (it) { return it.key === openedItemKey; });
+
+          console.log('[cart-sub-setup] line for variantId', variantId, '->', line ? ('FOUND, current key ' + line.key) : 'NOT FOUND', '- its current properties:', line && line.properties);
+
+          if (!line) {
+            throw new Error('Could not find this item in the cart anymore — it may have been removed or changed.');
+          }
+
+          var currentItemKey = line.key;
+          var finalProps = Object.assign({}, line.properties);
+
+          finalProps['subscription'] = '6 month + 1 month free';
+          finalProps['Delivery Date'] = chosenDate;
+          if (anchorMode === 'reset_to_1st') {
+            finalProps['Renewal Anchor'] = 'reset_to_1st';
+          } else {
+            delete finalProps['Renewal Anchor'];
+          }
+
+          console.log('[cart-sub-setup] finalProps about to be sent to /cart/change.js for key', currentItemKey, ':', JSON.parse(JSON.stringify(finalProps)));
+
+          return updateLineProperties(currentItemKey, finalProps, 'button.Subscription_button');
+        })
+        .then(function () {
+          confirmBtn.disabled = false;
+          closeModal();
+        })
+        .catch(function (err) {
+          console.error('[cart-sub-setup] confirm flow failed:', err);
+          confirmBtn.disabled = false;
+        });
+      return;
+    }
+  });
+
+  // bound directly to the overlay (not delegated via `document`) — this
+  // modal lives in the layout, not inside the AJAX-refreshed drawer partial,
+  // so it's never removed/recreated and a direct binding is safe. Mirrors
+  // the product page's popup, which uses the same direct-binding pattern.
+  // A document-level delegated click listener was closing this modal
+  // spuriously on iOS: interacting with the native inline date-picker for
+  // "Select your own date" produced a bubbled click whose target resolved
+  // to this overlay by the time it reached `document`, so the "click
+  // outside to close" check fired and killed the picker along with the
+  // modal the instant it opened.
+  var cartSubSetupOverlayEl = document.getElementById('cartSubSetupModal');
+  if (cartSubSetupOverlayEl) {
+    cartSubSetupOverlayEl.addEventListener('click', function (e) {
+      if (e.target === cartSubSetupOverlayEl) {
+        closeModal();
+      }
+    });
+  }
+
+  document.addEventListener('change', function (e) {
+    if (!e.target.matches || !e.target.matches('input[name="cartSubSetupStart"]')) return;
+    var els = getModalEls();
+    if (!els) return;
+    var isCustom = e.target.value === 'custom' && e.target.checked;
+    els.customDateWrap.style.display = isCustom ? '' : 'none';
+    els.anchorNote.style.display = isCustom ? '' : 'none';
+    refreshSelectedRow(els);
+  });
+})();
+</script>
+{% endif %}
+
+  </body>
+</html>
+
+<!-- Separate display inputs -->
+<input type="hidden" class="ApivalueAPI" placeholder="Custom API value">
+<input type="hidden" class="ApivalueSigma" placeholder="Custom Sigma value">
+<input type="hidden" class="Apivaluech2" placeholder="Custom API value">
+<input type="hidden" class="ApivalueSymbion" placeholder="Custom Sigma value">
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form[action="/account/login"]');
+    if (form) {
+      form.addEventListener('submit', function () {
+        sessionStorage.setItem('redirectAfterLogin', 'yes');
+      });
+    }
+
+    // jab user account page pe land kare login ke turant baad
+    if (sessionStorage.getItem('redirectAfterLogin') === 'yes' && window.location.pathname === '/account') {
+      sessionStorage.removeItem('redirectAfterLogin');
+      window.location.href = '/'; // home page redirect
+    }
+  });
+</script>
+
+
+
+
+
+<script>
+  // Save cart to localStorage whenever it's updated
+  function saveCartToLocalStorage(cartItems) {
+    localStorage.setItem('shopify_cart', JSON.stringify(cartItems));
+  }
+
+  // Load cart from localStorage
+  function loadCartFromLocalStorage() {
+    const savedCart = localStorage.getItem('shopify_cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  }
+
+  // Example: Hook into Shopify Ajax cart
+  document.addEventListener('DOMContentLoaded', () => {
+    // Load saved cart on page load
+    const savedItems = loadCartFromLocalStorage();
+    if(savedItems.length) {
+      savedItems.forEach(item => {
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: item.id, quantity: item.quantity })
+        });
+      });
+    }
+
+    // Whenever cart is updated, save it
+    document.addEventListener('cart:updated', (e) => {
+      saveCartToLocalStorage(e.detail.items);
+    });
+  });
+</script>
+
+

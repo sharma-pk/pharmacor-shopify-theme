@@ -1,0 +1,1345 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+  Section: Subscribe & Save — How it works
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- style -%}
+
+  .hiw-section {
+    width: 100%;
+    padding: 40px 20px 60px;
+    background: #ffffff;
+  }
+
+  .hiw-page {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+
+  /* =========================================================
+     MAIN HOW IT WORKS CARD
+  ========================================================= */
+
+  .hiw-main-card {
+    background: #f2f6f5;
+    border-radius: 18px;
+    padding: 24px 34px 34px;
+    overflow: hidden;
+  }
+
+  .hiw-heading {
+    margin: 0 0 38px;
+    color: #315d47;
+    font-size: 34px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  /* =========================================================
+     FREE STOCK BANNER
+  ========================================================= */
+
+  .hiw-banner {
+    width: 100%;
+    max-width: 540px;
+    min-height: 104px;
+    margin: 0 auto 48px;
+    padding: 18px 30px;
+    background: #e7f0d8;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    box-shadow: 0 15px 35px rgba(43, 65, 55, 0.12);
+    box-sizing: border-box;
+  }
+
+  .hiw-banner__icon {
+    flex: 0 0 140px;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hiw-banner__icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .hiw-banner__content {
+    flex: 1;
+  }
+
+  .hiw-banner__title {
+    margin: 0;
+    color: #355b47;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .hiw-banner__title span {
+    color: #54a823;
+  }
+
+  .hiw-banner__desc {
+    margin: 7px 0 0;
+    color: #355441;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  /* =========================================================
+     MONTHLY TIMELINE
+  ========================================================= */
+
+  .hiw-cycle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 0;
+  }
+
+  .hiw-month {
+    position: relative;
+    width: 140px;
+    flex: 0 0 140px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+.hiw-feature {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+  /* Number */
+html .hiw-dots {
+    margin: 0 -16px;
+    position: relative;
+}
+.hiw-month__number {
+    position: relative;
+    z-index: 4;
+    width: 24px;
+    height: 24px;
+    margin-bottom: -5px;
+    border-radius: 50%;
+    background: #55a923;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+}
+  /* Circle */
+
+  .hiw-month__circle {
+    position: relative;
+    z-index: 2;
+
+    width: 100px;
+    height: 100px;
+
+    border-radius: 50%;
+    background: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+  }
+
+  .hiw-month__circle img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+
+  /* Label */
+
+  .hiw-month__label {
+    margin-top: 9px;
+
+    color: #355548;
+    font-size:14px;
+    line-height: 1.2;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+.hiw-month__sub {
+    max-width: 95px;
+    margin-top: 6px;
+    color: #355441;
+    font-size: 13px;
+    line-height: 1.25;
+}
+  /* =========================================================
+     DOTTED CONNECTION
+  ========================================================= */
+
+  .hiw-dots {
+    width: 26px;
+    height: 64px;
+    flex: 0 0 26px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #65a83a;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+
+  .hiw-dots::before {
+    content: '';
+    width: 24px;
+    border-top: 2px dotted #70ae45;
+  }
+
+  .hiw-dots {
+    font-size: 0;
+  }
+
+  /* =========================================================
+     EQUALS SIGN
+  ========================================================= */
+
+  .hiw-equals {
+    width: 35px;
+    height: 64px;
+    flex: 0 0 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #355548;
+    font-size: 42px;
+    line-height: 1;
+    font-weight: 700;
+  }
+
+  /* =========================================================
+     MONTH 7 / FREE MONTH
+  ========================================================= */
+
+  .hiw-month--free {
+    width: 190px;
+    flex-basis: 190px;
+  }
+
+  .hiw-month--free .hiw-month__circle {
+    width: 160px;
+    height: 160px;
+
+    /* background: #ffffff; */
+
+    /* box-shadow:
+      0 0 0 7px rgba(101, 174, 60, 0.08),
+      0 0 0 18px rgba(101, 174, 60, 0.05),
+      0 0 35px rgba(101, 174, 60, 0.22); */
+          overflow: inherit;
+    background: transparent;
+  }
+
+.hiw-month--free .hiw-month__circle::before {
+    content: '';
+    position: absolute;
+    inset: -75px;
+    /* background: repeating-conic-gradient(
+        from 0deg,
+        rgba(103, 173, 61, 0.08) 0deg 7deg,
+        transparent 7deg 18deg
+      ); */
+    border-radius: 50%;
+    z-index: -1;
+    background-image: url(https://cdn.shopify.com/s/files/1/0726/4249/4700/files/Untitled_design.png?v=1786456741);
+    background-size: cover;
+    background-position: center -10px;
+    background-image: url(https://cdn.shopify.com/s/files/1/0726/4249/4700/files/top-rated-bg.png?v=1786542452);
+}
+  .hiw-month--free .hiw-month__number {
+    width: 31px;
+    height: 31px;
+
+    background: #55a923;
+    font-size: 18px;
+  }
+
+  .hiw-month--free .hiw-month__label {
+    color: #55a923;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  /* =========================================================
+     FEATURES BANNER
+  ========================================================= */
+
+  .hiw-features-banner {
+    margin-top: 28px;
+
+    background: #244d3b;
+    border-radius: 28px;
+    padding: 34px 40px 30px;
+  }
+
+  .hiw-features-banner__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    width: 100%;
+  }
+
+  .hiw-feature {
+    position: relative;
+
+    flex: 1;
+    min-width: 0;
+
+    padding: 0 22px;
+
+    text-align: left;
+  }
+
+  .hiw-feature:not(:last-child)::after {
+    content: '';
+
+    position: absolute;
+    top: 6px;
+    right: 0;
+
+    width: 1px;
+    height: 64px;
+
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .hiw-feature__icon {
+    width: 56px;
+    height: 56px;
+     min-width: 56px;
+    min-height: 56px;
+    margin: 0 0 14px;
+
+    border: 1.5px solid rgba(160, 205, 116, 0.75);
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+  }
+
+  .hiw-feature__icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .hiw-feature__title {
+    margin: 0;
+
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 1.3;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .hiw-feature__desc {
+    margin: 6px 0 0;
+
+    color: #c9d9ce;
+    font-size: 11.5px;
+    line-height: 1.4;
+    max-width: 160px;
+  }
+
+  /* =========================================================
+     TAGLINE
+  ========================================================= */
+
+  .hiw-features-banner__tagline {
+    margin: 26px 0 0;
+    padding-top: 22px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    color: #c9d9ce;
+    font-size: 13px;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .hiw-features-banner__tagline img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+  }
+.hiw-banner__icon {
+    flex: 0 0 140px;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid #fff;
+    padding-right: 22px;
+}
+  /* =========================================================
+     TABLET
+  ========================================================= */
+@media screen and (max-width: 1199px) {
+
+  /* =========================================================
+     TABLET CYCLE LAYOUT
+     Row 1: months 1-3 | Row 2: months 4-6 | Row 3: "=" | Row 4: free month
+     Uses fr-based columns so the row always fits inside the card
+     (no more edge overflow / clipped labels).
+  ========================================================= */
+
+  .hiw-cycle {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    justify-content: stretch;
+    align-items: center;
+    row-gap: 26px;
+    column-gap: 0;
+    padding: 5px 0 8px;
+    overflow: visible;
+  }
+
+  .hiw-cycle > .hiw-month:nth-child(1) { grid-row: 1; grid-column: 1; }
+  .hiw-cycle > .hiw-dots:nth-child(2)  { grid-row: 1; grid-column: 2; }
+  .hiw-cycle > .hiw-month:nth-child(3) { grid-row: 1; grid-column: 3; }
+  .hiw-cycle > .hiw-dots:nth-child(4)  { grid-row: 1; grid-column: 4; }
+  .hiw-cycle > .hiw-month:nth-child(5) { grid-row: 1; grid-column: 5; }
+
+  .hiw-cycle > .hiw-dots:nth-child(6)  { display: none; }
+
+  .hiw-cycle > .hiw-month:nth-child(7)  { grid-row: 2; grid-column: 1; }
+  .hiw-cycle > .hiw-dots:nth-child(8)   { grid-row: 2; grid-column: 2; }
+  .hiw-cycle > .hiw-month:nth-child(9)  { grid-row: 2; grid-column: 3; }
+  .hiw-cycle > .hiw-dots:nth-child(10)  { grid-row: 2; grid-column: 4; }
+  .hiw-cycle > .hiw-month:nth-child(11) { grid-row: 2; grid-column: 5; }
+
+  .hiw-equals {
+    grid-row: 3;
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: 10px;
+    position: static;
+    left: 0;
+  }
+
+  .hiw-month--free {
+    grid-row: 4;
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+
+  .hiw-month {
+    width: auto;
+    max-width: 150px;
+    justify-self: center;
+    flex: none;
+  }
+
+  .hiw-month__circle {
+    width: 100%;
+    max-width: 130px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .hiw-month__circle img {
+    padding: 10px;
+  }
+
+  .hiw-month__number {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .hiw-month__label {
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  .hiw-dots {
+    width: 14px;
+    flex: 0 0 14px;
+    height: auto;
+    align-self: center;
+  }
+
+  .hiw-dots::before {
+    width: 12px;
+  }
+
+  .hiw-month--free {
+    width: auto;
+    max-width: 280px;
+  }
+
+  .hiw-month--free .hiw-month__circle {
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .hiw-month--free .hiw-month__circle::before {
+    inset: -45px;
+  }
+
+  .hiw-month--free .hiw-month__number {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  .hiw-month--free .hiw-month__label {
+    font-size: 19px;
+  }
+
+  .hiw-month__sub {
+    font-size: 13px;
+    max-width: 240px;
+  }
+
+}
+
+  @media screen and (max-width: 850px) {
+
+    .hiw-section {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    .hiw-main-card {
+      padding: 24px 20px 28px;
+    }
+
+    .hiw-month {
+      max-width: 120px;
+    }
+
+    .hiw-month__circle {
+      max-width: 104px;
+    }
+
+    .hiw-dots {
+      width: 12px;
+      flex-basis: 12px;
+    }
+
+    .hiw-dots::before {
+      width: 10px;
+    }
+
+    .hiw-month--free {
+      max-width: 240px;
+    }
+
+    .hiw-month--free .hiw-month__circle {
+      max-width: 210px;
+    }
+
+    .hiw-month--free .hiw-month__circle::before {
+      inset: -35px;
+    }
+
+  }
+
+  
+
+  /* =========================================================
+     MOBILE
+  ========================================================= */
+
+
+  
+  @media screen and (max-width: 650px) {
+
+    .hiw-section {
+      padding: 25px 6px 40px;
+    }
+
+    .hiw-main-card {
+      padding: 20px 8px 22px;
+      border-radius: 14px;
+    }
+
+    .hiw-heading {
+      margin-bottom: 25px;
+      font-size: 26px;
+    }
+
+    .hiw-banner {
+      max-width: 100%;
+      min-height: 85px;
+
+      padding: 12px 15px;
+      margin-bottom: 30px;
+
+      gap: 12px;
+    }
+
+    .hiw-banner__icon {
+      width: 58px;
+      height: 58px;
+      flex-basis: 58px;
+    }
+
+    .hiw-banner__title {
+      font-size: 12px;
+    }
+
+    .hiw-banner__desc {
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    /* =========================================================
+       MOBILE CYCLE LAYOUT
+       Row 1: months 1-3  |  Row 2: months 4-6  |  Row 3: "="  |  Row 4: free month (7)
+       Order in the DOM: month, dots, month, dots, month, dots,
+                          month, dots, month, dots, month, equals, free-month
+    ========================================================= */
+
+    .hiw-cycle {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      justify-content: stretch;
+      align-items: center;
+      row-gap: 14px;
+      column-gap: 2px;
+      padding: 5px 4px 8px;
+      overflow: visible;
+    }
+
+    /* Row 1: month 1, dot, month 2, dot, month 3 */
+    .hiw-cycle > .hiw-month:nth-child(1) { grid-row: 1; grid-column: 1; }
+    .hiw-cycle > .hiw-dots:nth-child(2)  { grid-row: 1; grid-column: 2; }
+    .hiw-cycle > .hiw-month:nth-child(3) { grid-row: 1; grid-column: 3; }
+    .hiw-cycle > .hiw-dots:nth-child(4)  { grid-row: 1; grid-column: 4; }
+    .hiw-cycle > .hiw-month:nth-child(5) { grid-row: 1; grid-column: 5; }
+
+    /* connector dot between month 3 and month 4 is hidden — they now sit on different rows */
+    .hiw-cycle > .hiw-dots:nth-child(6)  { display: none; }
+
+    /* Row 2: month 4, dot, month 5, dot, month 6 */
+    .hiw-cycle > .hiw-month:nth-child(7)  { grid-row: 2; grid-column: 1; }
+    .hiw-cycle > .hiw-dots:nth-child(8)   { grid-row: 2; grid-column: 2; }
+    .hiw-cycle > .hiw-month:nth-child(9)  { grid-row: 2; grid-column: 3; }
+    .hiw-cycle > .hiw-dots:nth-child(10)  { grid-row: 2; grid-column: 4; }
+    .hiw-cycle > .hiw-month:nth-child(11) { grid-row: 2; grid-column: 5; }
+
+    /* Row 3: the "=" centered */
+    .hiw-equals {
+      grid-row: 3;
+      grid-column: 1 / -1;
+      justify-self: center;
+      margin-top: 6px;
+    }
+
+    /* Row 4: month 7 (free) centered */
+    .hiw-month--free {
+      grid-row: 4;
+      grid-column: 1 / -1;
+      justify-self: center;
+    }
+
+    .hiw-month {
+      width: auto;
+      max-width: 110px;
+      justify-self: center;
+      flex: none;
+    }
+
+    .hiw-month__circle {
+      width: 100%;
+      max-width: 98px;
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    .hiw-month__circle img {
+      padding: 8px;
+    }
+
+    .hiw-month__number {
+      width: 20px;
+      height: 20px;
+      font-size: 10px;
+    }
+
+    .hiw-month__label {
+      font-size: 9.5px;
+      margin-top: 6px;
+    }
+
+    .hiw-dots {
+      width: 10px;
+      flex: 0 0 10px;
+      height: auto;
+      align-self: center;
+    }
+
+    .hiw-dots::before {
+      width: 8px;
+    }
+
+    .hiw-month--free {
+      width: auto;
+      max-width: 230px;
+    }
+
+    .hiw-month--free .hiw-month__circle {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    .hiw-month--free .hiw-month__circle::before {
+      inset: -30px;
+    }
+
+    .hiw-month--free .hiw-month__number {
+      width: 30px;
+      height: 30px;
+      font-size: 15px;
+    }
+
+    .hiw-month--free .hiw-month__label {
+      font-size: 17px;
+    }
+
+    .hiw-month__sub {
+      font-size: 12px;
+      max-width: 220px;
+    }
+
+    .hiw-features-banner {
+      margin-top: 20px;
+      padding: 22px 16px 20px;
+      border-radius: 20px;
+    }
+
+    .hiw-features-banner__row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px 0;
+    }
+
+    .hiw-feature {
+      padding: 0 10px;
+      text-align: center;
+    }
+
+    .hiw-feature__icon {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 10px;
+    }
+
+    .hiw-feature:not(:last-child)::after,
+    .hiw-feature:nth-child(2)::after {
+      display: none;
+    }
+
+    .hiw-feature__title {
+      font-size: 10.5px;
+    }
+
+    .hiw-feature__desc {
+      font-size: 9.5px;
+      max-width: none;
+    }
+
+    .hiw-features-banner__tagline {
+      margin-top: 18px;
+      padding-top: 16px;
+      font-size: 10.5px;
+    }
+
+  }
+
+{%- endstyle -%}
+
+
+<section class="hiw-section" id="hiw-section">
+
+  <div class="hiw-page">
+
+    <div class="hiw-main-card">
+
+      {%- comment -%}
+        Heading
+      {%- endcomment -%}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="hiw-heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+
+      {%- comment -%}
+        Free Stock Banner
+      {%- endcomment -%}
+
+      <div class="hiw-banner">
+
+        <span class="hiw-banner__icon">
+
+          {% if section.settings.stock_banner_icon != blank %}
+            {{
+              section.settings.stock_banner_icon
+              | image_url: width: 120
+              | image_tag:
+                loading: 'lazy',
+                widths: '60, 80, 100, 120',
+                alt: section.settings.stock_banner_title
+            }}
+          {% endif %}
+
+        </span>
+
+        <div class="hiw-banner__content">
+
+          {% if section.settings.stock_banner_title != blank %}
+            <p class="hiw-banner__title">
+
+              {{ section.settings.stock_banner_title }}
+
+              {% if section.settings.stock_banner_free_text != blank %}
+                <span>
+                  {{ section.settings.stock_banner_free_text }}
+                </span>
+              {% endif %}
+
+            </p>
+          {% endif %}
+
+          {% if section.settings.stock_banner_description != blank %}
+            <p class="hiw-banner__desc">
+              {{ section.settings.stock_banner_description }}
+            </p>
+          {% endif %}
+
+        </div>
+
+      </div>
+
+
+      {%- comment -%}
+        Monthly Cycle
+      {%- endcomment -%}
+
+      <div class="hiw-cycle">
+
+        {% assign month_index = 0 %}
+
+        {% for block in section.blocks %}
+
+          {% if block.type == 'month' %}
+
+            {% assign month_index = month_index | plus: 1 %}
+
+            <div
+              class="hiw-month"
+              {{ block.shopify_attributes }}
+            >
+
+              <span class="hiw-month__number">
+                {{ month_index }}
+              </span>
+
+              <div class="hiw-month__circle">
+
+                {% if block.settings.icon != blank %}
+
+                  {{
+                    block.settings.icon
+                    | image_url: width: 140
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '60, 90, 120, 140',
+                      alt: block.settings.label
+                  }}
+
+                {% endif %}
+
+              </div>
+
+              {% if block.settings.label != blank %}
+
+                <span class="hiw-month__label">
+                  {{ block.settings.label }}
+                </span>
+
+              {% endif %}
+
+            </div>
+
+
+            {% unless month_index == 6 %}
+
+              <span class="hiw-dots"></span>
+
+            {% endunless %}
+
+          {% endif %}
+
+        {% endfor %}
+
+
+        {% if section.settings.equals != blank %}
+
+          <span class="hiw-equals">
+            {{ section.settings.equals }}
+          </span>
+
+        {% endif %}
+
+
+        {%- comment -%}
+          Free Month / Month 7
+        {%- endcomment -%}
+
+        <div class="hiw-month hiw-month--free">
+
+          <span class="hiw-month__number">
+            {{ section.settings.free_month_number }}
+          </span>
+
+          <div class="hiw-month__circle">
+
+            {% if section.settings.free_month_icon != blank %}
+
+              {{
+                section.settings.free_month_icon
+                | image_url: width: 150
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '70, 100, 120, 150',
+                  alt: section.settings.free_month_label
+              }}
+
+            {% endif %}
+
+          </div>
+
+          {% if section.settings.free_month_label != blank %}
+
+            <span class="hiw-month__label">
+              {{ section.settings.free_month_label }}
+            </span>
+
+          {% endif %}
+
+          {% if section.settings.free_month_subtext != blank %}
+
+            <span class="hiw-month__sub">
+              {{ section.settings.free_month_subtext }}
+            </span>
+
+          {% endif %}
+
+        </div>
+
+      </div>
+
+
+      {%- comment -%}
+        Features Banner
+      {%- endcomment -%}
+
+
+    </div>
+    
+      <div class="hiw-features-banner">
+
+        <div class="hiw-features-banner__row">
+
+          {% for block in section.blocks %}
+
+            {% if block.type == 'feature' %}
+
+              <div
+                class="hiw-feature"
+                {{ block.shopify_attributes }}
+              >
+
+                <div class="hiw-feature__icon">
+
+                  {% if block.settings.icon != blank %}
+
+                    {{
+                      block.settings.icon
+                      | image_url: width: 100
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '40, 60, 80, 100',
+                        alt: block.settings.title
+                    }}
+
+                  {% endif %}
+
+                </div>
+                <div class="faq_descontent">
+                {% if block.settings.title != blank %}
+
+                  <p class="hiw-feature__title">
+                    {{ block.settings.title }}
+                  </p>
+
+                {% endif %}
+
+                {% if block.settings.description != blank %}
+
+                  <p class="hiw-feature__desc">
+                    {{ block.settings.description }}
+                  </p>
+
+                {% endif %}
+
+              </div>
+            
+            </div>
+            {% endif %}
+          
+
+          {% endfor %}
+
+        </div>
+
+
+        {% if section.settings.tagline != blank %}
+
+          <p class="hiw-features-banner__tagline">
+
+            {% if section.settings.tagline_icon != blank %}
+
+              {{
+                section.settings.tagline_icon
+                | image_url: width: 50
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '25, 35, 50',
+                  alt: section.settings.tagline
+              }}
+
+            {% endif %}
+
+            {{ section.settings.tagline }}
+
+          </p>
+
+        {% endif %}
+
+      </div>
+
+  </div>
+
+</section>
+
+
+{% schema %}
+
+{
+  "name": "S&S How it works",
+
+  "settings": [
+
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How it works"
+    },
+
+    {
+      "type": "header",
+      "content": "Tagline"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "tagline_icon",
+      "label": "Tagline Icon"
+    },
+
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Reliable supply. Every time."
+    },
+
+    {
+      "type": "header",
+      "content": "Free Stock Banner"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "stock_banner_icon",
+      "label": "Free Stock Banner Icon"
+    },
+
+    {
+      "type": "text",
+      "id": "stock_banner_title",
+      "label": "Title",
+      "default": "1 month of stock"
+    },
+
+    {
+      "type": "text",
+      "id": "stock_banner_free_text",
+      "label": "Free Text",
+      "default": "FREE"
+    },
+
+    {
+      "type": "text",
+      "id": "stock_banner_description",
+      "label": "Description",
+      "default": "When you order 6 months of stock."
+    },
+
+    {
+      "type": "header",
+      "content": "Month 7"
+    },
+
+    {
+      "type": "text",
+      "id": "free_month_number",
+      "label": "Month Number",
+      "default": "7"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "free_month_icon",
+      "label": "Month 7 Icon"
+    },
+
+    {
+      "type": "text",
+      "id": "free_month_label",
+      "label": "Label",
+      "default": "Month 7"
+    },
+
+    {
+      "type": "text",
+      "id": "free_month_subtext",
+      "label": "Subtext",
+      "default": "On us, based on your usage"
+    },
+
+    {
+      "type": "text",
+      "id": "dots",
+      "label": "Dots",
+      "default": "···"
+    },
+
+    {
+      "type": "text",
+      "id": "equals",
+      "label": "Equals",
+      "default": "="
+    }
+
+  ],
+
+  "blocks": [
+
+    {
+      "type": "feature",
+      "name": "Feature",
+      "limit": 4,
+
+      "settings": [
+
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Set your delivery schedule"
+        },
+
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Choose what works for you."
+        }
+
+      ]
+    },
+
+    {
+      "type": "month",
+      "name": "Month",
+      "limit": 6,
+
+      "settings": [
+
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Month Product / Icon"
+        },
+
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Month 1"
+        }
+
+      ]
+    }
+
+  ],
+
+  "presets": [
+
+    {
+      "name": "S&S How it works",
+
+      "blocks": [
+
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Set your delivery schedule",
+            "description": "Choose what works for you."
+          }
+        },
+
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Delivered automatically",
+            "description": "Hassle-free, every time."
+          }
+        },
+
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Save more every month",
+            "description": "Consistent savings with every order."
+          }
+        },
+
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Flexible & easy",
+            "description": "Pause, skip or cancel anytime."
+          }
+        },
+
+        {
+          "type": "month",
+          "settings": {
+            "label": "Month 1"
+          }
+        },
+
+        {
+          "type": "month",
+          "settings": {
+            "label": "Month 2"
+          }
+        },
+
+        {
+          "type": "month",
+          "settings": {
+            "label": "Month 3"
+          }
+        },
+
+        {
+          "type": "month",
+          "settings": {
+            "label": "Month 4"
+          }
+        },
+
+        {
+          "type": "month",
+          "settings": {
+            "label": "Month 5"
+          }
+        },
+
+        {
+          "type": "month",
+          "settings": {
+            "label": "Month 6"
+          }
+        }
+
+      ]
+    }
+
+  ]
+
+}
+
+{% endschema %}

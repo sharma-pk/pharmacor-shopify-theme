@@ -1,0 +1,104 @@
+<style>
+  .promo-timer-wrapper {position: relative;display: flex;flex-wrap: wrap;padding-left: 0px!important;gap: 10px 20px;background:transparent;padding: 10px;-moz-box-align: center;align-items: center;-moz-box-pack: center;justify-content: center;border-bottom: 0px solid rgb(197, 200, 209);color: white;}
+  .promo-timer {display: grid;grid-template-columns: 1fr 10px 1fr 10px 1fr 10px 1fr;gap: 6px 2px;place-items: center;-moz-box-align: center;text-align: center;}
+  .promo-time {color: rgb(255, 255, 255);font-size: 22px;font-feature-settings: "tnum";font-variant-numeric: tabular-nums;font-weight: bold;font-style: normal;}
+  .promo-label {color: #fff;font-size: 10px;grid-column: span 2;padding-right: 10px;text-align: center;}
+  .promo-separator {color:#fff;font-size: 22px;font-weight: bold;line-height: 0.8;justify-self: center;}
+  .promo-content{display: flex;justify-content: center;align-items: center;width: 100%;padding-left: 3px;}
+</style>
+
+<div class="promo-timer-wrapper">
+  <div class="promo-container">
+    <div class="promo-timer" id="offerTimer">
+      <div class="promo-time" id="timerDays">00</div> <div class="promo-separator">:</div> <div class="promo-time" id="timerHours">00</div> <div class="promo-separator">:</div> <div class="promo-time" id="timerMinutes">00</div> <div class="promo-separator">:</div> <div class="promo-time" id="timerSeconds">00</div>
+    </div>
+    <div class="promo-content">
+      <div class="promo-label">Days</div> 
+      <div class="promo-label">Hours</div> 
+      <div class="promo-label">Mins</div> 
+      <div class="promo-label" style="position: relative;left: 9px;">Secs</div>
+    </div>
+  </div>
+</div>
+
+<input type="hidden" id="offerTimestamp" value="">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function setPromoCookie(key, value, duration) {
+  const expiryDate = new Date();
+  expiryDate.setTime(expiryDate.getTime() + (duration * 24 * 60 * 60 * 1000));
+  document.cookie = key + "=" + value + ";expires=" + expiryDate.toUTCString() + ";path=/";
+}
+
+function getPromoCookie(key) {
+  const keyEQ = key + "=";
+  const cookiesArr = document.cookie.split(';');
+  for (let i = 0; i < cookiesArr.length; i++) {
+    let cookie = cookiesArr[i];
+    while (cookie.charAt(0) === ' ') cookie = cookie.substring(1, cookie.length);
+    if (cookie.indexOf(keyEQ) === 0) return cookie.substring(keyEQ.length, cookie.length);
+  }
+  return null;
+}
+
+function initiatePromoTimer(daysLeft, hoursLeft, minutesLeft, secondsLeft) {
+  let storedTimestamp = getPromoCookie('offerTimestamp');
+
+  if (!storedTimestamp) {
+    storedTimestamp = new Date().getTime();
+    setPromoCookie('offerTimestamp', storedTimestamp, 365);
+  } else {
+    storedTimestamp = parseInt(storedTimestamp, 10);
+  }
+
+  const endTime = storedTimestamp +
+    (daysLeft * 24 * 60 * 60 * 1000) +
+    (hoursLeft * 60 * 60 * 1000) +
+    (minutesLeft * 60 * 1000) +
+    (secondsLeft * 1000);
+
+  function updatePromoDisplay() {
+    const currentTime = new Date().getTime();
+    const timeRemaining = endTime - currentTime;
+
+    if (timeRemaining <= 0) {
+      document.getElementById('offerTimer').innerHTML = "Earn 2 x Points - Ends";
+      $('.promo-timer-wrapper').hide();
+      return;
+    }
+
+    $('.promo-timer-wrapper').show();
+    const remainingDays = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+    const remainingHours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const remainingMinutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+    const remainingSeconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+    document.getElementById('timerDays').textContent = remainingDays.toString().padStart(2, '0');
+    document.getElementById('timerHours').textContent = remainingHours.toString().padStart(2, '0');
+    document.getElementById('timerMinutes').textContent = remainingMinutes.toString().padStart(2, '0');
+    document.getElementById('timerSeconds').textContent = remainingSeconds.toString().padStart(2, '0');
+  }
+
+  updatePromoDisplay();
+  setInterval(updatePromoDisplay, 1000);
+}
+
+function refreshPromoTimer() {
+  const newDays = {{ section.settings.days }};
+  const newHours = {{ section.settings.hours }};
+  const newMinutes = {{ section.settings.minutes | default: 0 }};
+  const newSeconds = {{ section.settings.seconds | default: 0 }};
+
+  const freshTimestamp = new Date().getTime();
+  setPromoCookie('offerTimestamp', freshTimestamp, 365);
+  $('.promo-timer-wrapper').show();
+  initiatePromoTimer(newDays, newHours, newMinutes, newSeconds);
+}
+
+initiatePromoTimer(
+  {{ section.settings.days }},
+  {{ section.settings.hours }},
+  {{ section.settings.minutes | default: 0 }},
+  {{ section.settings.seconds | default: 0 }}
+);
+</script>

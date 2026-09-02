@@ -1,0 +1,96 @@
+{%- capture styles -%}
+	--offset-top-desktop: {{ block.settings.offset_top_desktop }}px; {{-  -}}
+	--offset-bottom-desktop: {{ block.settings.offset_bottom_desktop }}px; {{-  -}}
+	--offset-top-mobile: {{ block.settings.offset_top_mobile }}px; {{-  -}}
+	--offset-bottom-mobile: {{ block.settings.offset_bottom_mobile }}px;
+{%- endcapture -%}
+<style>
+  .product-inventory-status__text{position: relative;}
+  .product-inventory-status__text::after{
+    content: '';position: absolute;
+ bottom: -25px;
+  height: 24px;
+  width: 100%;
+  
+  }
+  .product-inventory-status .product-inventory-status__icon{width: 18px;}
+</style>
+<div class="product-inventory-status" style="{{ styles }}">
+	{% assign current_variant = product.selected_or_first_available_variant %}
+	{% assign low_stock_icon = block.settings.inv_low_stock_icon %}
+	{% assign high_stock_icon = block.settings.inv_high_stock_icon %}
+    {% assign out_stock_icon = block.settings.out_stock_icon %}
+	{% assign low_stock_threshold = block.settings.low_stock_threshold %}
+	{% assign can_sell_after_zero = false %}
+
+	{% if current_variant.inventory_policy == "continue" or current_variant.inventory_management == nil %}
+		{% assign can_sell_after_zero = true %}
+	{% endif %}
+
+	{% capture low_stock_class %}
+		{% if low_stock_icon == blank %}product-inventory-status__text--low{% endif %}
+	{% endcapture %}
+  {% if product.handle == 'adalimumab-1' %}
+    {% else %}
+	<p class="product-inventory-status__text {{ low_stock_class }} js-product-low-stock-msg {% if current_variant.inventory_quantity > low_stock_threshold or current_variant.available == false or can_sell_after_zero %}is-hidden{% endif %}">
+		{% if low_stock_icon != blank %}
+			<img class="product-inventory-status__icon"
+				 src="{{ low_stock_icon | image_url: width: 24, height: 24 }}"
+				 srcset="{{ low_stock_icon | image_url: width: 24, height: 24 }} 1, {{ low_stock_icon | image_url: width: 48, height: 48 }}"
+				 alt=""
+			>
+		{% endif %}
+
+		{{- block.settings.inv_low_stock_text -}} <span class="my-inventry"></span>
+	</p>
+{% endif %}
+	{% capture high_stock_class %}
+		{% if high_stock_icon == blank %}product-inventory-status__text--high{% endif %}
+	{% endcapture %}
+  {% if product.handle == 'adalimumab-1' %}
+    {% else %}
+	<p class="product-inventory-status__text {{ high_stock_class }} js-product-high-stock-msg {% if current_variant.inventory_quantity <= low_stock_threshold and can_sell_after_zero == false or current_variant.available == false %}is-hidden{% endif %}">
+		{% if high_stock_icon != blank %}
+			<img class="product-inventory-status__icon"
+				 src="{{ high_stock_icon | image_url: width: 24, height: 24 }}"
+				 srcset="{{ high_stock_icon | image_url: width: 24, height: 24 }} 1, {{ high_stock_icon | image_url: width: 48, height: 48 }}"
+				 alt=""
+			>
+		{% endif %}
+
+		{{- block.settings.inv_high_stock_text -}} <span class="my-inventry"></span>
+	</p>
+{% endif %}
+  {% if product.handle == 'adalimumab-1' %}
+    {% else %}
+	<p class="myproduct-sold-out {% if current_variant.inventory_quantity > 0 or can_sell_after_zero %}is-hidden{% endif %}">
+		<span style="display: flex; align-items: center; gap: 8px;">
+			<img class="product-inventory-status__icon"
+				 src="{{ out_stock_icon | image_url: width: 18, height: 18 }}"
+				 srcset="{{ out_stock_icon | image_url: width: 18, height: 18 }}"
+				 alt=""
+			>
+		{{ block.settings.sold-out }}
+          <span class="my-inventry"></span></span> 
+	</p>
+{% endif %}
+	<script type="application/ld+json"
+			data-product-inventory
+			data-low-stock-threshold="{{ block.settings.low_stock_threshold }}"
+	>
+		[
+		{%- for variant in product.variants -%}
+			{
+				"id": {{ variant.id | json }},
+				"available": {{ variant.available | json }},
+				"inventory_policy": {{ variant.inventory_policy | json }},
+				"inventory_quantity": {{ variant.inventory_quantity | json }},
+				"inventory_management": {{ variant.inventory_management | json }}
+			}{% unless forloop.last %},{% endunless %}
+		{%- endfor -%}
+		]
+	</script>
+</div>
+
+
+

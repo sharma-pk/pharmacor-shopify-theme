@@ -1,0 +1,1574 @@
+
+
+
+<div class="welcome-box">
+
+
+  {% comment %} {% render 'collection-list',product:product %} {% endcomment %}
+
+  <div class="collections-list-wrapper">
+    <div class="collectiion_header">
+      {% if section.settings.heading != blank %}
+        <div class="title">
+          <h2>{{ section.settings.heading }}</h2>
+        </div>
+      {% else %}
+        <div class="title">
+          <h2>{{ collection.title }}</h2>
+        </div>
+      {% endif %}
+
+      <div class="search_list">
+        <span class="header__icon-wrapper search_header">
+          <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.4159 19.7676C7.90099 19.7676 5.53605 18.7916 3.75773 17.0193C1.97941 15.247 1 12.8906 1 10.3838C1 7.87704 1.97941 5.52102 3.75773 3.74833C5.53605 1.97564 7.90099 1 10.4159 1C12.9308 1 15.2953 1.97607 17.0741 3.74833C18.8528 5.5206 19.8318 7.87704 19.8318 10.3838C19.8318 12.8906 18.8524 15.2466 17.0741 17.0193C15.2958 18.792 12.9313 19.7676 10.4159 19.7676ZM10.4159 2.07072C5.81625 2.07072 2.07438 5.79984 2.07438 10.3838C2.07438 14.9678 5.81625 18.6969 10.4159 18.6969C15.0156 18.6969 18.7574 14.9678 18.7574 10.3838C18.7574 5.79984 15.0156 2.07072 10.4159 2.07072Z" fill="#30623D" stroke="#30623D" stroke-width="0.5"></path>
+            <path d="M23.4628 24C23.3252 24 23.1877 23.9478 23.0829 23.8433L16.3112 17.0947C16.1015 16.8857 16.1015 16.5465 16.3112 16.3375C16.5209 16.1285 16.8613 16.1285 17.071 16.3375L23.8427 23.086C24.0524 23.295 24.0524 23.6342 23.8427 23.8433C23.7378 23.9478 23.6003 24 23.4628 24Z" fill="#30623D" stroke="#30623D" stroke-width="0.5"></path>
+          </svg>
+          <input
+            class="input search__input js-search-input"
+            type="search"
+            id="searchInput"
+            placeholder="What are you looking for?"
+            name="q"
+            value="{{ search.terms | escape }}"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            required
+          >
+        </span>
+        <span class="serach_btn">Search</span>
+      </div>
+    </div>
+
+    <div class="filters_home">
+      {%- assign active_filters_size = 0 -%}
+      {%- assign filters_type = section.settings.filters_type -%}
+
+      {%- for filter in collection.filters -%}
+        {%- case filter.type -%}
+          {%- when 'list', 'boolean' -%}
+            {%- assign active_filters_size = active_filters_size | plus: filter.active_values.size -%}
+          {%- when 'price_range' -%}
+            {%- if filter.min_value.value > 0 or filter.max_value.value < filter.range_max -%}
+              {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                {%- assign active_filters_size = active_filters_size | plus: 1 -%}
+              {%- endif -%}
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+
+      {% for block in section.blocks %}
+        {% assign collection = collections[block.settings.collection] %}
+      {% endfor %}
+
+      <div class="collection__header-row sort_with_icons">
+        {%- render 'product-filters-and-sort-bar', product_list: collection, without_filter_button: true -%}
+
+        <div class="sort_with_icons">
+          <div class="grid-lists-iconss">
+           
+            <div class="list-view-btn active iocns">
+              <span>
+                <svg width="37" height="29" viewBox="0 0 37 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="7.70667" y="0.480713" width="28.992" height="4.40385" fill="#30623D"></rect>
+                  <circle cx="2.20193" cy="2.68264" r="2.20193" fill="#30623D"></circle>
+                  <rect x="7.70667" y="12.2243" width="28.992" height="4.40385" fill="#30623D"></rect>
+                  <circle cx="2.20193" cy="14.4263" r="2.20193" fill="#30623D"></circle>
+                  <rect x="7.70667" y="23.9679" width="28.992" height="4.40385" fill="#30623D"></rect>
+                  <circle cx="2.20193" cy="26.1698" r="2.20193" fill="#30623D"></circle>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="list_of_collections">
+      <div class="grid_data custom-home-content">
+        <div
+          class="collection__items js-grid-wrapper custom-collection-page-tabcontent "
+          aria-busy="true"
+          data-grid-col="3"
+          id="dynamic"
+        >
+
+
+            {% if customer %}
+
+
+                {% assign shown_products = "" %}
+                
+                {% for order in customer.orders %}
+                  {% for line_item in order.line_items %}
+                    {% unless shown_products contains line_item.product.id %}
+                          <div
+                          class="collection__item customitem product-item"
+                          data-filter-item
+                          data-titl="All Products"
+                          style="display:none;"
+                          data-title="{{ line_item.product.title | escape }}"
+                          data-price="{{ line_item.product.price | money_without_currency | replace: ',', '' }}"
+                          data-created="{{ line_item.product.created_at }}"
+                        >
+                          {% render 'product-card', product: line_item.product %}
+                        </div>
+                      {% assign shown_products = shown_products | append: line_item.product.id | append: "," %}
+                    {% endunless %}
+                  {% endfor %}
+                {% endfor %}
+
+            {% else %}
+              <p>Please <a href="/account/login">log in</a> to view your ordered products.</p>
+            {% endif %}
+
+
+
+
+
+
+
+
+
+    
+        </div>
+
+        <div class="text-center">
+          <button class="btn loadMore">Load More</button>
+        </div>
+      </div>
+
+      <div id="custom" class="custom-collection-page-tabcontent">
+        <style>
+          #custom-all .myshow{display: block!important;}
+          #custom-all .myhidden{display: none!important;}
+          
+                    .custom-btn-boxes{border: 2px solid #30623d!important;
+            padding-top: 20px!important;
+            padding-bottom: 20px!important;
+            cursor: pointer!important;}
+                    /* Container for tabs */
+                    .nav-tabs {
+                      overflow: hidden;
+                    }
+
+                    /* Tab buttons */
+                    .nav-tabs button {
+                      background: transparent;
+                      float: left;
+                      border: none;
+                      cursor: pointer;
+                      padding: 10px 30px;
+                      margin-right: 6px;
+                      font-size: 16px;
+                      transition: 0.3s;
+                      border: 2px solid #30623d;
+                      border-radius: 30px;
+                    }
+
+                    /* Hover effect */
+                    .nav-tabs button:hover {
+                      background: #30623d;
+                      color: #fff;
+                    }
+
+                    /* Active state */
+                    .nav-tabs button.active-tab {
+                      background: #30623d;
+                      color: #fff;
+                    }
+
+                    .tab-section {
+                      display: none;
+                    }
+          @media only screen and (max-width: 767px){
+                    .wrapper_welcome{padding: 12px !important;}
+                  }
+        </style>
+
+        <div class="nav-tabs">
+          {% for block in section.blocks %}
+            {% assign block_collection = collections[block.settings.collection] %}
+            <button
+              class="tab-btn {% if forloop.index == 1 %}active-tab{% endif %}"
+              onclick="showTab(event, 'custom{{ block.id }}')"
+            >
+              {% if block.settings.custom_name != blank -%}
+                {{- block.settings.custom_name -}}
+              {%- else %}
+                {{ block_collection.title -}}
+              {%- endif %}
+            </button>
+          {% endfor %}
+
+          <!-- Static tab button -->
+          <button
+            class="tab-btn myhidden"
+            onclick="showTab(event, 'custom-all')"
+          >
+            Filter Products
+          </button>
+        </div>
+
+        <div class="custom-cart-list-main">
+          <div class="custom_labels">
+            <div class="custom-list-image">Image</div>
+            <div class="custom-list-product-name">Product Name</div>
+            <div class="custom-list-wholesaler">
+              <div style="width: 50%;">Wholesaler</div>
+              <div style="width: 50%;">Strength/Pack Size</div>
+            </div>
+            {% if customer %}
+              <div class="custom-list-price">Price</div>
+              <div class="custom-list-quantity">Quantity</div>
+       
+            {% else %}
+              <div class="custom-list-product-info">Product Info</div>
+            {% endif %}
+          </div>
+
+          {% for block in section.blocks %}
+            {% assign block_collection = collections[block.settings.collection] %}
+            {% if block_collection %}
+              <div
+                id="custom{{ block.id }}"
+                class="my-collection-list-tabcontent tab-section"
+                {% if forloop.index == 1 %}
+                  style="display: block"
+                {% endif %}
+              >
+                <div class="custom-product-card-list custom-product-parent" style="width: 100%;">
+                  <div class="custom-product-card-list-wrap " id="custom-products">
+                {% if customer %}
+
+
+    {% assign shown_products = "" %}
+    
+    {% for order in customer.orders %}
+      {% for line_item in order.line_items %}
+        {% unless shown_products contains line_item.product.id %}
+              {% render 'custom-list-item', product: line_item.product, section: section, title: block_collection %}
+          {% assign shown_products = shown_products | append: line_item.product.id | append: "," %}
+        {% endunless %}
+      {% endfor %}
+    {% endfor %}
+
+{% else %}
+  <p>Please <a href="/account/login">log in</a> to view your ordered products.</p>
+{% endif %}
+                        
+                  
+                  </div>
+                  <div class="text-center">
+                    <button id="loadMore" class="loadMore btn">{{ section.settings['load-more'] }}</button>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+          {%- comment -%}
+            ---- STATIC BLOCK (All Products) ----
+          {%- endcomment -%}
+          <div
+            id="custom-all"
+            class="my-collection-list-tabcontent tab-section"
+            style="display: none"
+          >
+            <div class="custom-product-card-list allproductss custom-product-parent" style="width: 100%;">
+             <div class="custom-product-card-list-wrap">
+              {% paginate collections.all.products by 120 %}
+                {%- for product in collections.all.products -%}
+                  {% render 'custom-list-item', product: product, section: section, title: 'All Products' %}
+                {%- endfor -%}
+
+                {% if paginate.pages > 1 %}
+                  {{ paginate | default_pagination }}
+                {% endif %}
+              {% endpaginate %}
+            </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% comment %}
+        <div class="text-center">
+          <a href="{{ section.settings.btn_link }}" class="btn">{{ section.settings.btn_text }}</a>
+        </div>
+      {% endcomment %}
+    </div>
+  </div>
+
+<style>
+    .custom-collection-list .customitem {
+    display: none;
+  }
+  .allproductss .customitem {
+    display: block!important;
+  }
+  .custom-home-content .collection__item{display: none;}
+
+  .myhidden {
+    display: none !important;
+  }
+</style>
+<script>
+  document.getElementById('searchInput').addEventListener('input', function () {
+    var searchVal = this.value.trim().toLowerCase();
+    var products = document.querySelectorAll('.custom-main-inner-wrap');
+
+    products.forEach(function (product) {
+      var title = product.getAttribute('data-title').toLowerCase();
+
+      if (searchVal === '' || title.includes(searchVal)) {
+        product.style.display = 'block';
+      } else {
+        product.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+<script>
+  document.getElementById('searchInput').addEventListener('input', function () {
+    var searchVal = this.value.trim();
+    var allTabs = document.querySelectorAll('.nav-tabs .tab-btn');
+    var allProductsBtn = document.querySelector(".nav-tabs .tab-btn[onclick*='custom-all']");
+
+    if (searchVal.length > 0) {
+      // sab tabs hide karo
+      allTabs.forEach(function (btn) {
+        btn.classList.add('myhidden');
+        btn.classList.remove('active-tab');
+      });
+
+      // All Products ko dikhana aur activate karna
+      if (allProductsBtn) {
+        allProductsBtn.classList.remove('myhidden');
+        allProductsBtn.classList.add('active-tab');
+
+        // uska click trigger bhi karo
+        allProductsBtn.click();
+      }
+    } else {
+      // sab tabs wapas show karo
+      allTabs.forEach(function (btn, index) {
+        btn.classList.remove('myhidden');
+        btn.classList.remove('active-tab');
+      });
+
+      // pehli tab ko wapas active aur click karo
+      let firstTab = allTabs[0];
+      if (firstTab) {
+        firstTab.classList.add('active-tab');
+        firstTab.click();
+      }
+
+      // All Products tab ko wapas hide karo
+      if (allProductsBtn) {
+        allProductsBtn.classList.add('myhidden');
+        allProductsBtn.classList.remove('active-tab');
+      }
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let wrapper = document.querySelector('#dynamic'); // product wrapper
+    if (!wrapper) return;
+    let items = wrapper.querySelectorAll('.collection__item');
+    let loadMoreBtn = document.querySelector('.loadMore');
+    let visible = 10;
+
+    // sab ko hide kar do (CSS se bhi kar sakte ho)
+    items.forEach((item) => (item.style.display = 'none'));
+
+    // pehle 6 show karo
+    for (let i = 0; i < visible && i < items.length; i++) {
+      items[i].style.display = 'block';
+    }
+
+    if (!loadMoreBtn) return;
+
+    // button hide karo agar products 6 ya usse kam hain
+    if (items.length <= visible) {
+      loadMoreBtn.style.display = 'none';
+    }
+
+    // button click par aur 6 show karo
+    loadMoreBtn.addEventListener('click', function () {
+      let nextVisible = visible + 10;
+      for (let i = visible; i < nextVisible && i < items.length; i++) {
+        items[i].style.display = 'block';
+      }
+      visible = nextVisible;
+
+      if (visible >= items.length) {
+        loadMoreBtn.style.display = 'none';
+      }
+    });
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let parents = document.querySelectorAll('.custom-product-parent');
+
+    parents.forEach(function (parent) {
+      let items = parent.querySelectorAll('.customitem');
+      let loadMoreBtn = parent.querySelector('.loadMore');
+      let visible = 10;
+
+      // sabko hide kardo
+      items.forEach((item) => (item.style.display = 'none'));
+
+      // pehle 6 show
+      for (let i = 0; i < visible && i < items.length; i++) {
+        items[i].style.display = 'block';
+      }
+
+      if (!loadMoreBtn) return;
+
+      loadMoreBtn.addEventListener('click', function () {
+        // alert("Load More clicked ✅");
+        let nextVisible = visible + 10;
+        for (let i = visible; i < nextVisible && i < items.length; i++) {
+          items[i].style.display = 'block';
+        }
+        visible = nextVisible;
+
+        if (visible >= items.length) {
+          loadMoreBtn.style.display = 'none';
+        }
+      });
+
+      if (items.length <= 10) {
+        loadMoreBtn.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+<script>
+  $('.grid_data').hide();
+  $('.list-view-btn').click(function () {
+    // Activate only the clicked list view button
+    $('.list-view-btn').removeClass('active');
+    $('.grid-view-btn').removeClass('active');
+    $(this).addClass('active');
+
+    // Toggle views
+    $('.grid_data').hide();
+    $('.custom-collection-page-tabcontent').show();
+  });
+
+  $('.grid-view-btn').click(function () {
+    // Activate only the clicked grid view button
+    $('.grid-view-btn').removeClass('active');
+    $('.list-view-btn').removeClass('active');
+    $(this).addClass('active');
+
+    // Toggle views
+    $('.grid_data').show();
+    $('.collection__items').show(); // optional: if you use this elsewhere
+    $('.custom-collection-page-tabcontent').hide();
+  });
+</script>
+{% comment %}  {% endcomment %}
+
+<script>
+  $('.facets input[data-search]').on('keyup', function() {
+          var searchVal = $(this).val();
+          var filterItems = $('[data-filter-item]');
+          if ( searchVal != '' ) {
+          filterItems.addClass('hidden');
+          $('[data-filter-item][data-filter-name*="' + searchVal.toLowerCase() + '"]').removeClass('hidden');
+          } else {
+          filterItems.removeClass('hidden');
+          }
+          });
+
+      var loc = window.location.pathname;
+          $("#searchInput").keyup(function() {
+          var tvalue = $(this).val();
+          console.log(tvalue);
+      });
+</script>
+<style>
+    .product-quantity__wrapper{width: 160px;}
+        .sort_with_icons .sort .sort__select{
+        width:fit-content
+      }
+        input#searchInput {
+          border: none !important;
+          padding: 0px !important;
+          height: fit-content !important;
+          line-height: normal;
+          max-height: fit-content;
+          min-height: 30px;
+      }
+        .custom_product-section img
+        {
+              height: 150px !important;
+          object-fit: contain;
+        }
+
+        .welcome-box  .collection__items {
+          display: grid !important;
+          grid-template-columns:1fr
+      }
+       .welcome-box .collection__items .collection__item
+       {
+          {% comment %} display: block; {% endcomment %}
+      }
+        .welcome-box  .list_of_collections{
+      padding:50px 0;}
+        .welcome-box {
+          background: #F3F8F8;
+          padding: 50px;
+          border-radius: 20px;
+          font-family: sans-serif;
+          margin: 0 20px;
+        }
+      .wrapper_welcome {
+          background: #fff;
+          padding: 40px;
+          border-radius: 20px;
+      }
+      .welcome-grid{
+      margin-top:50px;
+      }
+        .welcome-box h2 {
+          color: #30623D;
+          font-family: Neutrif Studio;
+      font-weight: 500;
+      font-size: 45px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      vertical-align: middle;
+
+        }
+
+        .welcome-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+          .welcome-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+
+        .welcome-box  .collection__items {
+          display: grid !important;
+          grid-template-columns:1fr 1fr 1fr
+      }
+        }
+
+        .card {
+          border-radius: 20px;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          background: #B2E78A26;
+      }
+
+      .card h3 {
+          margin-top: 0;
+          color: #333;
+          font-family: Neutrif Studio;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 23px;
+          letter-spacing: 0%;
+          vertical-align: middle;
+          color: #7D7777;
+          margin-bottom: 10px;
+      }
+
+       .card p {
+          color: #7D7777;
+          margin-bottom: 10px;
+          font-family: Neutrif Studio;
+          font-weight: 400;
+          font-size: 15px;
+          line-height: normal;
+          letter-spacing: 0;
+          vertical-align: middle;
+      }
+        .card ul {
+          list-style: none;
+          background: #B2E78A26;
+          padding:30px 20px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          border-top-right-radius:20px;
+          border-bottom-right-radius:20px;
+        }
+      .text_wapper {
+          padding: 20px 20px 20px 40px;
+          display:flex;
+          flex-direction:column;
+          justify-content:center;
+      }
+        .card ul li {
+          margin-bottom: 6px;
+        }
+
+        .card ul li a {
+          color: #30623D;
+          text-decoration: none;
+          font-weight: 500;
+          font-family: Neutrif Studio;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: normal;
+          letter-spacing: 0;
+          vertical-align: middle;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap:50px;
+      }
+
+        .card ul li a:hover {
+          text-decoration: underline;
+        }
+          @media only screen and (max-width: 1400px) {
+    .custom_product-section {
+      overflow-x: hidden;
+    }
+  }
+        @media only screen and (max-width:767px){
+        .welcome-box h2{
+        font-size:35px;
+      }
+      .welcome-box{
+      padding:20px;}
+
+      .welcome-box  .card{
+        grid-template-columns: 1fr;
+        }
+       .welcome-box  .collectiion_header{
+          padding: 50px 0px;
+        }
+       .welcome-box  .list_of_collections{
+        width:100%;}
+      }
+      }
+</style>
+<script>
+  function showTab(e, tabId) {
+    let sections = document.getElementsByClassName('tab-section');
+    for (let i = 0; i < sections.length; i++) {
+      sections[i].style.display = 'none';
+    }
+
+    let buttons = document.getElementsByClassName('tab-btn');
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].classList.remove('active-tab');
+    }
+
+    const targetSection = document.getElementById(tabId);
+    if (targetSection) targetSection.style.display = 'block';
+    e.currentTarget.classList.add('active-tab');
+  }
+</script>
+
+
+<script>
+
+$(document).ready(function () {
+
+  // ---- helper for number parsing ----
+  function parseMoney(val) {
+    return parseFloat((val || "0").replace(/[^0-9.]/g, "")) || 0;
+  }
+
+  function handleDropdownChange($dropdown) {
+    const $parent = $dropdown.closest('.custom-main-inner-wrap');
+
+    // Build variant key from dropdown values
+    let combinedValue = [];
+    $parent.find('.custom_dropdown').each(function () {
+      if (this.value) combinedValue.push(this.value);
+    });
+
+    combinedValue = combinedValue.join("-")
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[\/\.]/g, "-");
+
+    if (!combinedValue) return;
+
+    // Find matching hidden variant inputs
+    const $variantElements = $parent.find("." + combinedValue);
+    if (!$variantElements.length) return;
+
+    const $baseEl = $variantElements.first();
+
+    const variantId = $baseEl.attr("myvarientid");
+    const variantProfit = $baseEl.attr("variantprofit");
+    const variantQty = parseInt($baseEl.attr("varientquentity") || "0", 10);
+
+    const variantPrice = parseMoney($baseEl.attr("varienrprice"));
+    const variantComparePrice = parseMoney($baseEl.attr("varienrcompprice"));
+    const tierPrice = parseMoney($baseEl.attr("customwholesaleprice"));
+
+    // ===== Determine final selling price =====
+    let displayPrice = variantPrice;
+    if (tierPrice > 0) displayPrice = tierPrice;
+
+    // ===== Volume Discount Rendering (Multiple Tiers) =====
+    const $volumeBox = $parent.find("#variant-volume-discount");
+    const $volumeText = $volumeBox.find(".volume-offer-text");
+    $volumeText.empty();
+
+    $variantElements.each(function () {
+      const qty = parseInt(this.getAttribute("volumeqty") || "0", 10);
+      const price = parseMoney(this.getAttribute("volumediscountprice"));
+
+      if (qty > 0 && price > 0) {
+        const row = document.createElement("div");
+        row.innerHTML = `
+          <span class="volume-qty">Buy ${qty}+</span>
+          <span class="volume-price"><span class="volumne-arrow">→</span> $${price.toFixed(2)}</span>
+        `;
+        $volumeText.append(row);
+      }
+    });
+
+    $volumeBox.toggle($volumeText.children().length > 0);
+
+    // ===== Saving Percentage =====
+    if (variantComparePrice > displayPrice && variantComparePrice > 0) {
+      let savingPercent = Math.round(((variantComparePrice - displayPrice) / variantComparePrice) * 100);
+      if (savingPercent <= 0) savingPercent = 1;
+
+      $parent.find(".custom-sale-pricee").html("Saving: " + savingPercent + "%");
+      $parent.find(".price__discount")
+        .contents()
+        .filter(function () { return this.nodeType === 3; })
+        .first()
+        .replaceWith(savingPercent + "% ");
+    }
+
+    // ===== ✅ Correct Ultra Theme Price Update =====
+
+    // Sale / Final Price
+    $parent.find(".price-item.price-item--sale")
+      .html("$" + displayPrice.toFixed(2));
+
+    // Compare-at Price (show only if higher)
+    if (variantComparePrice > displayPrice) {
+      $parent.find(".price-item.price-item--regular")
+        .html("$" + variantComparePrice.toFixed(2))
+        .show();
+    } else {
+      $parent.find(".price-item.price-item--regular").hide();
+    }
+
+    // Custom discount price box
+    $parent.find(".discount-price-item")
+      .attr("data-wpd-variant-id", variantId)
+      .html("$" + displayPrice.toFixed(2));
+
+    // ===== Hidden Inputs =====
+    $parent.find(".my-add-to-cart-value").val(variantId);
+    $parent.find("#my-variant-profit").val(variantProfit);
+
+    // ===== Stock =====
+    const $stockBox = $parent.find(".custom-quantity-items");
+    const $backorder = $parent.find('.backorder-order');
+
+    if (variantQty > 0) {
+      $stockBox.html("Stock: " + variantQty);
+      $backorder.hide();
+    } else {
+      $stockBox.html("");
+      $backorder.css('display','inline-block');
+    }
+  }
+
+  // ===== Event Listener =====
+  $(document).on('change', '.custom_dropdown', function () {
+    handleDropdownChange($(this));
+  });
+
+  // ===== Initialize on Page Load =====
+  $('.custom_dropdown').each(function () {
+    handleDropdownChange($(this));
+  });
+
+});
+
+
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('.custom-list-product-info').click(function () {
+      var mysecondparent = $(this).parent().parent().next();
+      $(mysecondparent).removeClass('custom-hidden-class');
+    });
+    $('.custom-close-pop').click(function () {
+      $(this).parent().parent().addClass('custom-hidden-class');
+    });
+
+    $('.mysimple-close').click(function () {
+      $(this).parent().addClass('custom-hidden-class');
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    function handleDropdownChange() {
+      const selectedValue = $('#mySelect').val();
+      $('.custom-list-wholesaler option').prop('selected', false); // Deselect all options
+
+      $('.custom-list-wholesaler option').each(function () {
+        const optionValue = $(this).val();
+        if (selectedValue === optionValue) {
+          // Find the parent container of the matching option
+          const parentContainer = $(this).closest('.custom-list-wholesaler');
+          // Select the matching option
+          var custmvalue = $(parentContainer).parent().find('option').val();
+          //console.log(custmvalue);
+          parentContainer.val(optionValue);
+        }
+      });
+
+      setTimeout(function () {
+        $('.custom-list-wholesaler').trigger('change');
+      }, 100);
+    }
+
+    $(document).on('change', '#mySelect', function () {
+      handleDropdownChange();
+    });
+    handleDropdownChange();
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    $(document).on('input change', '.product-quantity__input', function () {
+      let val = $(this).val(); // current quantity
+      let $wrap = $(this).closest('.custom-variant'); // parent wrapper
+      let $customInput = $wrap.find('.custom-class-quantity');
+
+      // value copy karna
+      $customInput.val(val);
+
+      // alert bhi show karna
+      //  alert("Quantity changed: " + val);
+    });
+  });
+</script>
+
+
+<script>
+  $(document).ready(function () {
+    if ($(window).width() > 992) {
+      // Initial setup for hiding the custom-variant
+      $('.custom-variant').slideUp(1);
+
+      // Hover function to show/hide the custom-variant
+      function initHover() {
+        $('.collection__item, .featured-products__col, .products-thumbnails__product').hover(
+          function () {
+            $(this).find('.custom-variant').stop(true, true).slideDown(300);
+          },
+          function () {
+            $(this).find('.custom-variant').stop(true, true).slideUp(500);
+          }
+        );
+      }
+
+      initHover();
+
+      function checkURLChange() {
+        setTimeout(function () {
+          $('.custom-variant').slideUp(1);
+          initHover();
+        }, 1600);
+        initHover();
+      }
+
+      var pushState = history.pushState;
+      history.pushState = function (state) {
+        pushState.apply(history, arguments);
+        checkURLChange();
+      };
+
+      $(window).on('popstate', function () {
+        checkURLChange();
+      });
+    }
+  });
+</script>
+<script>
+  (function() {
+    $(document.body).on("click", ".custom-carttt", function() {
+      var $btn = $(this);
+      if ($btn.hasClass('atc-loading')) return;
+
+      var parentForm = $btn.closest("form");
+
+      var idimp          = resolveWholesalerVariantId(parentForm);
+      var customquantity = parentForm.find(".custom-quantity").val();
+      var subscription    = parentForm.find('[name="properties[subscription]"]').val();
+      var pickup_location    = $('[name="properties[Shipping Option]"]:checked').val();
+
+      var properties = buildWholesalerCartProperties(parentForm, idimp, {
+        "subscription": subscription,
+        "Shipping Option": pickup_location
+      });
+
+      let formobj = {
+        quantity: customquantity,
+        id: idimp,
+        properties: properties
+      };
+
+      $btn.addClass('atc-loading');
+      var $btnText = $btn.find('.js-product-add-to-cart-button-text');
+      var originalText = $btnText.text();
+      if ($btnText.length) $btnText.text('Adding...');
+
+      $.ajax({
+        type: "POST",
+        url: "/cart/add.js",
+        cache: false,
+        data: formobj,
+        dataType: "json",
+        success: function(addedItem) {
+          if (addedItem && addedItem.status) {
+            showATCNotification(addedItem.description || 'Could not add to cart.', 'error');
+            return;
+          }
+
+          // bubble refresh
+          $('#cart-icon-bubble').load(window.location.href + " #cart-icon-bubble > *");
+
+          var itemTitle = addedItem && addedItem.product_title ? addedItem.product_title : 'Item';
+          showATCNotification(itemTitle + ' added to cart!', 'success');
+
+          // drawer refresh
+          refreshCartDrawer(function(){
+            {% if settings.home-page-drawer %}
+              $(".header__icon--cart").trigger("click");
+              $("body").addClass("cart-open");
+            {% endif %}
+          });
+        },
+        error: function(xhr, status, error) {
+          console.log('add to cart error:', error);
+          showATCNotification('Could not add to cart.', 'error');
+        },
+        complete: function() {
+          $btn.removeClass('atc-loading');
+          if ($btnText.length) $btnText.text(originalText);
+        }
+      });
+    });
+
+    function showATCNotification(message, type) {
+      $('.atc-toast-notification').remove();
+      var $toast = $('<div class="atc-toast-notification">' + message + '</div>');
+      $toast.css({
+        position: 'fixed', top: '90px', right: '20px',
+        background: type === 'success' ? '#30623D' : '#c0392b',
+        color: '#fff', padding: '14px 24px', borderRadius: '8px',
+        fontSize: '14px', fontWeight: '600', zIndex: 999999,
+        opacity: 0, transform: 'translateY(-10px)', transition: 'all 0.3s ease'
+      });
+      $('body').append($toast);
+      setTimeout(function () { $toast.css({ opacity: 1, transform: 'translateY(0)' }); }, 10);
+      setTimeout(function () {
+        $toast.css({ opacity: 0, transform: 'translateY(-10px)' });
+        setTimeout(function () { $toast.remove(); }, 200);
+      }, 2000);
+    }
+
+    // -------- Drawer Refresh (Section Rendering API) ----------
+    function refreshCartDrawer(done){
+      var $drawer = $("#CartDrawer");
+      var sectionKey = $drawer.data("section-id");
+
+      $.ajax({
+        type: "GET",
+        url: "/?sections=" + encodeURIComponent(sectionKey) + "&_=" + Date.now(),
+        dataType: "json",
+        success: function(res){
+          var html = res && res[sectionKey];
+          if(html) {
+            swapDrawerHTML(html);
+            if(typeof done === "function") done();
+          } else {
+            fallbackHTML(done);
+          }
+        },
+        error: function(){
+          fallbackHTML(done);
+        }
+      });
+
+      function fallbackHTML(cb){
+        $.ajax({
+          type: "GET",
+          url: "/?section_id=cart-drawer&_=" + Date.now(),
+          dataType: "html",
+          success: function(html){
+            swapDrawerHTML(html);
+            if(typeof cb === "function") cb();
+          }
+        });
+      }
+
+      function swapDrawerHTML(newHtml){
+        var $tmp = $(newHtml);
+
+        var $newContainer = $tmp.find(".js-cart-container");
+        if($newContainer.length){
+          $drawer.find(".js-cart-container").html($newContainer.html());
+        } else {
+          var $alt = $tmp.filter(".drawer").find(".js-cart-container");
+          if($alt.length){
+            $drawer.find(".js-cart-container").html($alt.html());
+          }
+        }
+
+        var $newFooter = $tmp.find(".cart-drawer__footer");
+        if($newFooter.length){
+          $drawer.find(".cart-drawer__footer").html($newFooter.html());
+        }
+      }
+    }
+  })();
+</script>
+
+<script>
+  (function() {
+    $(document.body).on("click", ".custom-btn-boxes", function() {
+      var $btn = $(this);
+      if ($btn.hasClass('atc-loading')) return;
+
+      var parentForm = $btn.closest("form");
+
+      var idimp2          = resolveWholesalerVariantId(parentForm);
+      var customquantity2 = parentForm.find(".custom-class-quantity").val();
+      var properties2 = buildWholesalerCartProperties(parentForm, idimp2);
+
+      let formobj = {
+        quantity: customquantity2,
+        id: idimp2,
+        properties: properties2
+      };
+
+      $btn.addClass('atc-loading');
+      var $btnText = $btn.find('.js-product-add-to-cart-button-text');
+      var originalText = $btnText.text();
+      if ($btnText.length) $btnText.text('Adding...');
+
+      $.ajax({
+        type: "POST",
+        url: "/cart/add.js",
+        cache: false,
+        data: formobj,
+        dataType: "json",
+        success: function(addedItem) {
+          if (addedItem && addedItem.status) {
+            showATCNotification(addedItem.description || 'Could not add to cart.', 'error');
+            return;
+          }
+
+          // bubble refresh
+          $('#cart-icon-bubble').load(window.location.href + " #cart-icon-bubble > *");
+
+          var itemTitle = addedItem && addedItem.product_title ? addedItem.product_title : 'Item';
+          showATCNotification(itemTitle + ' added to cart!', 'success');
+
+          // drawer refresh
+          refreshCartDrawer(function(){
+            {% if settings.home-page-drawer %}
+              $(".header__icon--cart").trigger("click");
+              $("body").addClass("cart-open");
+            {% endif %}
+          });
+        },
+        error: function(xhr, status, error) {
+          console.log('add to cart error:', error);
+          showATCNotification('Could not add to cart.', 'error');
+        },
+        complete: function() {
+          $btn.removeClass('atc-loading');
+          if ($btnText.length) $btnText.text(originalText);
+        }
+      });
+    });
+
+    function showATCNotification(message, type) {
+      $('.atc-toast-notification').remove();
+      var $toast = $('<div class="atc-toast-notification">' + message + '</div>');
+      $toast.css({
+        position: 'fixed', top: '90px', right: '20px',
+        background: type === 'success' ? '#30623D' : '#c0392b',
+        color: '#fff', padding: '14px 24px', borderRadius: '8px',
+        fontSize: '14px', fontWeight: '600', zIndex: 999999,
+        opacity: 0, transform: 'translateY(-10px)', transition: 'all 0.3s ease'
+      });
+      $('body').append($toast);
+      setTimeout(function () { $toast.css({ opacity: 1, transform: 'translateY(0)' }); }, 10);
+      setTimeout(function () {
+        $toast.css({ opacity: 0, transform: 'translateY(-10px)' });
+        setTimeout(function () { $toast.remove(); }, 200);
+      }, 2000);
+    }
+
+    // -------- Drawer Refresh (Section Rendering API) ----------
+    function refreshCartDrawer(done){
+      var $drawer = $("#CartDrawer");
+      var sectionKey = $drawer.data("section-id") || "cart-drawer";
+
+      $.ajax({
+        type: "GET",
+        url: "/?sections=" + encodeURIComponent(sectionKey) + "&_=" + Date.now(),
+        dataType: "json",
+        success: function(res){
+          var html = res && res[sectionKey];
+          if(html) {
+            swapDrawerHTML(html);
+            if(typeof done === "function") done();
+          } else {
+            fallbackHTML(done);
+          }
+        },
+        error: function(){
+          fallbackHTML(done);
+        }
+      });
+
+      function fallbackHTML(cb){
+        $.ajax({
+          type: "GET",
+          url: "/?section_id=cart-drawer&_=" + Date.now(),
+          dataType: "html",
+          success: function(html){
+            swapDrawerHTML(html);
+            if(typeof cb === "function") cb();
+          }
+        });
+      }
+
+      function swapDrawerHTML(newHtml){
+        var $tmp = $(newHtml);
+
+        // container
+        var $newContainer = $tmp.find(".js-cart-container");
+        if($newContainer.length){
+          $drawer.find(".js-cart-container").html($newContainer.html());
+        }
+
+        // footer (support multiple selectors)
+        var $newFooter = $tmp.find(".cart-drawer__footer, .drawer__footer");
+        if($newFooter.length){
+          $drawer.find(".cart-drawer__footer, .drawer__footer").html($newFooter.html());
+        }
+      }
+    }
+  })();
+</script>
+
+{% comment %} Product filter ho rahi han  {% endcomment %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.querySelector("#searchInput");
+  const products = document.querySelectorAll(".custom-main-inner-wrap");
+  searchInput.addEventListener("keyup", function () {
+    const query = this.value.toLowerCase().trim();
+    products.forEach((item) => {
+      const title = item.getAttribute("data-title").toLowerCase();
+      item.classList.remove("myshow", "myhidden");
+      if (title.includes(query)) {
+        item.classList.add("myshow");
+      } else {
+        item.classList.add("myhidden");
+      }
+    });
+  });
+});
+</script>
+
+
+{% schema %}
+{
+  "name": "Welcome Favourites",
+  "settings": [
+    {
+      "type": "select",
+      "id": "filters_type",
+      "label": "Filters type",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "Sidebar"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "horizontal",
+      "info": "Used only for desktop"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "manage_orders_title",
+      "label": "Manage Orders Title",
+      "default": "Manage Orders"
+    },
+
+    {
+      "type": "text",
+      "id": "order-history-1",
+      "label": "Manage Orders 1st Link Title",
+      "default": "Manage Orders "
+    },
+    {
+      "type": "url",
+      "id": "orders_link",
+      "label": "Orders Page Link"
+    },
+    {
+      "type": "text",
+      "id": "order-history-2",
+      "label": "Manage Orders 2nd Link Title",
+      "default": "Reorder"
+    },
+    {
+      "type": "url",
+      "id": "reorder_link",
+      "label": "Reorder Page Link"
+    },
+    {
+      "type": "text",
+      "id": "order-history-3",
+      "label": "Manage Orders 3rd Link Title",
+      "default": "Manage Subscriptions"
+    },
+    {
+      "type": "url",
+      "id": "subscriptions_link",
+      "label": "Subscriptions Page Link"
+    },
+
+    {
+      "type": "text",
+      "id": "benefits_title",
+      "label": "Benefits Title",
+      "default": "Benefits"
+    },
+    {
+      "type": "text",
+      "id": "benefits_text",
+      "label": "Benefits Text",
+      "default": "Unlock extra savings and convenience with"
+    },
+    {
+      "type": "text",
+      "id": "benefits_title-1",
+      "label": "Benefits Title 1st",
+      "default": "Loyalty Rewards"
+    },
+    {
+      "type": "url",
+      "id": "loyalty_link",
+      "label": "Loyalty Rewards Link"
+    },
+    {
+      "type": "text",
+      "id": "benefits_title-2",
+      "label": "Benefits Title 2nd",
+      "default": "Savings Extras"
+    },
+    {
+      "type": "url",
+      "id": "savings_link",
+      "label": "Savings Extras Link"
+    },
+
+    {
+      "type": "text",
+      "id": "contact_title",
+      "label": "Contact Us Title",
+      "default": "Contact Us"
+    },
+    {
+      "type": "text",
+      "id": "contact_title-description",
+      "label": "Contact Us Description",
+      "default": "We’re here to help, contact us anytime with your enquiries"
+    },
+    {
+      "type": "url",
+      "id": "chat_link",
+      "label": "Chat Link"
+    },
+    {
+      "type": "text",
+      "id": "contact-us-1",
+      "label": "Contact Us 1st Title",
+      "default": "Chat with our Bot"
+    },
+    {
+      "type": "url",
+      "id": "email_link",
+      "label": "Contact Us 1st URL"
+    },
+    {
+      "type": "text",
+      "id": "contact-us-2",
+      "label": "Contact Us 1st Title",
+      "default": "Email Us"
+    },
+    {
+      "type": "text",
+      "id": "email_link2",
+      "label": "Contact Us 2nd URL"
+    },
+    {
+      "type": "text",
+      "id": "contact-us-3",
+      "label": "Contact Us 3rd Title",
+      "default": "Call Us"
+    },
+    {
+      "type": "text",
+      "id": "call_link1",
+      "label": "Contact Us 3rd URL"
+    },
+    {
+      "type": "text",
+      "id": "contact-us-4",
+      "label": "Contact Us 4th Title",
+      "default": "Whats App"
+    },
+    {
+      "type": "text",
+      "id": "call_link22",
+      "label": "Contact Us 4th URL"
+    },
+    {
+      "type": "text",
+      "id": "load-more",
+      "label": "Load More Button Text",
+      "default": "Load More"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "See All Products"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
+          "type": "text",
+          "id": "custom_name",
+          "label": "Custom Collection Name"
+        },
+        {
+          "type": "select",
+          "id": "variant_picker",
+          "label": "Variant picker",
+          "options": [
+            {
+              "value": "radio",
+              "label": "Buttons"
+            },
+            {
+              "value": "select",
+              "label": "Dropdown"
+            }
+          ],
+          "default": "radio"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Welcome Favourites"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  $(".serach_btn").on("click", function() {
+      var searchValue = $("#searchInput").val().trim();
+      var searchLower = searchValue.toLowerCase();
+
+      // 1️⃣ For .collection__item
+      $(".collection__item").each(function() {
+          var title = $(this).find('.product-card__title').text().toLowerCase();
+          if (title.includes(searchLower)) {
+              $(this).show();
+          } else {
+              $(this).hide();
+          }
+      });
+
+      // 2️⃣ For .custom_product-section
+      $(".custom_product-section,.custom-main-inner-wrap").each(function() {
+          var title = $(this).find('.product-name').text().toLowerCase();
+          if (title.includes(searchLower)) {
+              $(this).show();
+          } else {
+              $(this).hide();
+          }
+      });
+  });
+  {% comment %}  {% endcomment %}
+   const optionMenu = document.querySelector(".select-menu");
+  if (optionMenu) {
+    const selectBtn = optionMenu.querySelector(".select-btn"),
+      options = optionMenu.querySelectorAll(".option"),
+      sBtn_text = optionMenu.querySelector(".sBtn-text");
+
+    selectBtn.addEventListener("click", () =>
+      optionMenu.classList.toggle("active")
+    );
+
+    options.forEach((option) => {
+      option.addEventListener("click", () => {
+        let selectedOption = option.querySelector(".option-text").innerText;
+        sBtn_text.innerText = selectedOption;
+
+        optionMenu.classList.remove("active");
+      });
+    });
+  }
+</script>
+<style>
+  .select-menu {
+    max-width: 330px;
+    margin: 50px auto;
+  }
+  .select-menu .select-btn {
+    display: flex;
+    height: 55px;
+    background: #fff;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 8px;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .select-menu .options {
+    position: absolute;
+    width: 330px;
+    overflow-y: auto;
+    max-height: 295px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation-name: fadeInDown;
+    -webkit-animation-name: fadeInDown;
+    animation-duration: 0.35s;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 0.35s;
+    -webkit-animation-fill-mode: both;
+  }
+  .select-menu .options .option {
+    display: flex;
+    height: 55px;
+    cursor: pointer;
+    padding: 0 16px;
+    border-radius: 8px;
+    align-items: center;
+    background: #fff;
+  }
+  .select-menu .options .option:hover {
+    background: #f2f2f2;
+  }
+  .select-menu .options .option i {
+    font-size: 25px;
+    margin-right: 12px;
+  }
+  .select-menu .options .option .option-text {
+    font-size: 18px;
+    color: #333;
+  }
+
+  .select-btn i {
+    font-size: 25px;
+    transition: 0.3s;
+  }
+
+  .select-menu.active .select-btn i {
+    transform: rotate(-180deg);
+  }
+  .select-menu.active .options {
+    display: block;
+    opacity: 0;
+    z-index: 10;
+    animation-name: fadeInUp;
+    -webkit-animation-name: fadeInUp;
+    animation-duration: 0.4s;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 0.4s;
+    -webkit-animation-fill-mode: both;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      transform: translate3d(0, 30px, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+  }
+  @keyframes fadeInDown {
+    from {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+    to {
+      transform: translate3d(0, 20px, 0);
+      opacity: 0;
+    }
+  }
+</style>

@@ -1,0 +1,233 @@
+<style>
+.custom-signup-section {
+    text-align: center;
+  width:100%;
+  max-width:1432px;
+  margin:0 auto;
+  padding: 40px 0px;
+  box-sizing: border-box;
+
+}
+.signup-cards {
+    display: flex;
+   justify-content: space-around;
+    gap: 10px;
+    width: 100%;
+}
+.main-heading-3 {
+    color: #67A469;
+    font-size: 34px;
+    font-weight: 500;
+}
+.signup-card {
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    width: 32%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #1e9b1e;
+}
+.signup-card img {
+    max-width: 90px;
+    margin-top: 10px;
+}
+.signup-card a {
+    background: #4c9f38;
+    color: white;
+    border-radius: 25px;
+    text-decoration: none;
+    display: inline-block;
+    max-width: 60%;
+    width: 100%;
+    margin: 10px auto;
+ padding: 14px 17px !important;
+  font-weight: 700;
+  border: 3px solid white;
+}
+.signup-card a:hover {
+    background: #367c2b;
+}
+.custmo-title {}
+.custom-h3 {
+    font-size: 24px;
+    color: white;
+    font-weight: bold;
+    margin: 0px;
+}
+.custom-sp {
+    margin: 0px;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+}
+.custom-logo-img {
+    margin-top: 35px;
+}
+@media (max-width: 768px) {
+    .signup-cards {
+        flex-direction: column;
+        align-items: center;
+      padding:0px 15px;
+    box-sizing: border-box;
+    }
+    .signup-card {
+        width: 80%;
+    }
+  .main-heading-3{
+    margin: 20px 0px !important;
+  }
+}
+@media (max-width: 480px) {
+    .signup-card {
+        width: 100%;
+        padding: 15px;
+      
+    }
+    .signup-card a {
+        max-width: 100%;
+    }
+}
+</style>
+
+<div class="custom-signup-section page-width">
+    <h2 class="main-heading-3" style="color: {{ section.settings.main_title_color }}; font-size: {{ section.settings.main_title_font_size }}px;  margin: 0px 0px 30px 0px !important;
+  ">
+        {{ section.settings.main_title }}
+    </h2>
+    <div class="signup-cards">
+        {% for block in section.blocks %}
+        <div class="signup-card" style="background: linear-gradient(135deg, {{ block.settings.gradient_start_color }}, {{ block.settings.gradient_end_color }}); border-color: {{ block.settings.border_color }};">
+            <div class="custmo-title">
+                <h3 class="custom-h3" style="color: {{ block.settings.title_color }}; font-size: {{ block.settings.title_font_size }}px;">
+                    {{ block.settings.card_title }}
+                </h3>
+                <p class="custom-sp" style="color: {{ block.settings.description_color }}; font-size: {{ block.settings.description_font_size }}px;">
+                    {{ block.settings.card_description }}
+                </p>
+            </div>
+            <div class="custom-logo-img">
+                {% if block.settings.card_logo != blank %}
+                <img src="{{ block.settings.card_logo | image_url }}" alt="Logo">
+                {% endif %}
+            </div>
+          {% if block.settings.card_button_text != blank %}
+            <a class="button button--small button--secondary-border promotion-banners__block-button Custom-promotion-Button" href="{{ block.settings.card_link }}">{{ block.settings.card_button_text }}</a>
+          {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Sign Up",
+  "settings": [
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Main Title",
+      "default": "Sign up now"
+    },
+    {
+      "type": "color",
+      "id": "main_title_color",
+      "label": "Main Title Color",
+      "default": "#67A469"
+    },
+    {
+      "type": "range",
+      "id": "main_title_font_size",
+      "label": "Main Title Font Size",
+      "min": 20,
+      "max": 60,
+      "default": 34
+    }
+   
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "Card Title"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Title Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "title_font_size",
+          "label": "Title Font Size",
+          "min": 12,
+          "max": 48,
+          "default": 24
+        },
+        {
+          "type": "text",
+          "id": "card_description",
+          "label": "Card Description"
+        },
+        {
+          "type": "color",
+          "id": "description_color",
+          "label": "Description Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "description_font_size",
+          "label": "Description Font Size",
+          "min": 12,
+          "max": 36,
+          "default": 13
+        }, {
+          "type": "image_picker",
+          "id": "card_logo",
+          "label": "Card Logo"
+        },{
+          "type": "url",
+          "id": "card_link",
+          "label": "Card Link"
+        },
+        {
+          "type": "text",
+          "id": "card_button_text",
+          "label": "Button Text"
+        },
+        {
+          "type": "color",
+          "id": "gradient_start_color",
+          "label": "Gradient Start Color",
+          "default": "#a8e063"
+        },
+        {
+          "type": "color",
+          "id": "gradient_end_color",
+          "label": "Gradient End Color",
+          "default": "#56ab2f"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Border Color",
+          "default": "#1e9b1e"
+        }
+      ]
+    }
+  ],
+"presets" : [
+{
+  "name" : "Custom Sign Up"
+  }
+]
+}
+{% endschema %}
+

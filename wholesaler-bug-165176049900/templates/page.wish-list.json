@@ -1,0 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "default-page": {
+      "type": "page-template",
+      "disabled": true,
+      "settings": {
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "wish_list_rECrMK": {
+      "type": "wish-list",
+      "settings": {}
+    }
+  },
+  "order": [
+    "default-page",
+    "wish_list_rECrMK"
+  ]
+}

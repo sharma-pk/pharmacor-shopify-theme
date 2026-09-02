@@ -1,0 +1,209 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "default-page": {
+      "type": "page-template",
+      "disabled": true,
+      "settings": {
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "subscriptions_template_RaiB4w": {
+      "type": "subscriptions-template",
+      "name": "Subscriptions template",
+      "settings": {}
+    },
+    "subscribe_save_how_it_works_EPYMT9": {
+      "type": "subscribe-save-how-it-works",
+      "blocks": {
+        "month_RcERAY": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month 1"
+          }
+        },
+        "month_CiNUQX": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month 2"
+          }
+        },
+        "month_bat6x9": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month 3"
+          }
+        },
+        "month_p98kHK": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month 4"
+          }
+        },
+        "month_K8eafm": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month 5"
+          }
+        },
+        "month_3MAcgh": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month 6"
+          }
+        },
+        "feature_MGQY9q": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/timetable.png",
+            "title": "Set your delivery schedule",
+            "description": "Choose what works for you."
+          }
+        },
+        "feature_bnXhEb": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/express-delivery.png",
+            "title": "Delivered automatically",
+            "description": "Hassle-free, every time."
+          }
+        },
+        "feature_hwTpyQ": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/coin.png",
+            "title": "Save more every month",
+            "description": "Consistent savings with every order."
+          }
+        },
+        "feature_FRjzg7": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/recycle.png",
+            "title": "Flexible & easy",
+            "description": "Pause, skip or cancel anytime."
+          }
+        }
+      },
+      "block_order": [
+        "month_RcERAY",
+        "month_CiNUQX",
+        "month_bat6x9",
+        "month_p98kHK",
+        "month_K8eafm",
+        "month_3MAcgh",
+        "feature_MGQY9q",
+        "feature_bnXhEb",
+        "feature_hwTpyQ",
+        "feature_FRjzg7"
+      ],
+      "name": "S&S How it works",
+      "settings": {
+        "heading": "How it works",
+        "tagline_icon": "shopify://shop_images/shield.png",
+        "tagline": "Reliable supply. Every time.",
+        "stock_banner_icon": "shopify://shop_images/calender.png",
+        "stock_banner_title": "1 month of stock",
+        "stock_banner_free_text": "FREE",
+        "stock_banner_description": "When you order 6 months of stock.",
+        "free_month_number": "7",
+        "free_month_icon": "shopify://shop_images/medicine.png",
+        "free_month_label": "Month 7",
+        "free_month_subtext": "On us, based on your usage",
+        "dots": "···",
+        "equals": "="
+      }
+    },
+    "custom_faqs_97RUhQ": {
+      "type": "custom-faqs",
+      "blocks": {
+        "faq_L6XPYn": {
+          "type": "faq",
+          "settings": {
+            "question": "1. How do I start a subscription?",
+            "answer": "On the product page, choose \"Subscribe and save\" instead of one-time purchase, pick when your first order should start, and add to cart as normal.."
+          }
+        },
+        "faq_YWLLEq": {
+          "type": "faq",
+          "settings": {
+            "question": "2. How do I get my 7th month free?",
+            "answer": "Every 6 consecutive orders on a subscription earns you the 7th month free automatically — no code needed."
+          }
+        },
+        "faq_KiEHiG": {
+          "type": "faq",
+          "settings": {
+            "question": "3. Can I change my quantity or delivery date?",
+            "answer": "Yes — open \"Manage your subscriptions\" from your account, click Edit on the subscription, and update the date, quantity, or wholesaler account. You can choose whether the change applies to just this order or every month going forward."
+          }
+        },
+        "faq_w8UFLf": {
+          "type": "faq",
+          "settings": {
+            "question": "4. How do I pause, skip, or cancel?",
+            "answer": "From \"Manage your subscriptions\", use Drop Now to push your next order out a month, or Edit for more options. You can cancel anytime and there's no penalty."
+          }
+        },
+        "faq_qeqzq9": {
+          "type": "faq",
+          "settings": {
+            "question": "5. Can I switch wholesalers on a subscription?",
+            "answer": "Yes, if your account is covered by more than one wholesaler. Open Edit on the subscription and choose a different wholesaler account from the dropdown."
+          }
+        },
+        "faq_Aw4eE9": {
+          "type": "faq",
+          "settings": {
+            "question": "6. What happens if a product is out of stock?",
+            "answer": "If an item is out of stock on your scheduled delivery date, that cycle is automatically paused and pushed to the next month — you won't be charged for it."
+          }
+        },
+        "faq_NarT77": {
+          "type": "faq",
+          "settings": {
+            "question": "7. What happens if I cancel and want to restart later?",
+            "answer": "Reactivating a cancelled or paused subscription resets your delivery schedule to start one month from today.."
+          }
+        }
+      },
+      "block_order": [
+        "faq_L6XPYn",
+        "faq_YWLLEq",
+        "faq_KiEHiG",
+        "faq_w8UFLf",
+        "faq_qeqzq9",
+        "faq_Aw4eE9",
+        "faq_NarT77"
+      ],
+      "name": "Custom FAQ Accordion",
+      "settings": {
+        "heading": "FAQS",
+        "bg_color": "#f3f8f8"
+      }
+    }
+  },
+  "order": [
+    "default-page",
+    "subscriptions_template_RaiB4w",
+    "subscribe_save_how_it_works_EPYMT9",
+    "custom_faqs_97RUhQ"
+  ]
+}

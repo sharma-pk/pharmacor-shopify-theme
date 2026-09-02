@@ -1,0 +1,897 @@
+{%- comment -%}
+  ------------------------------------------------------------------------------
+  Snippet: Header menu
+  Render header menu
+  - menu: menu object;
+  - menu_type_desktop: type of rendered menu, dropdown menu or mega menu;
+  - blocks: transfer block object;
+  - menu_style_type: type of rendered menu (secondary);
+  - menu_position: position of rendered menu (center);
+  - enable_rounded_header: enable rounded header;
+  - menu_highlighted_link_name: menu highlighted link name;
+  - enable_burger_menu: enable burger menu (true/false).
+  - enable_roundwholeselerinfoed_header: enable rounded header (true/false).
+
+  Usage:
+  {%- render 'header-menu' -%}
+  ------------------------------------------------------------------------------
+{%- endcomment -%}
+<style>
+  .wholeseller-wraper {
+    height: fit-content;
+  }
+    /* Hide number input arrows for Chrome, Safari, Edge, Opera */
+    .product-quantity__input2::-webkit-outer-spin-button,
+    .product-quantity__input2::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Hide number input arrows for Firefox */
+    .product-quantity__input2[type=number] {
+      -moz-appearance: textfield;
+    }
+
+      .wholwseller-input:checked + label {
+                     border-color: #599d61;
+                     background-color: #599d61;
+                 color: #fff;
+                   }
+      .wholwseller-input{
+                       visibility: hidden;
+                       position: absolute;
+                     }
+
+                     .radio-input:checked + label {
+                     border-color: #599d61;
+                     background-color: #599d61;
+                 color: #fff;
+                   }
+                     .wholeseller-wraper input {
+                       visibility: hidden;
+                       position: absolute;
+                     }
+              .customwdata {
+                border-color: #b0d0bb;
+                background-color: #b0d0bb;
+                color: #000;
+                padding: 2px 30px;
+                border-radius: 20px;
+                margin: 2px 0px;
+                width: 100%;
+              }
+            .wholwseller-label{
+                border-color: #b0d0bb;
+                background-color: #b0d0bb;
+                color: #000;
+                padding: 2px 30px;
+                border-radius: 20px;
+                margin: 2px 0px;
+                width: 100%;
+          cursor: pointer;
+              }
+        .wholwseller-item.active.whoelactive {
+               background-color: #599d61;
+        }
+                       .wholeseller-wraper{width: 100%;margin-right: 16px;}
+                         .main-wraper {
+                           display: flex;
+                         }
+                           .wholeselerinfo {
+                             width: 100%;
+                             text-align: center;
+                             display: none;
+                             color: #e60202;
+                             animation: blink 3s ease-in-out infinite;
+                           }
+
+                           @keyframes blink {
+                             0%, 100% { opacity: 1; }
+                             50% { opacity: 0; }
+                           }
+
+                             .custom__active{
+                             background: #4195ba!important;
+                             color: #fff!important;
+                           }
+                             {% comment %} .custom-inner-wholesaler{display: none;} {% endcomment %}
+                             .mygrand-child{display: none;  cursor: pointer;padding: 4px 12px; background: #6ac1ab;color: #fff;}
+</style>
+{%- assign burger_menu_button_class = '' -%}
+{%- assign item_text_class = '' -%}
+{%- assign item_class = '' -%}
+{%- assign list_class = '' -%}
+
+{%- if menu_style_type == 'secondary' %}
+  {%- assign burger_menu_button_class = 'header-burger-menu-button--secondary' -%}
+  {%- assign item_text_class = 'header-menu__item-text--secondary' -%}
+  {%- assign item_class = 'header-menu__item--secondary' -%}
+{%- endif -%}
+
+{%- if menu_position == 'middle' -%}
+  {%- assign list_class = 'header-menu__list--middle' -%}
+{%- endif -%}
+
+<nav
+  class="header-menu"
+  aria-label="{{- "layout.navigation.main_menu" | t | escape -}}"
+>
+  <ul class="header-menu__list header-menu__list--main {{ list_class -}}">
+    {%- if enable_burger_menu == true -%}
+      <li>
+        <button
+          class="header-burger-menu-button {{ burger_menu_button_class -}}"
+          aria-label="{{ "layout.navigation.open_drawer_menu" | t | escape }}"
+          data-multi-drawer-toggle="HeaderBurgerMenu"
+          data-drawer-level="1"
+          aria-expanded="false"
+          aria-controls="HeaderBurgerMenuMain"
+        >
+          {%- render 'icons', icon: 'burger-menu-main' -%}
+
+          <span class="header-burger-menu-button__label">
+            {{ 'layout.navigation.main_drawer_menu_button_label' | t }}
+          </span>
+        </button>
+      </li>
+    {%- endif -%}
+
+    {%- for first_level_link in menu.links -%}
+      {%- assign has_megamenu = false -%}
+      {%- assign megamenu_object = '' -%}
+      {%- assign item_class_highlighted = '' -%}
+      {%- assign item_text_class_highlighted = '' -%}
+
+      {%- if first_level_link.title == menu_highlighted_link_name -%}
+        {%- assign item_class_highlighted = 'header-menu__item--highlighted' -%}
+        {%- assign item_text_class_highlighted = 'header-menu__item-text--highlighted' -%}
+      {%- endif -%}
+
+      {%- for block in blocks -%}
+        {%- if block.type != 'megamenu-brands-logo' -%}
+          {%- assign menu_handle = block.settings.menu_handle | handleize -%}
+
+          {%- if first_level_link.handle == menu_handle -%}
+            {% if block.type == 'megamenu' or block.type == 'megamenu-row-menus' or block.type == 'megamenu-brands' %}
+              {%- if first_level_link.links != blank -%}
+                {%- assign has_megamenu = true -%}
+                {%- assign megamenu_object = block -%}
+
+                {%- break -%}
+              {%- endif -%}
+            {%- else -%}
+              {%- assign has_megamenu = true -%}
+              {%- assign megamenu_object = block -%}
+
+              {%- break -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      <li
+        {% if has_megamenu == true or first_level_link.links != blank %}
+          class="js-header-dropdown-menu-element"
+        {% endif %}
+      >
+        {%- capture megamenu -%}
+
+					{%- if megamenu_object.type == 'megamenu' and has_megamenu == true -%}
+						{%- render 'header-mega-menu', menu: first_level_link, megamenu_object: megamenu_object, enable_rounded_header: enable_rounded_header -%}
+					{%- endif -%}
+
+					{%- if megamenu_object.type == 'megamenu-images' and has_megamenu == true -%}
+						{%- render 'header-mega-menu-images', menu: first_level_link, megamenu_object: megamenu_object, enable_rounded_header: enable_rounded_header -%}
+					{%- endif -%}
+
+					{%- if megamenu_object.type == 'megamenu-row-menus' and has_megamenu == true -%}
+						{%- render 'header-mega-menu-row-menus', menu: first_level_link, megamenu_object: megamenu_object, enable_rounded_header: enable_rounded_header -%}
+					{%- endif -%}
+
+					{%- if megamenu_object.type == 'megamenu-brands' and has_megamenu == true -%}
+						{%- assign brands_logos_blocks = section.blocks | where: 'type', 'megamenu-brands-logo' -%}
+
+						{%- render 'header-mega-menu-brands', menu: first_level_link, megamenu_object: megamenu_object, blocks: brands_logos_blocks, enable_rounded_header: enable_rounded_header -%}
+					{%- endif -%}
+
+					{%- if megamenu_object.type == 'megamenu-half-to-half' and has_megamenu == true -%}
+						{%- if megamenu_object.settings.heading == blank and megamenu_object.settings.subheading == blank and megamenu_object.settings.image == blank -%}
+							{%- assign has_megamenu = false -%}
+						{%- else -%}
+							{%- render 'header-mega-menu-half-to-half', menu: first_level_link, megamenu_object: megamenu_object, enable_rounded_header: enable_rounded_header -%}
+						{%- endif -%}
+					{%- endif -%}
+				{%- endcapture -%}
+
+        {%- if megamenu != blank and menu_type_desktop == 'megamenu' or menu_type_desktop == 'both' -%}
+          <a
+            class="header-menu__item  custombb {{ item_class }} {{ item_class_highlighted }} {%- if first_level_link.active %} header-menu__item--active{% endif %} no-js"
+            href="{{- first_level_link.url -}}"
+            {% if first_level_link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            <span class="header-menu__item-text {{ item_text_class }} {{ item_text_class_highlighted }}">
+              {{ first_level_link.title | escape }}
+            </span>
+          </a>
+
+          <button
+            class="header-menu__item {{ item_class }} {{ item_class_highlighted }} {% if first_level_link.child_active %} header-menu__item--active{% endif %} js-header-mega-menu-toggler"
+            type="button"
+            data-target="headerMegaMenu:{{- first_level_link.title | handleize -}}"
+            aria-controls="headerMegaMenu:{{- first_level_link.title | handleize -}}"
+            aria-expanded="false"
+            {% if megamenu_object.type == 'megamenu-brands' %}
+              data-brands-drawer
+            {%- endif -%}
+          >
+            <span class="header-menu__item-text {{ item_text_class }} {{ item_text_class_highlighted }}">
+              {{ first_level_link.title | escape }}
+            </span>
+
+            {% assign badge_text = megamenu_object.settings.badge_text %}
+            {% assign badge_text_color = megamenu_object.settings.badge_text_color %}
+            {% assign badge_background_color = megamenu_object.settings.badge_background_color %}
+
+            {%- if badge_text != blank -%}
+              <span
+                class="header-menu__item-badge"
+                style="--header-background: {{ header_bg -}}; --badge-text-color: {{ badge_text_color }}; --badge-background-color: {{ badge_background_color }};"
+              >
+                {{- badge_text -}}
+              </span>
+            {%- endif -%}
+
+            <span class="header-menu__item-toggle-icon">
+              {%- render 'icons', icon: 'arrow-down' -%}
+            </span>
+          </button>
+
+          {{- megamenu -}}
+        {%- elsif first_level_link.links != blank and menu_type_desktop == 'dropdown' or menu_type_desktop == 'both' -%}
+          <a
+            class="header-menu__item customdd {{ item_class }} {{ item_class_highlighted }} {%- if first_level_link.active %} header-menu__item--active{% endif %} no-js"
+            href="{{- first_level_link.url -}}"
+            {% if first_level_link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            <span class="header-menu__item-text  {{ item_text_class }} {{ item_text_class_highlighted }}">
+              {{ first_level_link.title | escape }}
+            </span>
+          </a>
+
+          <button
+            class="header-menu__item {{ item_class }} {{ item_class_highlighted }} {% if first_level_link.child_active %} header-menu__item--active{% endif %} js-header-dropdown-menu-toggler"
+            type="button"
+            data-target="headerDesktopMenu:{{- first_level_link.title | handleize -}}"
+            aria-controls="headerDesktopMenu:{{- first_level_link.title | handleize -}}"
+            aria-expanded="false"
+          >
+            <span class="header-menu__item-text  {{ item_text_class }} {{ item_text_class_highlighted }}">
+              {{ first_level_link.title | escape }}
+            </span>
+
+            <span class="header-menu__item-toggle-icon">
+              {%- render 'icons', icon: 'arrow-down' -%}
+            </span>
+          </button>
+
+          <ul
+            id="headerDesktopMenu:{{- first_level_link.title | handleize -}}"
+            class="header-menu__list header-menu__list--nested js-header-dropdown-menu {% if first_level_link.levels == 2 %}js-accordion-container{% endif %}"
+          >
+            {%- for second_level_link in first_level_link.links -%}
+              <li class="accordion__item {% if second_level_link.links != blank %}js-accordion-item{%- endif -%}">
+                {%- if second_level_link.links != blank -%}
+                  <button class="header-menu__item js-accordion-control {%- if second_level_link.child_active %} header-menu__item--active{%- endif -%}">
+                    {{- second_level_link.title | escape -}}
+
+                    <span class="header-menu__item-toggle-icon">
+                      {%- render 'icons', icon: 'arrow-down' -%}
+                    </span>
+                  </button>
+
+                  <div class="accordion__content accordion__content--animate js-accordion-content">
+                    <ul class="header-menu__list header-menu__list--collapsible js-accordion-inner">
+                      {%- for third_level_link in second_level_link.links -%}
+                        <li>
+                          <a
+                            class="header-menu__item"
+                            href="{{- third_level_link.url -}}"
+                            {% if third_level_link.current %}
+                              aria-current="page"
+                            {% endif %}
+                          >
+                            {{- third_level_link.title -}}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {%- else -%}
+                  <a
+                    class="header-menu__item customreee"
+                    href="{{- second_level_link.url -}}"
+                    {% if second_level_link.current %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    {{- second_level_link.title -}}
+                  </a>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          <a
+            class="header-menu__item custom-title{{ first_level_link.title | handleize }} {{ item_class }} {{ item_class_highlighted }} {%- if first_level_link.active %} header-menu__item--active{% endif %}"
+            href="{{- first_level_link.url -}}"
+            {% if first_level_link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            <span class="header-menu__item-text  {{ item_text_class }} {{ item_text_class_highlighted }}">
+              {{ first_level_link.title | escape }}
+            </span>
+          </a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+
+    {% if customer %}
+      <li class="js-header-dropdown-menu-element wholesellercontainer">
+        <button
+          class="header-menu__item js-header-mega-menu-toggler"
+          type="button"
+          data-target="headerMegaMenu:shop-Wholsale"
+          aria-expanded="false"
+        >
+          <span class="header-menu__item-text">My Wholesaler</span>
+          <span class="header-menu__item-toggle-icon">
+            {%- render 'icons', icon: 'arrow-down' -%}
+          </span>
+        </button>
+
+        <div id="headerMegaMenu:shop-Wholsale" class="header-mega-menu js-header-mega-menu is-hidden">
+          <div class="header-mega-menu__container js-header-mega-menu-content" style="--megamenu-background: #ffffff;">
+            <div class="header-mega-menu__content-container">
+              <div class="header-mega-menu__block header-mega-menu__block--menu">
+                {% comment %}
+                  <ul id="myUlSelect1" class="header-mega-menu__menu">
+                    <li data-value="1" id="api" value="api"{% if firstwholeseller %} selected{% endif %} class="header-mega-menu__menu-item header-mega-menu__menu-item--parent customapi q header-mega-menu__menu-item-wrapper">api</li>
+                    <li data-value="2" id="sigma" value="sigma"{% if firstwholeseller2 %} selected{% endif %} class="header-mega-menu__menu-item header-mega-menu__menu-item--parent customsigma q header-mega-menu__menu-item-wrapper">sigma</li>
+                    <li data-value="3" id="symbion" value="symbion"{% if firstwholeseller3 %} selected{% endif %} class="header-mega-menu__menu-item header-mega-menu__menu-item--parent customsymbion q header-mega-menu__menu-item-wrapper">symbion</li>
+                    <li data-value="4" id="ch2" value="ch2" {% if firstwholeseller4 %} selected{% endif %} class="header-mega-menu__menu-item header-mega-menu__menu-item--parent customch2 q header-mega-menu__menu-item-wrapper">
+                      ch2
+
+                    </li>
+                  </ul>
+                {% endcomment %}
+                <div class="main-wraper">
+                  <ul class="wholeseller-wraper">
+                    {% assign coverage_countries = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
+                    {% assign coverage_data = coverage_countries | join: ',' | downcase %}
+                   
+                    {% if coverage_data contains 'api' %}
+                      <li>
+                        <input
+                          type="radio"
+                          id="api"
+                          name="wholeseller"
+                          value="api"
+                          {% if firstwholeseller %}
+                            checked
+                          {% endif %}
+                          class="radio-input"
+                        >
+                        <label for="api" class="customwdata">API</label>
+                      </li>
+                    {% endif %}
+
+                    {% if coverage_data contains 'sigma' %}
+                      <li>
+                        <input
+                          type="radio"
+                          id="sigma"
+                          name="wholeseller"
+                          value="sigma"
+                          {% if firstwholeseller2 %}
+                            checked
+                          {% endif %}
+                          class="radio-input"
+                        >
+                        <label for="sigma" class="customwdata">Sigma</label>
+                      </li>
+                    {% endif %}
+
+                    {% if coverage_data contains 'symbion' %}
+                      <li>
+                        <input
+                          type="radio"
+                          id="symbion"
+                          name="wholeseller"
+                          value="symbion"
+                          {% if firstwholeseller3 %}
+                            checked
+                          {% endif %}
+                          class="radio-input"
+                        >
+                        <label for="symbion" class="customwdata custom__symbion">Symbion</label>
+                      </li>
+                    {% endif %}
+
+                    {% if coverage_data contains 'ch2' %}
+                      <li>
+                        <input
+                          type="radio"
+                          id="ch2"
+                          name="wholeseller"
+                          value="ch2"
+                          {% if firstwholeseller4 %}
+                            checked
+                          {% endif %}
+                          class="radio-input"
+                        >
+                        <label for="ch2" class="customwdata">CH2</label>
+                      </li>
+                    {% endif %}
+                  </ul>
+
+                  <div class="wholeseller desktopseller">
+                    {% if customer %}
+                      {% assign coverage_countries = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
+                      <ul class="header-mega-menu__menu">
+                        {% for item in coverage_countries %}
+                    
+                          {% assign selleritem = item | downcase | replace: ' ', '' %}
+
+                          <li class="wholwseller-item" data-value="{{ selleritem }}">
+                            <input
+                              type="radio"
+                              id="country-{{ forloop.index }}"
+                              name="{%if selleritem contains 'api' %} api{%endif%}{%if selleritem contains 'sigma'%}sigma {% endif %}{%if selleritem contains 'symbion'%}symbion{% endif %}{%if  selleritem contains 'ch2'%}ch2{% endif %}"
+                              value="{{ selleritem  }}"
+                              class="wholwseller-input {%if selleritem contains 'api' %} customapi{%endif%}{%if selleritem contains 'sigma'%}customsigma {% endif %}{%if selleritem contains 'symbion'%}customsymbion{% endif %}{%if  selleritem contains 'ch2'%}customch2{% endif %}"
+                              itemnumber="
+                                {% assign cleaned_item = selleritem
+                                  | remove: 'api'
+                                  | remove: 'sigma'
+                                  | remove: 'symbion'
+                                  | remove: 'ch2'
+                                  | remove: 'API'
+                                  | remove: 'Sima'
+                                  | remove: 'Symbion'
+                                  | remove: 'CH2'
+                                %}
+                                {{ cleaned_item }}
+                              "
+                            >
+                            <label for="country-{{ forloop.index }}" class="wholwseller-label {{selleritem }}">
+                              {% assign cleaned_item = selleritem
+                                | remove: 'api'
+                                | remove: 'sigma'
+                                | remove: 'symbion'
+                                | remove: 'ch2'
+                                | remove: 'API'
+                                | remove: 'Sima'
+                                | remove: 'Symbion'
+                                | remove: 'CH2'
+                              %}
+                              {{ cleaned_item }}
+                            </label>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <style>
+                  .wholwseller-item { display: none; } /* hide all by default */
+                  .wholwseller-item.active { display: list-item; }
+                </style>
+
+                <script>
+                  document.addEventListener('DOMContentLoaded', function () {
+                    const radios = document.querySelectorAll('input[name="wholeseller"]');
+                    const items = document.querySelectorAll('.wholwseller-item');
+
+                    // restore last saved selection from localStorage
+                    const saved = localStorage.getItem('selected_wholeseller');
+                    if (saved) {
+                      const savedRadio = document.querySelector(`input[name="wholeseller"][value="${saved}"]`);
+                      if (savedRadio) {
+                        savedRadio.checked = true;
+                      }
+                    }
+
+                    function updateVisible() {
+                      let selected = document.querySelector('input[name="wholeseller"]:checked')?.value;
+                      if (selected) {
+                        // save current selected in localStorage
+                        localStorage.setItem('selected_wholeseller', selected);
+                      }
+
+                      items.forEach((item) => {
+                        if (selected && item.dataset.value.includes(selected)) {
+                          item.classList.add('active');
+                        } else {
+                          item.classList.remove('active');
+                        }
+                      });
+
+                      // brand click alone only reveals matching numbers — make sure one is actually selected too
+                      if (selected) {
+                        const checkedInput = document.querySelector('.wholwseller-input:checked');
+                        const checkedMatchesBrand = checkedInput && checkedInput.closest('.wholwseller-item')?.dataset.value.includes(selected);
+                        if (!checkedMatchesBrand) {
+                          const firstMatch = document.querySelector('.wholwseller-item.active .wholwseller-input');
+                          if (firstMatch) {
+                            firstMatch.checked = true;
+                            firstMatch.dispatchEvent(new Event('change', { bubbles: true }));
+                          }
+                        }
+                      }
+                    }
+
+                    radios.forEach((radio) => {
+                      radio.addEventListener('change', updateVisible);
+                    });
+
+                    updateVisible(); // run on page load
+                  });
+                  const saved = localStorage.getItem('selected_wholeseller');
+
+                  if (saved) {
+                    const savedRadio = document.querySelector(`input[name="wholeseller"][value="${saved}"]`);
+                    if (savedRadio) {
+                      savedRadio.checked = true;
+                    }
+                  }
+                </script>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% assign wholesaler_coverage = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
+<script>
+  // Live coverage for the CURRENT company, recomputed on every page load —
+  // never trust a cached wholesaler value that isn't in this list, so a
+  // wholesaler-account change on the company takes effect immediately.
+  window.__wholesalerCoverage = [
+    {%- for item in wholesaler_coverage -%}
+      "{{ item | downcase | escape }}"{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ];
+  // isWholesalerCovered() itself lives in assets/wholesaler-shared.js, loaded in <head>.
+</script>
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+  // Function to handle storage for a specific class
+  function handleWholesellerStorage(className, storageKey) {
+    const inputs = document.querySelectorAll(`.${className}`);
+
+    inputs.forEach((input) => {
+      input.addEventListener('change', function () {
+        if (this.checked) {
+          localStorage.setItem(storageKey, this.value);
+        }
+      });
+    });
+
+    // Restore on page load
+    const savedValue = localStorage.getItem(storageKey);
+
+    if (savedValue && !isWholesalerCovered(savedValue)) {
+      // Cached value no longer matches this company's current wholesaler
+      // accounts (e.g. account was switched from Sigma to Symbion) — clear
+      // it instead of restoring stale/invalid data.
+      localStorage.removeItem(storageKey);
+    } else if (savedValue) { // <-- check if not null
+      if (savedValue.includes('api')) {
+        const inputEl = document.querySelector('.api');
+        if (inputEl) inputEl.value = savedValue;
+      }
+
+      if (savedValue.includes('sigma')) {
+        const sigmaElements = document.querySelectorAll('.custom_product-section .sigma');
+        sigmaElements.forEach(el => el.value = savedValue); // NodeList needs forEach
+      }
+
+      if (savedValue.includes('symbion')) {
+        const inputEl = document.querySelector('.symbion');
+        if (inputEl) inputEl.value = savedValue;
+      }
+
+      if (savedValue.includes('ch2')) {
+        const inputEl = document.querySelector('.ch2');
+        if (inputEl) inputEl.value = savedValue;
+      }
+
+      // Restore checked state (CSS.escape guards against values with raw newlines/whitespace)
+      const savedInput = document.querySelector(`.${className}[value="${CSS.escape(savedValue)}"]`);
+      if (savedInput) savedInput.checked = true;
+    }
+  }
+
+  // Call for each wholeseller type
+  handleWholesellerStorage('customapi', 'selected_api');
+  handleWholesellerStorage('customsigma', 'selected_sigma');
+  handleWholesellerStorage('customsymbion', 'selected_symbion');
+  handleWholesellerStorage('customch2', 'selected_ch2');
+});
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Function to handle saving first input of a class into localStorage
+    function saveFirstInputValue(className, storageKey) {
+      const firstInput = document.querySelector(className);
+      if (firstInput) {
+        if (isWholesalerCovered(firstInput.value)) {
+          localStorage.setItem(storageKey, firstInput.value);
+        } else {
+          // Don't cache a value that isn't actually in this company's
+          // current wholesaler coverage — prevents stale/mismatched accounts.
+          localStorage.removeItem(storageKey);
+        }
+      }
+    }
+
+    // Call function for each input group
+    saveFirstInputValue('.customapi', 'selected_api');
+    saveFirstInputValue('.customsigma', 'selected_sigma');
+    saveFirstInputValue('.customsymbion', 'selected_symbion');
+    saveFirstInputValue('.customch2', 'selected_ch2');
+  });
+</script>
+{% if customer %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Function to handle saving first input of a class into localStorage
+      function saveFirstInputValue(className, storageKey) {
+        const firstInput = document.querySelector(className);
+        if (firstInput) {
+          if (isWholesalerCovered(firstInput.value)) {
+            localStorage.setItem(storageKey, firstInput.value);
+          } else {
+            localStorage.removeItem(storageKey);
+          }
+        }
+      }
+
+      // Call function for each input group
+      saveFirstInputValue('.customapi', 'selected_api');
+      saveFirstInputValue('.customsigma', 'selected_sigma');
+      saveFirstInputValue('.customsymbion', 'selected_symbion');
+      saveFirstInputValue('.customch2', 'selected_ch2');
+    });
+  </script>
+{% endif %}
+
+<script>
+  $(document).ready(function () {
+    $('.customlable').click(function () {
+      $(this).parent().prev().find('.custom-active').removeClass('custom-active');
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    // List of radio groups
+    const groups = ['sigma', 'api', 'symbion', 'ch2'];
+
+    groups.forEach(function (name) {
+      // Find the first input in each group
+      const $firstInput = $(`input[name="${name}"]`).first();
+
+      if ($firstInput.length) {
+        // Find the label connected to that input and add the class
+        const id = $firstInput.attr('id');
+        if (id) {
+          $(`label[for="${id}"]`).addClass('custom-active');
+        }
+      }
+    });
+  });
+</script>
+{% if customer and customer.orders_count > 0 %}
+  {% assign last_order = customer.orders.first %}
+
+  {% if last_order.line_items.size > 0 %}
+    {% assign last_line_item = last_order.line_items.last %}
+
+    {% assign wholesaler_number = '' %}
+    {% for property in last_line_item.properties %}
+      {% if property.first == 'Wholesaler Account No.1'
+        or property.first == 'Wholesaler Account No.2'
+        or property.first == 'Wholesaler Account No.3'
+        or property.first == 'Wholesaler Account No.4'
+      %}
+        {% assign wholesaler_number = property.last | strip %}
+      {% endif %}
+    {% endfor %}
+
+  {% endif %}
+{% endif %}
+
+{% comment %}
+  {% if wholesaler_number != blank %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const runKey = 'wholesaler-script-ran';
+        const wholesalerNumber = '{{ wholesaler_number | escape }}';
+
+        // Check if script has already run
+        if (!localStorage.getItem(runKey)) {
+          const input = document.querySelector(`.wholwseller-input[itemnumber*="${wholesalerNumber}"]`);
+          if (input) {
+            input.checked = true;
+
+            const li = input.closest('.wholwseller-item');
+            if (li) li.classList.add('active');
+          }
+
+          // Mark as run so it doesn't execute again
+          localStorage.setItem(runKey, 'true');
+        }
+      });
+    </script>
+  {% endif %}
+{% endcomment %}
+{% if customer and coverage_countries.size > 0 %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const runCookieName = 'wholesaler_script_ran'; // cookie that prevents re-running after user click
+      const selectedCookieName = 'wholesaler_selected_number';
+      const defaultNumber = '{{ wholesaler_number | escape }}';
+      const cookieDays = 365;
+
+      // --- Cookie helpers ---
+      function setCookie(name, value, days) {
+        let expires = '';
+        if (days) {
+          const date = new Date();
+          date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+          expires = '; expires=' + date.toUTCString();
+        }
+        document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/';
+      }
+
+      function getCookie(name) {
+        const nameEQ = name + '=';
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i].trim();
+          if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length));
+        }
+        return null;
+      }
+
+      function deleteCookie(name) {
+        document.cookie = name + '=; Max-Age=0; path=/';
+      }
+
+      // --- Helper: which brand a per-number input belongs to (from its custom{brand} class) ---
+      function getBrandFromWholesellerInput(inputEl) {
+        if (inputEl.classList.contains('customapi')) return 'api';
+        if (inputEl.classList.contains('customsigma')) return 'sigma';
+        if (inputEl.classList.contains('customsymbion')) return 'symbion';
+        if (inputEl.classList.contains('customch2')) return 'ch2';
+        return null;
+      }
+
+      // --- Helper: activate input + item (uncheck-all-first, so a stale browser-restored checked state can't linger) ---
+      // note: visibility (.active) is owned by updateVisible() based on brand match, covering every same-brand
+      // number — this only marks which specific number is the checked/highlighted one among those shown.
+      function activateInput(inputEl) {
+        if (!inputEl) return;
+        document.querySelectorAll('.wholwseller-input').forEach((el) => { el.checked = false; });
+        inputEl.checked = true;
+        document.querySelectorAll('.wholwseller-item').forEach((li) => li.classList.remove('wholwseller-selected'));
+        const li = inputEl.closest('.wholwseller-item');
+        if (li) li.classList.add('wholwseller-selected');
+
+        // keep the brand-level radio (and its number-pill visibility filter) in sync with this pick —
+        // always dispatch, even if already checked, so updateVisible() re-shows every number for this brand
+        const brand = getBrandFromWholesellerInput(inputEl);
+        const brandRadio = brand && document.querySelector('input[name="wholeseller"][value="' + brand + '"]');
+        if (brandRadio) {
+          brandRadio.checked = true;
+          brandRadio.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+
+      // --- Move checked item to top (works on load and after change) ---
+      function moveCheckedToTop() {
+        const checkedInput = document.querySelector('.wholwseller-input:checked');
+        if (checkedInput) {
+          const li = checkedInput.closest('.wholwseller-item');
+          const parent = li?.parentElement;
+          if (li && parent && parent.firstElementChild !== li) {
+            parent.insertBefore(li, parent.firstElementChild);
+          }
+        }
+      }
+
+      // --- Determine active number and activate corresponding input (re-validated every load, not just once) ---
+      const savedNumber = (getCookie(selectedCookieName) || '').trim() || null;
+      const activeNumber = savedNumber || defaultNumber;
+
+      // an empty activeNumber matches nothing per the CSS spec ([attr*=""] never matches), so guard it explicitly
+      let input = activeNumber ? document.querySelector(`.wholwseller-input[itemnumber*="${activeNumber}"]`) : null;
+
+      if (!input) {
+        // nothing resolvable from cookie/default (stale, cleared, or blank) — clear any stale cookie and fall back,
+        // preferring another number under the same brand before jumping to a different brand entirely
+        if (savedNumber) deleteCookie(selectedCookieName);
+        const lastBrand = localStorage.getItem('selected_wholeseller');
+        input = (defaultNumber && document.querySelector(`.wholwseller-input[itemnumber*="${defaultNumber}"]`))
+          || (lastBrand && document.querySelector('.wholwseller-input.custom' + lastBrand))
+          || document.querySelector('.wholwseller-input');
+      }
+
+      if (input) {
+        activateInput(input);
+        const freshNumber = input.getAttribute('itemnumber');
+        if (freshNumber) setCookie(selectedCookieName, freshNumber.trim(), cookieDays);
+      }
+
+      // --- Ensure UI puts checked item first on load (covers dynamic checking) ---
+      moveCheckedToTop();
+      setTimeout(moveCheckedToTop, 300);
+
+      // --- When user clicks a different option ---
+      document.querySelectorAll('.wholwseller-input').forEach((inp) => {
+        inp.addEventListener('change', function () {
+          // activate visually
+          activateInput(this);
+          moveCheckedToTop();
+
+          // store chosen number cookie
+          const selectedNumber = (this.getAttribute('itemnumber') || '').trim();
+          if (selectedNumber) setCookie(selectedCookieName, selectedNumber, cookieDays);
+
+          // set run cookie so this initialization doesn't run again on reload
+          // (use long expiry so it persists across sessions)
+          setCookie(runCookieName, '1', cookieDays);
+
+          if (typeof applyWholesalerNumberOverride === 'function') applyWholesalerNumberOverride();
+        });
+      });
+    });
+
+    // --- Optional: helper available even if above early-return happened ---
+    function moveCheckedToTop() {
+      const checkedInput = document.querySelector('.wholwseller-input:checked');
+      if (checkedInput) {
+        const li = checkedInput.closest('.wholwseller-item');
+        const parent = li?.parentElement;
+        if (li && parent && parent.firstElementChild !== li) {
+          parent.insertBefore(li, parent.firstElementChild);
+        }
+      }
+    }
+  </script>
+{% elsif customer == blank %}
+  <!-- Customer logged out — clear cookies -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.cookie = 'wholesaler_selected_number=; Max-Age=0; path=/';
+      document.cookie = 'wholesaler_script_ran=; Max-Age=0; path=/';
+
+      // also remove any run keys from localStorage if you used those elsewhere
+      for (let key in localStorage) {
+        if (key.startsWith('wholesaler_script_ran_')) {
+          localStorage.removeItem(key);
+        }
+      }
+    });
+  </script>
+{% endif %}

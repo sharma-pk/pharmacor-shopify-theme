@@ -1,0 +1,243 @@
+<style>
+    .scrolling-bar-container {
+      width: 100%;
+      overflow: hidden; 
+      background-color: {{ section.settings.color-1 }}; 
+      padding-top: {{section.settings.icon-margin-top}}px;
+      padding-bottom: {{section.settings.icon-margin-bottom}}px;
+    }
+  
+    .scrolling-bar {
+      display: flex;
+      animation: scroll {{ section.settings.speed }}s linear infinite; 
+    }
+    .scrolling-bar img{width: 28px;
+      {% comment %} filter: brightness(0) invert(1); {% endcomment %}
+    }
+  
+    .scrolling-bar a {
+      {% if template.name == 'cart' %}
+      min-width: 410px;
+      {% else %}  
+      min-width: 300px;
+      {%endif %}
+      font-size: 19px;
+      line-height: 19px;
+      color: {{ section.settings.color-bg-1 }}; 
+      text-decoration: none;justify-content: space-around;
+      padding: 0 2px; 
+      white-space: nowrap; 
+      display: flex;text-transform: uppercase;
+      align-items: center;
+    }
+  
+    @keyframes scroll {
+      0% {
+        transform: translateX(0); 
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+  @media only screen and (max-width: 767px){
+     .scrolling-bar {animation: scroll {{ section.settings.speed-2 }}s linear infinite; }
+  }
+  </style>
+  
+  <div class="scrolling-bar-container">
+    <div class="scrolling-bar">
+      {% for block in section.blocks %}
+        {% if block.settings.title != blank %}
+            <a href="{{ block.settings.title-url }}">{{ block.settings.title }}
+              {% if block.settings.img != blank %}
+                 <img src="{{ block.settings.img | img_url: 'master' }}" alt="{{ block.settings.title | escape }}">
+              {% endif %}
+            </a>
+        {% endif %}
+        {% if block.settings.title-1 != blank %}
+            <a href="{{ block.settings.title-url-1 }}">{{ block.settings.title-1 }}
+              {% if block.settings.img1 != blank %}
+                 <img src="{{ block.settings.img1 | img_url: 'master' }}"alt="{{ block.settings.title-1 | escape }}">
+              {% endif %}
+            </a>
+            
+        {% endif %}
+        {% if block.settings.title-2 != blank %}
+            <a href="{{ block.settings.title-url-2 }}">{{ block.settings.title-2 }}
+              {% if block.settings.img2 != blank %}
+                 <img src="{{ block.settings.img2 | img_url: 'master' }}"alt="{{ block.settings.title-2 | escape }}">
+              {% endif %}
+            </a>
+        {% endif %}
+        {% if block.settings.title-3 != blank %}
+            <a href="{{ block.settings.title-url-3 }}">{{ block.settings.title-3 }}
+              {% if block.settings.img3 != blank %}
+                 <img src="{{ block.settings.img3 | img_url: 'master' }}"alt="{{ block.settings.title-3 | escape }}">
+              {% endif %}
+            </a>
+        {% endif %}
+        {% if block.settings.title-4 != blank %}
+            <a href="{{ block.settings.title-url-4 }}">{{ block.settings.title-4 }}
+              {% if block.settings.img4 != blank %}
+                 <img src="{{ block.settings.img4 | img_url: 'master' }}"alt="{{ block.settings.title-4 | escape }}">
+              {% endif %}
+            </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  
+
+{% schema %}
+  {
+    "name": "Custom Announcement Bar",
+    "settings": [
+        {
+        "type": "range",
+        "id": "icon-margin-top",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "icon-margin-bottom",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "speed",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Scrolling Speed Desktop",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "speed-2",
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "label": "Scrolling Speed Mobile",
+        "default": 25
+      },
+    {
+       "type":"color",
+       "id":"color-1",
+      "label":"Background Color"
+    },
+     {
+       "type":"color",
+       "id":"color-bg-1",
+       "label":"Text Color"
+      }
+    ] ,
+	"blocks": [
+    	{
+			"name": "Icon Slide",
+        	"type": "reviews",
+			"settings":[
+              {
+                "type":"text",
+                "id":"title",
+                "label":"1st Title"
+              },
+              {
+                "type":"image_picker",
+                "id":"img",
+                "label":"1st Image"
+              },
+              {
+                "type":"url",
+                "id":"title-url",
+                "label":"1st Title URL"
+              },
+               {
+                "type":"text",
+                "id":"title-1",
+                "label":"2nd Title"
+              },
+              {
+                "type":"image_picker",
+                "id":"img1",
+                "label":"2nd Image"
+              },
+              {
+                "type":"url",
+                "id":"title-url-1",
+                "label":"2nd Title URL"
+              },
+              {
+                "type":"text",
+                "id":"title-2",
+                "label":"3rd Title"
+              },
+              {
+                "type":"image_picker",
+                "id":"img2",
+                "label":"3rd Image"
+              },
+              {
+                "type":"url",
+                "id":"title-url-2",
+                "label":"3rd Title URL"
+              },
+                {
+                "type":"text",
+                "id":"title-3",
+                "label":"4th Title"
+              },
+              {
+                "type":"image_picker",
+                "id":"img3",
+                "label":"4th Image"
+              },
+              {
+                "type":"url",
+                "id":"title-url-3",
+                "label":"4th Title URL"
+              },
+               {
+                "type":"text",
+                "id":"title-4",
+                "label":"5th Title"
+              },
+              {
+                "type":"image_picker",
+                "id":"img4",
+                "label":"5th Image"
+              },
+              {
+                "type":"url",
+                "id":"title-url-4",
+                "label":"5th Title URL"
+              }
+            ]
+        }
+    ],
+	"presets":[
+	  {
+		"name": "Custom Announcement Bar",
+		"category": "Slider"
+	  }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

@@ -1,0 +1,675 @@
+<style>
+{% if template.name == "product" %}
+
+.product-section .product-quantity__wrapper form {
+	margin: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: column-reverse;
+	height: fit-content;
+}
+.product-section .product-quantity .product-quantity__wrapper {
+	display: flex;
+	align-items: baseline!important;
+	gap: 32px;
+	flex-direction: column;
+}
+
+.product-options {
+	position: relative;
+	z-index: 9999999;
+}
+
+.add_to_cart_qunatitty {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 30% 66%;
+    gap: 20px;
+}
+.product-section .product-add-to-cart__button.add-to-cart{
+width:100%;}
+span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary:before,
+span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary:after{
+display:none
+}
+
+span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary {
+  width:100% !important;
+    border: 2px solid #30623D !important;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    overflow: hidden;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 32px;
+    text-decoration: none;
+    text-transform: none;
+    transition-property: opacity, color, border, background-color;
+    transition-duration: var(--timing-base);
+    cursor: pointer;
+    font-family: Neutrif Studio;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 100%;
+    letter-spacing: .8px;
+    text-align: center;
+    background: transparent;
+    color:#30623D;
+    min-height: 56px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary:hover{
+background:#30623D;
+color:#fff;
+}
+@media only screen and (min-width: 567px){
+.product-section .product-quantity .product-quantity__wrapper {
+	gap: 32px;
+
+}
+.product-quantity .product-quantity__wrapper{flex-wrap: inherit!important;}
+.customitem .product-quantity__container{width: fit-content!important;}
+.product-section .product-quantity__container{
+	position: relative;
+
+}
+.product-section .product-add-to-cart__button.add-to-cart {
+	width: 100%;
+	margin: auto;
+	margin-right: 0;
+}
+
+}
+
+
+
+.product-section .delivery-date.showproductpage{display:flex;margin:20px 0px;flex-direction: column;gap: 10px;}
+
+{% endif %}
+
+/* ============================
+   Homepage Quantity + ATC Row
+   ============================ */
+
+/* Override the theme rule that hides ATC button inside product rows */
+.custom_product-section .homepage-qty-atc-row .product-add-to-cart__button {
+  display: flex !important;
+}
+
+/* ---- Row layout ---- */
+.homepage-qty-atc-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+/* ---- Quantity selector pill ---- */
+.custom_product-section .homepage-qty-selector {
+  display: flex;
+  align-items: center;
+  border: 2px solid #30623D;
+  border-radius: 50px;
+  overflow: hidden;
+  height: 40px;
+  flex-shrink: 0;
+  background: #fff;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.custom_product-section .homepage-qty-selector:hover {
+  border-color: #245029;
+  box-shadow: 0 2px 8px rgba(48, 98, 61, 0.15);
+}
+
+/* ---- +/- buttons ---- */
+.custom_product-section .homepage-qty-btn {
+  width: 32px;
+  height: 100%;
+  border: none !important;
+  background: transparent;
+  color: #30623D;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0;
+  line-height: 1;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.custom_product-section .homepage-qty-btn:hover {
+  background-color: #30623D;
+  color: #fff;
+}
+
+.custom_product-section .homepage-qty-btn:active {
+  background-color: #245029;
+  color: #fff;
+}
+
+/* ---- Quantity input ---- */
+.custom_product-section .homepage-qty-selector input[type="number"].homepage-qty-input {
+  width: 38px !important;
+  height: 100% !important;
+  min-height: unset !important;
+  max-height: 40px !important;
+  border: none !important;
+  border-left: 1px solid #c5d8c9 !important;
+  border-right: 1px solid #c5d8c9 !important;
+  border-radius: 0 !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #1E1E1E !important;
+  background: #fff !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
+}
+
+.custom_product-section .homepage-qty-selector input[type="number"].homepage-qty-input:focus {
+  background: #f0faf2 !important;
+}
+
+.custom_product-section .homepage-qty-selector input[type="number"].homepage-qty-input::-webkit-inner-spin-button,
+.custom_product-section .homepage-qty-selector input[type="number"].homepage-qty-input::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+/* ---- Add to Cart button ---- */
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 16px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  font-size: 13px !important;
+  margin: 0 !important;
+  white-space: nowrap;
+  border-radius: 50px;
+  border: 2px solid #30623D !important;
+  background: #30623D !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+  font-family: "Neutrif Studio", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(48, 98, 61, 0.2);
+}
+
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes:hover {
+  background: #245029 !important;
+  border-color: #245029 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(48, 98, 61, 0.35);
+  transform: translateY(-1px);
+}
+
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes:active {
+  background: #1b3c20 !important;
+  border-color: #1b3c20 !important;
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(48, 98, 61, 0.2);
+}
+
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes:before,
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes:after {
+  display: none !important;
+}
+
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  fill: #fff;
+  stroke: #fff;
+}
+
+.custom_product-section .homepage-qty-atc-row .custom-btn-boxes:hover svg {
+  fill: #fff;
+  stroke: #fff;
+}
+
+/* ---- Wrapper column sizing ---- */
+.custom_product-section .product-quantity__wrapper.custom-wraoer-22 {
+  min-width: 220px !important;
+  position: static !important;
+  top: auto !important;
+}
+
+/* ---- Responsive: mobile ---- */
+@media only screen and (max-width: 810px) {
+  .homepage-qty-atc-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .custom_product-section .homepage-qty-selector {
+    width: 100%;
+    justify-content: center;
+    max-width: 160px;
+  }
+  .custom_product-section .homepage-qty-atc-row .custom-btn-boxes {
+    width: 100%;
+    flex: unset;
+  }
+  .custom_product-section .product-quantity__wrapper.custom-wraoer-22 {
+    min-width: 160px !important;
+  }
+}
+
+/* ---- Responsive: tablet ---- */
+@media only screen and (min-width: 768px) and (max-width: 1200px) {
+  .custom_product-section .product-quantity__wrapper.custom-wraoer-22 {
+    min-width: 220px !important;
+  }
+}
+</style>
+{% comment %}
+  Picks whichever wholesaler appears first in the account's own coverage list
+  (no option-rendering loop exists in this file to derive a per-variant handle from).
+{% endcomment %}
+<p id="wholesaler-display"></p>
+
+{% assign selected_seller_handle = '' %}
+{% assign seller_account_number = '' %}
+
+{% if customer %}
+  {% assign coverage_countries = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
+
+  {% for item in coverage_countries %}
+    {% assign clean_item = item | strip %}
+    {% assign clean_item_down = clean_item | downcase %}
+
+    {% if clean_item_down contains 'api' %}
+      {% assign selected_seller_handle = 'api' %}
+      {% assign seller_account_number = clean_item | remove_first: 'api' | remove_first: 'API' | strip %}
+      {% break %}
+    {% elsif clean_item_down contains 'sigma' %}
+      {% assign selected_seller_handle = 'sigma' %}
+      {% assign seller_account_number = clean_item | remove_first: 'sigma' | remove_first: 'SIGMA' | strip %}
+      {% break %}
+    {% elsif clean_item_down contains 'symbion' %}
+      {% assign selected_seller_handle = 'symbion' %}
+      {% assign seller_account_number = clean_item | remove_first: 'symbion' | remove_first: 'SYMBION' | strip %}
+      {% break %}
+    {% elsif clean_item_down contains 'ch2' %}
+      {% assign selected_seller_handle = 'ch2' %}
+      {% assign seller_account_number = clean_item | remove_first: 'ch2' | remove_first: 'CH2' | strip %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% comment %} does this product have a Wholesaler option, and does any value survive coverage filtering? {% endcomment %}
+{% assign has_wholesaler_option = false %}
+{% assign wholesaler_has_visible_value = false %}
+{% for pfci_option in product.options_with_values %}
+  {% if pfci_option.name contains 'Wholesaler' %}
+    {% assign has_wholesaler_option = true %}
+    {% for pfci_value in pfci_option.values %}
+      {% assign pfci_value_down = pfci_value | downcase %}
+      {% for pfci_item in coverage_countries %}
+        {% assign pfci_item_down = pfci_item | downcase %}
+        {% if pfci_item_down contains pfci_value_down %}
+          {% assign wholesaler_has_visible_value = true %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+{% assign hide_purchase_controls = false %}
+{% if has_wholesaler_option and wholesaler_has_visible_value == false %}
+  {% assign hide_purchase_controls = true %}
+{% endif %}
+
+<p>Selected seller: {{ selected_seller_handle }}</p>
+<p>Seller account number: {{ seller_account_number }}</p>
+
+{% comment %}
+  Step 3: Output hidden inputs with the correct number
+{% endcomment %}
+<input type="hidden" name="properties[Wholesaler Account No.1]" value="{% if selected_seller_handle contains 'api' %}{{ seller_account_number }}{% endif %}" class="API">
+<input type="hidden" name="properties[Wholesaler Account No.2]" value="{% if selected_seller_handle contains 'sigma' %}{{ seller_account_number }}{% endif %}" class="Sigma">
+<input type="hidden" name="properties[Wholesaler Account No.3]" value="{% if selected_seller_handle contains 'symbion' %}{{ seller_account_number }}{% endif %}" class="Symbion">
+<input type="hidden" name="properties[Wholesaler Account No.4]" value="{% if selected_seller_handle contains 'ch2' %}{{ seller_account_number }}{% endif %}" class="Ch2">
+<input type="hidden" name="properties[Order Date]" value="">
+<input type="hidden" id="wholesaler-account-number" name="properties[Wholesaler Account]" value="{{ seller_account_number }}">
+        <input id="my-variant-profit" type="hidden" name="properties[Saving Per Item]" class="itemperdiscount" value="">
+<input id="" type="hidden" name="properties[Wholesaler Account No.]" value="">
+
+{% liquid
+  assign section_contains_quantity_block = false
+  assign gift_card_recipient_feature_active = false
+
+  if product.gift_card? and block.settings.show_gift_card_recipient
+    assign gift_card_recipient_feature_active = true
+  endif
+
+  assign button_type = block.settings.button_type
+%}
+
+{% if gift_card_recipient_feature_active %}
+  {%- assign gift_card_recipient_control_flag = 'properties[__shopify_send_gift_card_to_recipient]' -%}
+
+  <div class="recipient-form">
+    <div class="recipient-form__checkbox-field">
+      <input
+        id="Recipient-checkbox-{{ section.id }}"
+        class="checkbox recipient-form__checkbox js-recipient-form-checkbox"
+        type="checkbox"
+        name="{{ gift_card_recipient_control_flag }}"
+        disabled
+      >
+
+      <label for="Recipient-checkbox-{{ section.id }}" class="checkbox-label">
+        <span class="checkbox-label__box "></span>
+        {{ 'products.product.recipient.form.checkbox' | t }}
+      </label>
+    </div>
+
+    <div class="recipient-form__fields is-hidden js-recipient-form-fields">
+      <div class="recipient-form__field">
+        <label class="label-input" for="Recipient-email-{{ section.id }}">
+          <span class="recipient-form__label-normal">{{ 'products.product.recipient.form.email_label' | t }}</span>
+          <span class="recipient-form__label-no-js">
+            {{- 'products.product.recipient.form.email_label_optional_for_no_js_behavior' | t -}}
+          </span>
+        </label>
+
+        <input
+          class="input js-recipient-form-field"
+          id="Recipient-email-{{ section.id }}"
+          type="email"
+          placeholder="Recipient email"
+          name="properties[Recipient email]"
+          value="{{ form.email }}"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="RecipientForm-email-error-{{ section.id }}"
+          {% endif %}
+        >
+
+        <div
+          id="RecipientForm-email-error-{{ section.id }}"
+          class="error js-form-error{% unless form.errors contains 'email' %} is-hidden{% endunless %}"
+        >
+          {%- if form.errors contains 'email' -%}
+            {{ form.errors.messages.email }}.
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="recipient-form__field">
+        <label class="label-input" for="Recipient-name-{{ section.id }}">
+          {{- 'products.product.recipient.form.name_label' | t -}}
+        </label>
+
+        <input
+          class="input js-recipient-form-field"
+          autocomplete="name"
+          type="text"
+          id="Recipient-name-{{ section.id }}"
+          name="properties[Recipient name]"
+          placeholder="{{ 'products.product.recipient.form.name' | t }}"
+          value="{{ form.name }}"
+          {% if form.errors contains 'name' %}
+            aria-invalid="true"
+            aria-describedby="RecipientForm-name-error-{{ section.id }}"
+          {% endif %}
+        >
+
+        <div
+          id="RecipientForm-name-error-{{ section.id }}"
+          class="error js-form-error {% unless form.errors contains 'name' %} is-hidden{% endunless %}"
+        >
+          {%- if form.errors contains 'name' -%}
+            {{ form.errors.messages.name }}.
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="recipient-form__field">
+        {%- assign max_chars_message = 200 -%}
+        {%- assign max_chars_message_rendered = 'products.product.recipient.form.max_characters'
+          | t: max_chars: max_chars_message
+        -%}
+        {%- assign message_label_rendered = 'products.product.recipient.form.message_label' | t -%}
+
+        <label class="label-input" for="Recipient-message-{{ section.id }}">
+          {{ message_label_rendered }}
+        </label>
+
+        <textarea
+          rows="10"
+          id="Recipient-message-{{ section.id }}"
+          class="recipient-form__textarea input js-recipient-form-field"
+          name="properties[Message]"
+          maxlength="{{ max_chars_message }}"
+          placeholder="{{ 'products.product.recipient.form.message' | t }}"
+          aria-label="Max characters 200"
+          {% if form.errors contains 'message' %}
+            aria-invalid="true"
+            aria-describedby="RecipientForm-message-error-{{ section.id }}"
+          {% endif %}
+        >{{- form.message -}}</textarea>
+
+        <div class="recipient-form__input-info">{{ max_chars_message_rendered }}</div>
+
+        <div
+          id="RecipientForm-message-error-{{ section.id }}"
+          class="error js-form-error{% unless form.errors contains 'message' %} is-hidden{% endunless %}"
+        >
+          {%- if form.errors contains 'message' -%}
+            {{ form.errors.messages.message }}.
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="recipient-form__field">
+        <label class="label-input" for="Recipient-send_on-{{ section.id }}">
+          {{ 'products.product.recipient.form.send_on_label' | t }}
+        </label>
+
+        <input
+          class="input js-recipient-form-field"
+          autocomplete="off"
+          type="date"
+          id="Recipient-send_on-{{ section.id }}"
+          name="properties[Send on]"
+          pattern="\d{4}-\d{2}-\d{2}"
+          value="{{ form.send_on }}"
+          {% if form.errors contains 'send_on' %}
+            aria-invalid="true"
+            aria-describedby="RecipientForm-send_on-error-{{ section.id }}"
+          {% endif %}
+        >
+
+        <div
+          id="RecipientForm-send_on-error-{{ section.id }}"
+          class="error js-form-error {% unless form.errors contains 'send_on' %} is-hidden{% endunless %}"
+        >
+          {%- if form.errors contains 'send_on' -%}
+            {{ form.errors.messages.send_on }}.
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <input
+      type="hidden"
+      name="{{ gift_card_recipient_control_flag }}"
+      value="if_present"
+      id="Recipient-control-{{ section.id }}"
+      class="js-recipient-form-no-js-control"
+    >
+
+    <input
+      type="hidden"
+      name="properties[__shopify_offset]"
+      value=""
+      id="Recipient-timezone-offset-{{ section.id }}"
+      class="js-recipient-form-timezone-offset"
+    >
+  </div>
+{% endif %}
+{% comment %}
+   {% if product.template_suffix == 'pre-order' %}
+  	<input type="hidden" name="properties[_Pre-order]" value="true">
+  {% endif %}
+{% endcomment %}
+
+
+  
+
+  <input type="hidden" name="id" class="my-add-to-cart-value custom-idd" value="{{ product.variants.first.id }}">
+{% if hide_purchase_controls and request.page_type != 'product' %}
+  <div class="homepage-qty-atc-row wholesaler-unavailable-notice">
+    <p style="color:#8a8a8a;font-weight:normal;margin:0;white-space:nowrap;text-align:center;width:100%;">Not available</p>
+  </div>
+{% endif %}
+<div class="homepage-qty-atc-row" style="{% if hide_purchase_controls %}display:none;{% endif %}">
+  <div class="homepage-qty-selector">
+    <button
+      class="homepage-qty-btn homepage-qty-decrease"
+      type="button"
+      aria-label="Decrease quantity"
+    >
+      &minus;
+    </button>
+
+    <input
+      class="homepage-qty-input custom-class-quantity"
+      type="number"
+      name="quantity"
+      value="1"
+      min="1"
+      step="1"
+      aria-label="Quantity"
+    >
+
+    <button
+      class="homepage-qty-btn homepage-qty-increase"
+      type="button"
+      aria-label="Increase quantity"
+    >
+      &plus;
+    </button>
+  </div>
+
+  <span
+    class="
+      custom-btn-boxes product-add-to-cart__button add-to-cart button button--block button--{{- button_type -}}
+    "
+    {% if product.template_suffix == 'pre-order' %}
+      data-preorder
+    {% endif %}
+  >
+    {%- render 'icons', icon: 'cart' -%}
+
+    <span class="js-product-add-to-cart-button-text">
+      {% if product.first_available_variant.available %}
+        {% if product.template_suffix == 'pre-order' %}
+          {{- 'products.product.pre_order' | t -}}
+        {% else %}
+          {{- 'products.product.add_to_cart' | t -}}
+        {% endif %}
+      {% else %}
+        {{- 'products.product.sold_out' | t -}}
+      {% endif %}
+    </span>
+  </span>
+</div>
+{% comment %}
+  <button
+  	type="submit"
+  	class="custom-btn-boxes product-add-to-cart__button add-to-cart button button--block button--{{- button_type -}}
+  			{% unless product.first_available_variant.available %}
+  				disabled
+  			{% endunless %}
+  		"
+  	{% unless product.first_available_variant.available %}
+  		disabled
+  	{% endunless %}
+  	{% if product.template_suffix == 'pre-order' %}
+  		data-preorder
+  	{% endif %}
+  >
+  	{%- render 'icons', icon: 'cart' -%}
+
+  	<span class="js-product-add-to-cart-button-text">
+  		{% if product.first_available_variant.available %}
+  			{% if product.template_suffix == 'pre-order' %}
+  				{{- 'products.product.pre_order' | t -}}
+  			{% else %}
+  				{{- 'products.product.add_to_cart' | t -}}
+  			{% endif %}
+  		{% else %}
+  			{{- 'products.product.sold_out' | t -}}
+  		{% endif %}
+  	</span>
+  </button>
+{% endcomment %}
+{% comment %}
+  {% render 'custom-product-quantity', block: block, product: product, show_label: true %}
+{% endcomment %}
+{% if block.settings.show_additional_buttons and hide_purchase_controls == false %}
+  <div class="product-add-to-cart__additional-buttons">
+    {{- form | payment_button -}}
+  </div>
+{% endif %}
+{% if customer %}
+  {% for address in customer.addresses %}
+    <!-- <p style="" class="custom-address-1">{{ customer.tags | join: ', ' }}</p> -->
+    <div class="my-cusotm-tag-main">
+      {% for tag in customer.tags %}
+        <span class="customer-tag custom-address-1" style="position: absolute; opacity: 0;">{{ tag | handleize }}</span>
+      {% endfor %}
+    </div>
+  {% endfor %}
+  <style>
+    {% if template.name == 'product' %}
+    /* .product-inventory-status{display: none;} */
+      {% endif %}
+  </style>
+{% endif %}
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the hidden input
+    const hiddenInput = document.getElementById('wholesaler-account-{{ forloop.index }}');
+
+    if(hiddenInput) {
+        // Get the data-value-wholesale attribute
+        const value = hiddenInput.getAttribute('data-value-wholesale');
+
+        // Set it inside the <p> tag
+        const displayP = document.getElementById('wholesaler-display');
+        if(displayP) {
+            displayP.textContent = value;  // shows the value
+        }
+    }
+});
+</script>

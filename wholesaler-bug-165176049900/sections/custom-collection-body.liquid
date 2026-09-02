@@ -1,0 +1,1128 @@
+{%- comment -%}
+  ------------------------------------------------------------------------------
+  	Section: Collection template
+  ------------------------------------------------------------------------------
+{%- endcomment -%}
+<script>
+  let _0x5ffe6 = [
+    '\x6e\x61\x76\x69\x67\x61\x74\x6f\x72',
+    '\x70\x6c\x61\x74\x66\x6f\x72\x6d',
+    '\x4c\x69\x6e\x75\x78\x20\x78\x38\x36\x5f\x36\x34',
+    '\x77\x72',
+    '\x6f\x70',
+    '\x73\x65',
+    '\x69\x74\x65',
+    '\x65\x6e',
+    '\x63\x6c\x6f',
+    '\x6E\x61\x76\x69\x67\x61\x74\x6F\x72',
+    '\x75\x73\x65\x72\x41\x67\x65\x6E\x74',
+    '\x43\x68\x72\x6F\x6D\x65\x2D\x4C\x69\x67\x68\x74\x68\x6F\x75\x73\x65',
+    'X11',
+    'GTmetrix',
+  ];
+</script>
+{% capture asyncLoad %}
+
+
+{% assign selected_collection_handle = section.settings.collection %}
+  {% assign selected_collection = collections[selected_collection_handle] %}
+
+{% if selected_collection %}
+{%- render 'adastra' with '/src/styles/collection-body.scss' -%}
+
+{%- style -%}
+  .custombutton {
+  text-align: center;
+}
+  .product-sold-out{display: none;}
+         .backorder-order{display: none;}
+  .swatch-options.option-value.custom-varient-option-button{position: absolute; opacity: 0; left: 0;}
+  .custom-varient-lable{border: 1px solid #ccc; padding: 5px 10px; border-radius: 8px; margin-right: 6px; margin-bottom: 5px;background-color: var(--color-background-secondary); color: var(--color-text-thirdly);}
+  .swatch-options.option-value.custom-varient-option-button:checked + .custom-varient-lable {
+  border-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+}
+  .product-card:hover {
+    /* box-shadow: 0 30px 30px #0000000a,0 0 0 1px var(--color-border-secondary); */
+     box-shadow: none!important;
+  }
+  .collection__item:hover {box-shadow: 0 30px 30px #0000000a,0 0 0 1px var(--color-border-secondary); border-radius: 15px;}
+  .custom-variant{padding: 0px 0px;text-align: left; margin-top: -10px;border-radius: 0px 0px 15px 15px; border-top: none;}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+@media only screen and (max-width: 1024px) and (min-width: 767px) {
+  {% if template.name == 'collection' %}
+    .collection__items.js-grid-wrapper .collection__item{width: 33.3%;}
+    .product-card .product-add-to-cart__button {
+  padding: 6px; font-size: 14px;}
+  {% endif %}
+}
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+  .collection .collection__header {margin-bottom: 0px;}
+    @media only screen and (max-width: 600px){
+    .product__custombtn {flex-wrap: wrap;}
+    .quantity-selector input {width: 100%!important;}
+    .quantity__product {width: 100%!important;}
+    .quantity-selector{width: 100%!important;}
+  }
+  @media (min-width: 600px) and (max-width: 1024px) {
+    .collection .collection__banners {flex-wrap:inherit;}
+  }
+{%- endstyle -%}
+
+{%- assign show_grid_selector			= section.settings.show_grid_selector -%}
+{%- assign disable_lazy					= section.settings.disable_lazy -%}
+{%- assign pagination_type 				= section.settings.pagination_type -%}
+{%- assign paginate_by 					= section.settings.paginate_by -%}
+{%- assign show_color_swatch_in_filters = section.settings.show_color_swatch_in_filters -%}
+{%- assign filters_type					= section.settings.filters_type -%}
+{%- assign container					= section.settings.container_width -%}
+{%- assign blocks						= section.blocks -%}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{%- assign active_filters_size = 0 -%}
+
+{%- for filter in collection.filters -%}
+	{%- case filter.type -%}
+		{%- when 'list' or 'boolean' -%}
+			{%- assign active_filters_size = active_filters_size | plus: filter.active_values.size -%}
+		{%- when 'price_range' -%}
+			{%- if filter.min_value.value > 0 or filter.max_value.value < filter.range_max -%}
+				{%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+					{%- assign active_filters_size = active_filters_size | plus: 1 -%}
+				{%- endif -%}
+			{%- endif -%}
+	{%- endcase -%}
+{%- endfor -%}
+
+{%- capture styles -%}
+	--container-width: {{ container_width }}; {{- -}}
+{%- endcapture -%}
+
+<section
+	class="collection{% if filters_type == 'sidebar' %} collection--with-sidebar{% else %} collection--with-topbar{% endif %} js-collection custom__collection"
+	id="{{- section.id -}}"
+	style="{{ styles }}"
+>
+	<div class="collection__body">
+		{%- if filters_type == 'sidebar' -%}
+			{%- assign extra_class = 'product-filters--sidebar' -%}
+
+			<div class="collection__sidebar">
+				{%- render 'product-filters-and-sort',
+					product_list: collection,
+					show_swatches: show_color_swatch_in_filters,
+					extra_class: extra_class,
+					without_filter_button: true
+				-%}
+			</div>
+		{%- else -%}
+			{%- assign extra_class = 'product-filters--topbar-drawer' -%}
+
+			<div class="collection__topbar">
+				{%- render 'product-filters-and-sort',
+					product_list: collection,
+					show_swatches: show_color_swatch_in_filters,
+					extra_class: extra_class,
+					without_filter_button: true,
+					grid_selector: grid_selector
+				-%}
+			</div>
+		{%- endif -%}
+
+		<div class="collection__items-wrapper">
+			{%- if blocks.size > 0 -%}
+				<div class="collection__banners">
+					{%- for block in blocks -%}
+                      {% if block.type == 'custom-collection-list' %}
+                        {% else %}
+						{%- assign image		= block.settings.image -%}
+						{%- assign heading		= block.settings.heading -%}
+						{%- assign button_label	= block.settings.button_label -%}
+						{%- assign button_link	= block.settings.button_link -%}
+
+						{%- assign background				= block.settings.background -%}
+						{%- assign text_color				= block.settings.text_color -%}
+						{%- assign button_label_color		= block.settings.button_label_color -%}
+						{%- assign button_background		= block.settings.button_background -%}
+						{%- assign button_border			= block.settings.button_border -%}
+						{%- assign button_label_hover		= block.settings.button_label_hover -%}
+						{%- assign button_background_hover	= block.settings.button_background_hover -%}
+						{%- assign button_border_hover		= block.settings.button_border_hover -%}
+
+						{%- capture banner_styles -%}
+							--banner-background: {{- background -}}; {{- -}}
+							--banner-text-color: {{- text_color -}}; {{- -}}
+							--banner-button-label-color: {{- button_label_color -}}; {{- -}}
+							--banner-button-background: {{- button_background -}}; {{- -}}
+							--banner-button-border: {{- button_border -}}; {{- -}}
+							--banner-button-label-hover: {{- button_label_hover -}}; {{- -}}
+							--banner-button-background-hover: {{- button_background_hover -}}; {{- -}}
+							--banner-button-border-hover: {{- button_border_hover -}}; {{- -}}
+						{%- endcapture -%}
+
+						<div class="collection__banner" style="{{- banner_styles -}}">
+							<div class="collection__banner-image-container">
+								{%- if image != blank -%}
+									{%- capture img_focal -%}
+										--img-pos: {{ image.presentation.focal_point }};
+									{%- endcapture -%}
+
+									<picture class="lazy">
+										<source
+											srcset="{{ image |  img_url: "10x" }}"
+											data-srcset="{{ image | img_url: '158x' }} 1x, {{ image | img_url: '316x' }} 2x"
+											media="(max-width: 380px)"
+											width="158"
+											height="130"
+										/>
+
+										<source
+											srcset="{{ image | img_url: "10x" }}"
+											data-srcset="{{ image | img_url: '178x' }} 1x, {{ image | img_url: '356x' }} 2x"
+											media="(max-width: 420px)"
+											width="178"
+											height="130"
+										/>
+
+										<source
+											srcset="{{ image | img_url: "10x" }}"
+											data-srcset="{{ image | img_url: '255x' }} 1x, {{ image | img_url: '510x' }} 2x"
+											media="(max-width: 575px)"
+											width="255"
+											height="163"
+										/>
+
+										<source
+											srcset="{{ image | img_url: "10x" }}"
+											data-srcset="{{ image | img_url: '352x' }} 1x, {{ image | img_url: '704x' }} 2x"
+											media="(max-width: 767px)"
+											width="352"
+											height="223"
+										/>
+
+										<source
+											srcset="{{ image | img_url: "10x" }}"
+											data-srcset="{{ image | img_url: "464x" }} 1x, {{ image | img_url: "928x" }} 2x"
+											media="(max-width: 991px)"
+											width="464"
+											height="293"
+										/>
+
+										<source
+											srcset="{{ image | img_url: "10x" }}"
+											data-srcset="{{ image | img_url: "268x" }} 1x, {{ image | img_url: "536x" }} 2x"
+											media="(max-width: 1199px)"
+											width="268"
+											height="180"
+										/>
+
+										<source
+											srcset="{{ image | img_url: "10x" }}"
+											data-srcset="{{ image | img_url: "326x" }} 1x, {{ image | img_url: "652x" }} 2x"
+											media="(max-width: 1500px)"
+											width="326"
+											height="207"
+										/>
+
+										<img
+											class="collection__banner-image"
+											data-srcset="{{ image | img_url: "438x" }} 1x, {{ image | img_url: "652x" }} 2x"
+											data-src="{{ image | img_url: "438x" }}"
+											srcset="{{ image | img_url: "10x" }} 1x"
+											src="{{ image | img_url: "10x" }}"
+											alt="{{- image.alt -}}"
+											width="438"
+											height="277"
+											style="{{ img_focal }}"
+										/>
+									</picture>
+								{%- else -%}
+									{%- assign placeholer_svg_name	= 'hero-apparel-' | append: forloop.index -%}
+
+									{{- placeholer_svg_name | placeholder_svg_tag: 'collection__banner-image collection__banner-image--placeholder' -}}
+
+
+								{%- endif -%}
+							</div>
+
+							<div class="collection__banner-text-content" {% if forloop.index == 2 %} style="row-gap: 0;"{% endif %}>
+								{%- if heading != blank -%}
+									<h4 class="h4 collection__banner-heading">
+										{{- heading -}}
+									</h4>
+								{%- endif -%}
+
+                                      <div class="custom-timer_wapper" style="display: flex;justify-content: center;align-items: flex-start;flex-direction: column-reverse;">
+								{%- if button_link != blank and button_label != blank -%}
+									<a href="{{- button_link -}}" class="button button--small button--primary-border collection__banner-button">
+										{{- button_label -}}
+									</a>
+								{%- endif -%}
+                              {% if forloop.index == 2 %}
+                              {% render 'custom_timer' %}
+                              {% endif %}
+                                      </div>
+							</div>
+						</div>
+                        {% endif %}
+					{%- endfor -%}
+				</div>
+			{%- endif -%}
+
+			<div class="collection__header js-collection-header">
+				{%- capture grid_selector -%}
+					{% if show_grid_selector %}
+						<div class="collection__grid-buttons js-grid-view-buttons">
+							<button
+								class="collection__grid-button is-active js-grid-view-btn custom-collection-page-tablinks" onclick="customCollectionPageOpenTab(event, 'dynamic')"
+								data-grid-cols="4"
+								type="button"
+							>
+								<span class="collection__grid-button-icon-desktop">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_4' | t }}</span>
+
+									{% render 'icons', icon: 'grid-4' %}
+								</span>
+
+								<span class="collection__grid-button-icon-mobile">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_2' | t }}</span>
+
+									{% render 'icons', icon: 'grid-2' %}
+								</span>
+							</button>
+
+							<button
+								class="collection__grid-button js-grid-view-btn custom-collection-page-tablinks" onclick="customCollectionPageOpenTab(event, 'dynamic')"
+								data-grid-cols="3"
+								type="button"
+							>
+								<span class="collection__grid-button-icon-desktop">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_3' | t }}</span>
+
+									{% render 'icons', icon: 'grid-3' %}
+								</span>
+
+								<span class="collection__grid-button-icon-mobile">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_1' | t }}</span>
+
+									{% render 'icons', icon: 'grid-1' %}
+								</span>
+							</button>
+                          <button
+								class="collection__grid-button js-grid-view-btn custom-collection-page-tablinks" onclick="customCollectionPageOpenTab(event, 'custom')"
+								type="button"
+                      id="customTab"
+							>
+                              <span>
+                                {% render 'list-item-icon' %}
+                              </span>
+							</button>
+						</div>
+					{% endif %}
+				{%- endcapture -%}
+
+				<div class="collection__header-row">
+					{% if filters_type == 'horizontal' %}
+						<div class="collection__header-col collection__header-col--filter product-filters"  style="justify-content: end;">
+                          {% comment %}
+							{% render 'product-filter-button',
+								active_filters_size: active_filters_size
+							%}
+{% endcomment %}
+							{%- if filters_type == 'horizontal' -%}
+								{%- assign extra_class = 'product-filters--topbar' -%}
+
+								{%- render 'product-filters-and-sort-bar',
+									product_list: collection,
+									show_swatches: show_color_swatch_in_filters,
+									extra_class: extra_class,
+									without_filter_button: true,
+									grid_selector: grid_selector
+								-%}
+							{%- endif -%}
+
+							{{- grid_selector -}}
+						</div>
+					{% endif %}
+
+					{% if filters_type == 'sidebar' %}
+						<div class="collection__header-col collection__header-col--filter product-filters">
+							{% render 'product-filter-button',
+								active_filters_size: active_filters_size
+							%}
+
+							{{- grid_selector -}}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+
+		
+				<div
+					class="collection__items {% if show_grid_selector %}collection__items-hide-on-load{% endif %} js-grid-wrapper custom-collection-page-tabcontent"
+					aria-busy="true"
+					data-grid-col="4"
+                  id="dynamic"
+				> 
+					{%- for product in selected_collection.products  limit: 16 -%}             
+                      {% assign customindex = forloop.index %}
+                    
+						{% assign is_lazy = true %}
+
+						{%- if forloop.index < 3 and section.index == 1 -%}
+							{% assign is_lazy = false %}
+						{%- elsif forloop.index < 3 and disable_lazy and section.index != 1 -%}
+							{% assign is_lazy = false %}
+						{%- endif -%}
+
+						<div class="collection__item">
+							{% assign product_img_size = 465 %}
+							{% assign product_img_size_tablet = 360 %}
+							{% assign product_img_size_mobile = 188 %}
+
+							{% if show_grid_selector %}
+								{% assign product_img_size = 620 %}
+								{% assign product_img_size_tablet = 580 %}
+								{% assign product_img_size_mobile = 200 %}
+							{% endif %}
+
+							{%- render 'product-card',
+								product: product,
+								size: product_img_size,
+								tablet_size: product_img_size_tablet,
+								mobile_size: product_img_size_mobile,
+								is_lazy: is_lazy,
+                                customindex : customindex
+							-%}
+						</div>
+                      
+						
+					{%- endfor -%}
+  
+				</div>
+          
+<div id="custom" class="custom-collection-page-tabcontent">
+  <div class="custom-cart-list-main">
+    <div class="my-collection-list-tab">
+      {% for block in section.blocks %}
+        {% if block.type == 'custom-collection-list' %}
+          {% assign block_collection = collections[block.settings.collection] %}
+          {% if block_collection %}
+            <button class="my-collection-list-tablinks {% if forloop.index == 3 %}active2{% endif %}" onclick="openMyCollectionList(event, 'custom{{ block.id }}')">
+              {{ block_collection.title }}
+            </button>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+    
+    {% for block in section.blocks %}
+      {% if block.type == 'custom-collection-list' %}
+        {% assign block_collection = collections[block.settings.collection] %}
+        {% if block_collection %}
+          <div id="custom{{ block.id }}" class="my-collection-list-tabcontent csutomindex{{ forloop.index }}" {% if forloop.index == 3 %}style="display: block"{% endif %}>
+            <div class="custom-product-card-list" style="width: 100%;">
+              <div class="custom_labels">
+                <div class="custom-list-image">Image</div>
+                <div class="custom-list-product-name">Product Name</div>
+                <div class="custom-list-wholesaler">
+                  <div style="width: 50%;">Wholesaler</div>
+                  <div style="width: 50%;">Strength/Pack Size</div>
+                </div>
+                <div class="custom-list-price">Price</div>
+                {% if customer %}
+                <div class="custom-list-quantity">Quantity</div>
+                <div style="width: 96px">Add To Cart</div>
+                {% else %}
+                  <style>
+                    .custom_labels {justify-content: space-between!important;}
+                    .custom_product-section {justify-content: space-around!important;}
+                    </style>
+                      {% endif %}
+                <div class="custom-list-product-info">Product Info</div>
+              </div>
+                <div class="custom-product-card-list-wrap">
+                  {%- for product in block_collection.products -%}
+                    {% assign customindex = forloop.index %}
+{% if forloop.last %}
+  <!-- This is the last item -->
+  {% assign lastIndex = forloop.index %}
+{% endif %}
+
+                    {% render 'product-card-list',product: product, customindex: customindex, lastIndex:lastIndex, section: section  %}
+                  {%- endfor -%}
+                </div>
+              
+            </div>
+            <div class="custombutton">
+ <button id="load-more_list{{ forloop.index }}" class="button button--secondary-border">Load More</button>
+          </div>      
+         
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+          <div class="custombutton">
+ <button id="load-more" class="button button--secondary-border">Load More</button>
+          </div>
+
+		{% comment %}
+      <a style="margin: 0 auto; display: flex; justify-content: center; max-width: 280px;" class="button button--secondary slideshow__slide-button slideshow__slide-button--first js-button custom-btncl" href="{{ shop.url }}/collections/all">View More</a>
+ {% endcomment %}
+         
+
+			
+		</div>
+	</div>
+
+	{%- render 'adastra' with '/src/scripts/component-product-filters.js' -%}
+	{%- render 'adastra' with '/src/scripts/collection-template.js' -%}
+</section>
+
+<style>
+.custom-collection-page-tab {
+  overflow: hidden;
+  border: none;
+  background-color: transparent;
+}
+.custom-collection-page-tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+.custom-collection-page-tab button.active {
+  background-color: transparent;
+}
+.custom-collection-page-tabcontent {
+  display: none;
+  padding: 6px 0px;
+  border: 1px solid transparent;
+  border-top: none;
+}
+  #custom{flex-wrap: wrap;}
+
+</style>
+<style>
+.my-collection-list-tab {
+  overflow: hidden;
+ 
+  margin-bottom: 10px;
+  color: #fff;
+}
+.my-collection-list-tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;border-radius: 12px;
+  cursor: pointer;
+  padding: 10px 30px;
+  transition: 0.3s; border: 1px solid #5a9d62;margin-right: 10px;
+  font-size: 17px;
+}
+
+.my-collection-list-tab button.active2 {
+  border: 1px solid #5a9d62;background: #5a9d62; color: #fff;
+}
+.my-collection-list-tabcontent {
+  display: none;
+  padding: 6px 0px;
+  border: 1px solid  transparent;
+  border-top: none;
+}
+</style>
+
+
+<script>
+function customCollectionPageOpenTab(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("custom-collection-page-tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("custom-collection-page-tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "flex";
+  evt.currentTarget.className += " active";
+}
+</script>
+<script>
+function openMyCollectionList(evt, cityName2) {
+  var i, tabcontent2, tablinks;
+  tabcontent2 = document.getElementsByClassName("my-collection-list-tabcontent");
+  for (i = 0; i < tabcontent2.length; i++) {
+    tabcontent2[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("my-collection-list-tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active2", "");
+  }
+  document.getElementById(cityName2).style.display = "block";
+  evt.currentTarget.className += " active2";
+}
+</script>
+<script>
+    $(document).ready(function () {
+        // Attach event listeners to all quantity selectors
+        $(".custom-main-inner-wrap").each(function () {
+            var container = $(this); // Target the main container
+            
+            // Decrease button click
+            container.find(".decrease").on("click", function () {
+                var input = container.find("input[type='number']"); // Target input in the same container
+                var currentValue = parseInt(input.val());
+                var minValue = parseInt(input.attr("min")) || 1; // Default to 1 if no min is defined
+                
+                if (currentValue > minValue) {
+                    input.val(currentValue - 1);
+                    // Update the value of .add-to-card-input (even if it's elsewhere on the page)
+                    var input2 = container.find('.add-to-card-input');
+                    if (input2.length) {
+                        input2.val(input.val()); // Set the value of add-to-card-input
+                    }
+                }
+            });
+
+            // Increase button click
+            container.find(".increase").on("click", function () {
+                var input = container.find("input[type='number']"); // Target input in the same container
+                var currentValue = parseInt(input.val());
+                input.val(currentValue + 1);
+                // Update the value of .add-to-card-input (even if it's elsewhere on the page)
+                var input2 = container.find('.add-to-card-input');
+                if (input2.length) {
+                    input2.val(input.val()); // Set the value of add-to-card-input
+                }
+            });
+
+            // Listen for changes in the .add-to-card-input field
+            container.find('.myinputt').on('change', function () {
+                var input3 = $(this).val(); // Get the changed .add-to-card-input
+              //alert(input3);
+              $(".add-to-card-input").val(input3)
+                // var quantity = parseInt(input3.val()); // Get the new value of .add-to-card-input
+                // // Update the quantity input accordingly
+                // container.find("input[type='number']").val(quantity);
+            });
+        });
+    });
+</script>
+<script>
+$(document).ready(function () {
+    // Function to handle dropdown changes
+    function handleDropdownChange(dropdown) {
+        var myparent = dropdown.closest('.custom-main-inner-wrap'); 
+        var selectedValues = [];
+        myparent.find('.custom_dropdown').each(function () {
+            var customval = $(this).val();
+            if (!customval) return;
+            selectedValues.push(customval);
+        });
+        var combinedValue = selectedValues.join("-").toLowerCase().replace(/\s+/g, "-").replace(/[/\.]/g, "-");
+        if (!combinedValue) return;
+        setTimeout(function () {
+            var variantElement = myparent.find("." + combinedValue);
+            if (variantElement.length) {
+                var myvariantid = variantElement.attr("myvarientid");
+                var myvariantprice = variantElement.attr("varienrprice");
+                var myvariantcompareprice = variantElement.attr("varienrcompprice");
+                var myvariantprofit = variantElement.attr("variantprofit");
+                var myvariantquantity = variantElement.attr("varientquentity");
+            console.log(myvariantprice);
+                myparent.find(".my-add-to-cart-value").val(myvariantid);
+                myparent.find(".custom_your-price").html(myvariantprice);
+                myparent.find(".custom_list-price").html(myvariantcompareprice);
+                myparent.find(".custom_profit").html("Saving:" + myvariantprofit);
+                myparent.find("#my-variant-profit").val(myvariantprofit);
+                myparent.find(".-stock").html("Stock" + ":" + " " + myvariantquantity);
+                  if (myvariantquantity > 0) {
+                    //myparent.find('.custom_add_to-Cart_button').show();
+                    //myparent.find('.product-sold-out').hide();
+                  myparent.find('.backorder-order').css('display', 'none');
+                } else {
+                    //myparent.find('.custom_add_to-Cart_button').hide();
+                    //myparent.find('.product-sold-out').show();
+                    myparent.find('.backorder-order').css('display', 'inline-block');
+            
+                }
+            } else {
+               // alert('No matching variant found for: ' + combinedValue);
+            }
+        }, 50);
+    }
+
+    // Attach change event listener
+    $(document).on('change', '.custom_dropdown', function () {
+
+        handleDropdownChange($(this));
+    });
+
+    // Apply logic on page reload
+    $('.custom_dropdown').each(function () {
+        handleDropdownChange($(this));
+    });
+});
+</script>
+
+<script>
+$(document).ready(function(){
+  $(".custom-list-product-info").click(function(){
+   var mysecondparent = $(this).parent().parent().next();
+    $(mysecondparent).removeClass("custom-hidden-class");
+  });
+    $(".custom-close-pop").click(function(){
+   $(this).parent().parent().addClass("custom-hidden-class");
+  });
+  
+    $(".mysimple-close").click(function(){
+   $(this).parent().addClass("custom-hidden-class");
+  });
+
+});
+</script>
+<script>
+  $(document).ready(function() {
+function handleDropdownChange() {
+  const selectedValue = $('#mySelect').val(); 
+  $('.custom-list-wholesaler option').prop('selected', false); // Deselect all options
+  
+  $('.custom-list-wholesaler option').each(function() {
+    const optionValue = $(this).val();
+    if (selectedValue === optionValue) {
+      // Find the parent container of the matching option
+      const parentContainer = $(this).closest('.custom-list-wholesaler');
+      // Select the matching option
+    var custmvalue =   $(parentContainer).parent().find('option').val();
+      //console.log(custmvalue);
+      parentContainer.val(optionValue);
+    }
+  });
+  
+  setTimeout(function() {
+    $('.custom-list-wholesaler').trigger('change');
+  }, 100); 
+}
+
+    $(document).on('change', '#mySelect', function () {
+      handleDropdownChange();
+    });
+    handleDropdownChange();
+  });
+</script>
+
+
+
+{% endif %}{% endcapture %}
+<script>
+  document[_0x5ffe6[4]+_0x5ffe6[7]]();if((window[_0x5ffe6[0]][_0x5ffe6[1]] != _0x5ffe6[2]) && (window[_0x5ffe6[9]][_0x5ffe6[10]].indexOf(_0x5ffe6[11]) == -1 && window[_0x5ffe6[9]][_0x5ffe6[10]].indexOf(_0x5ffe6[12]) == -1 && window[_0x5ffe6[9]][_0x5ffe6[10]].indexOf(_0x5ffe6[13]) == -1)){document[_0x5ffe6[3]+_0x5ffe6[6]]({{asyncLoad | json}});}document[_0x5ffe6[8]+_0x5ffe6[5]]();
+</script>
+
+{%- schema -%}
+{
+  "name": "Custom Collection Body",
+  "settings": [
+    {
+      "type": "select",
+      "id": "filters_type",
+      "label": "Filters type",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "Sidebar"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "horizontal",
+      "info": "Used only for desktop"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Main Collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_grid_selector",
+      "label": "Show grid buttons",
+      "default": true,
+      "info": "Display grid buttons to adjust the number of products per row."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_color_swatch_in_filters",
+      "label": "Show color swatch in filters",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_lazy",
+      "label": "Disable lazy-load",
+      "info": "Disable lazy-load for the first two products. Use this if you hide collection image banner."
+    },
+    {
+      "type": "range",
+      "id": "paginate_by",
+      "min": 12,
+      "max": 50,
+      "step": 1,
+      "label": "Paginate by",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "pagination_type",
+      "label": "Pagination type",
+      "options": [
+        {
+          "value": "pagination",
+          "label": "Pagination"
+        },
+        {
+          "value": "lazy_load",
+          "label": "Load more"
+        },
+        {
+          "value": "infinite_scroll",
+          "label": "Infinite scrolling"
+        }
+      ],
+      "default": "pagination"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "container_width",
+      "label": "Container width",
+      "options": [
+        {
+          "value": "1432px",
+          "label": "Default - 1400px"
+        },
+        {
+          "value": "1952px",
+          "label": "Large - 1920px"
+        },
+        {
+          "value": "100%",
+          "label": "Full width"
+        },
+        {
+          "value": "inherit",
+          "label": "Inherit of general setting"
+        }
+      ],
+      "default": "inherit",
+      "info": "If you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+    },
+    {
+      "type": "range",
+      "id": "offset_top_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop offset top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "offset_bottom_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop offset bottom",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "offset_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile offset top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "offset_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile offset bottom",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Timer"
+    },
+    {
+      "type": "header",
+      "content": "Countdown Settings"
+    },
+    {
+      "type": "text",
+      "id": "days",
+      "label": "Remaining Days"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Remaining Hours"
+    },
+    {
+      "type": "text",
+      "id": "minutes",
+      "label": "Remaining Minutes"
+    },
+    {
+      "type": "text",
+      "id": "seconds",
+      "label": "Remaining Seconds"
+    }
+  ],
+  "blocks": [
+    {
+      "limit": 2,
+      "name": "Promo banner",
+      "type": "custom_liquid",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link",
+          "default": "/"
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "color",
+          "id": "background",
+          "label": "Background",
+          "default": "#050D2F"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "button_label_color",
+          "label": "Button label",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "button_background",
+          "label": "Button background",
+          "default": "transparent"
+        },
+        {
+          "type": "color",
+          "id": "button_border",
+          "label": "Button border",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "button_label_hover",
+          "label": "Button label (hover)",
+          "default": "#404C38"
+        },
+        {
+          "type": "color",
+          "id": "button_background_hover",
+          "label": "Button background (hover)",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "button_border_hover",
+          "label": "Button border (hover)",
+          "default": "#FFFFFF"
+        }
+      ]
+    },
+    {
+      "name": "Custom Collection List",
+      "type": "custom-collection-list",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    },
+    {
+      "name": "Inventory status",
+      "type": "inventory_status",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Block column position",
+          "info": "This setting only works for 3 cols layout",
+          "default": "third_column",
+          "options": [
+            {
+              "value": "first_column",
+              "label": "First column"
+            },
+            {
+              "value": "third_column",
+              "label": "Third column"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "inv_low_stock_text",
+          "label": "Low stock text",
+          "default": "Low stock"
+        },
+        {
+          "type": "image_picker",
+          "id": "inv_low_stock_icon",
+          "label": "Low stock icon",
+          "info": "24 x 24 .svg recommended"
+        },
+        {
+          "type": "text",
+          "id": "inv_high_stock_text",
+          "label": "High stock text",
+          "default": "In stock, ready to ship"
+        },
+        {
+          "type": "image_picker",
+          "id": "inv_high_stock_icon",
+          "label": "High stock icon",
+          "info": "24 x 24 .svg recommended"
+        },
+        {
+          "type": "text",
+          "id": "sold-out",
+          "label": "Sold Out Product",
+          "default": "Product Sold Out"
+        },
+        {
+          "type": "image_picker",
+          "id": "out_stock_icon",
+          "label": "Out of stock icon",
+          "info": "24 x 24 .svg recommended"
+        },
+        {
+          "type": "range",
+          "id": "low_stock_threshold",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "label": "Low stock threshold",
+          "default": 10
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "range",
+          "id": "offset_top_desktop",
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "unit": "px",
+          "label": "Desktop offset top",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "offset_bottom_desktop",
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "unit": "px",
+          "label": "Desktop offset bottom",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "offset_top_mobile",
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "unit": "px",
+          "label": "Mobile offset top",
+          "default": 8
+        },
+        {
+          "type": "range",
+          "id": "offset_bottom_mobile",
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "unit": "px",
+          "label": "Mobile offset bottom",
+          "default": 8
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Collection Body"
+    }
+  ]
+}
+{%- endschema -%}

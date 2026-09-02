@@ -1,0 +1,59 @@
+/* Toggle Button Styles */
+.view-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.view-toggle-button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.view-toggle-button.active {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+/* Grid and List View Styles */
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.product-item {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.product-item.grid-view {
+  width: 30%;
+}
+
+.product-item.list-view {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  display: none;
+}
+
+.list-item-content img {
+  width: 100px;
+  height: auto;
+}
+
+.list-item-content div {
+  flex-grow: 1;
+}
+
+#product-container.list-view-active .grid-view {
+  display: none;
+}
+
+#product-container.list-view-active .list-view {
+  display: flex;
+}

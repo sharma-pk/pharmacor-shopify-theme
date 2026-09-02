@@ -1,0 +1,100 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "wellcom_search_yKf69M": {
+      "type": "wellcom-search",
+      "blocks": {
+        "collection_item_6gpWAM": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "allergy",
+            "custom_name": "",
+            "variant_picker": "radio"
+          }
+        },
+        "collection_item_6pQPDW": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "analgesic",
+            "custom_name": "",
+            "variant_picker": "radio"
+          }
+        },
+        "collection_item_d4NGd6": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "cold-flu",
+            "custom_name": "",
+            "variant_picker": "radio"
+          }
+        }
+      },
+      "block_order": [
+        "collection_item_6gpWAM",
+        "collection_item_6pQPDW",
+        "collection_item_d4NGd6"
+      ],
+      "name": "Welcome Search",
+      "settings": {
+        "filters_type": "horizontal",
+        "heading": "",
+        "manage_orders_title": "Manage Orders",
+        "order-history-1": "Manage Orders",
+        "orders_link": "",
+        "order-history-2": "Reorder",
+        "reorder_link": "",
+        "order-history-3": "Manage Subscriptions",
+        "subscriptions_link": "",
+        "benefits_title": "Benefits",
+        "benefits_text": "Unlock extra savings and convenience with",
+        "benefits_title-1": "Loyalty Rewards",
+        "loyalty_link": "",
+        "benefits_title-2": "Savings Extras",
+        "savings_link": "",
+        "contact_title": "Contact Us",
+        "contact_title-description": "We’re here to help, contact us anytime with your enquiries",
+        "chat_link": "",
+        "contact-us-1": "Chat with our Bot",
+        "email_link": "",
+        "contact-us-2": "Email Us",
+        "email_link2": "",
+        "contact-us-3": "Call Us",
+        "call_link1": "",
+        "contact-us-4": "Whats App",
+        "call_link22": "",
+        "load-more": "Load More",
+        "btn_text": "See All Products",
+        "btn_link": "shopify://collections/all"
+      }
+    },
+    "search-template": {
+      "type": "search-template",
+      "disabled": true,
+      "settings": {
+        "heading": "Search Results",
+        "show_color_swatch_in_filters": false,
+        "show_grid_selector": true,
+        "filters_type": "horizontal",
+        "paginate_by": 16,
+        "pagination_type": "infinite_scroll",
+        "container_width": "1952px",
+        "offset_top_desktop": 22,
+        "offset_bottom_desktop": 60,
+        "offset_top_mobile": 14,
+        "offset_bottom_mobile": 52
+      }
+    }
+  },
+  "order": [
+    "wellcom_search_yKf69M",
+    "search-template"
+  ]
+}

@@ -1,0 +1,374 @@
+      <style>
+        .custom_add_to-Cart_button[disabled] {
+  background-color: #84b189; 
+
+}
+
+        .custom-list-product-name {
+  display: flex;
+  justify-content: space-between;
+}
+        .customquickview {
+  cursor: pointer;
+}
+
+          .backorder-order{display: none;}
+      .my-collection-list-tab button {
+      color: #5a9d62;
+      }
+      .custom_labels {display: flex;justify-content: start;font-weight: bold;margin-bottom: 10px;font-size: 14px;gap: 20px;}
+      .custom_product-section {display: flex;justify-content: start;align-items: center;border: 1px solid #ccc;padding: 10px;border-radius: 5px;background-color: #fff;gap: 12px; min-height: 106px;}
+      .custom_product-section img {width: 80px; height: auto;}
+      .product-name {
+      font-weight: bold;
+      font-size: 17px;
+      }
+      .custom_badge {
+      display: inline-block;
+      
+      color: white;
+      font-size: 12px;
+      border-radius: 3px;
+      margin-bottom: 5px;
+      }
+      .custom_product-section a{color: #000; text-decoration: none;}
+      .custom-product-card-list-wrap{display: flex; flex-wrap: wrap; gap: 10px;}
+      .custom-list-product-name{width: 18%; padding-left: 10px;}
+      .custom-list-wholesaler{width: 26%;display: flex; gap: 10px;}
+      .custom-list-wholesaler select{padding-left: 10px; padding-right: 50px;width: 50%;}
+      .custom-list-price{width: 22%;text-align: center;}
+      .custom-list-quantity{width: 12%;text-align: center;}
+      .custom_dropdown {
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 14px;
+      padding-right: 50px;
+      padding-left: 10px;
+      }
+      .custom_price-section {
+      text-align: right;
+      font-size: 14px;
+      }
+      .custom_list-price {
+      text-decoration: line-through;
+      color: #999;
+      }
+      .custom_your-price {
+      font-weight: bold;
+      }
+      .custom_profit {
+      color: #4caf50;
+      }
+      .custom_quantity {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;flex-wrap: wrap;
+      }
+      .custom_quantity button {
+      width: 25px;
+      height: 25px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      cursor: pointer;
+      }
+      .custom_quantity input {
+      width: 65px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 0px;
+      height: 10px;
+      min-height: 26px;
+      }
+      .custom_more-info {
+      text-align: center;
+      color: blue;
+      cursor: pointer;
+      text-decoration: underline;
+      }
+      .custom_wapper {display: flex;gap: 20px;  justify-content: center;}
+      .custom-list-image{width: 130px;}
+      .custom-list-product-info{width: 110px;}
+      .custom_add_to-Cart_button{width: 100px;
+      padding: 10px 10px;
+      background: #5a9d62;
+      color: #fff;
+      border-radius: 10px;}
+      .my-pop-data p{display: flex;
+      padding-bottom: 8px;
+      gap: 0px;
+      border-bottom: 2px solid #000;
+      justify-content: space-between;
+      margin-top: 8px;padding-right: 10px;}
+      .my-pop-data p .metafield-multi_line_text_field{width: 50%;
+      text-align: right;}
+      .my-pop-data p strong{width: 50%;}
+      .custom-hidden-class{display: none;}
+      .custom-product-info{position: fixed; top: 0; left: 0; z-index: 13;width: 100%; height: 100%;background: #00000052;padding: 10px;}
+      .custom-product-info-wrap{ display: flex; align-items: center; justify-content: center;border-radius: 10px;overflow: scroll; overflow-x: hidden; border: 2px solid #fff; background: #fff;padding: 30px 15px; min-height: 501px; max-width: 600px;z-index: 99; position: relative;margin: 0 auto; top: 10%; bottom: 25%;}
+      @media only screen and (max-width: 1250px){
+      .custom-cart-list-main{overflow-x: hidden!important;}
+      .custom_product-section {overflow: scroll;justify-content: inherit;}
+      .custom_product-section div{flex-shrink: 0; }
+      .custom_labels{overflow: scroll;justify-content: inherit;padding-bottom: 10px;}
+      .custom_labels div{flex-shrink: 0;}
+      .custom-list-image{width: 140px;}
+      .custom-list-product-info{width: 120px;}
+      .custom_add_to-Cart_button{width: 110px;}
+      .custom-list-product-name{width: 180px;}
+      .custom-list-wholesaler{width: 260px;}
+      .custom-list-price{width: 240px;}
+      .custom-list-quantity{width: 160px;}
+      .my-collection-list-tab button {padding: 8px 22px;}
+      }
+      </style>
+
+<div class="custom-main-inner-wrap collection__item customitem{{ indxlast }}" style="width: 100%;" itemidex="{{ lastIndex }}">
+{% for variant in product.variants %} 
+  <input type="hidden" class="procustom{{ variant.id | handleize }} {{ variant.title | handleize }}" compareprice="{{ variant.compare_at_price | money }}" varienrprice="{{ variant.price | money }}" varientquentity="{{ variant.inventory_quantity }}" myvarientid="{{ variant.id }}" varienrcompprice="{{ variant.compare_at_price | money }}"
+     variantprofit=" {% if variant.compare_at_price > variant.price %}
+  {% assign price_difference = variant.compare_at_price | minus: variant.price %}
+  {% assign profit_percentage = price_difference | times: 100.0 | divided_by: variant.compare_at_price %}
+  {{ profit_percentage | round: 2 }}%
+{% endif %}">
+{% endfor %}
+
+<div class="custom_product-section">
+  <div class="custom-list-image">
+    <a href="{{ product.url }}">
+    <img src="{{ product.featured_image | img_url: 'large' }}" alt="Product Image" style="width: 100%; padding: 10px;">
+    </a>
+  </div>
+    <div class="custom-list-product-name">
+      <a href="{{ product.url }}">
+        <span class="custom_badge" style="gap: 10px; display: flex;">
+      {%- for tag in product.tags -%}
+		{%- if tag contains 'label__' -%}
+			{%- assign class = 'product-card__label' -%}
+
+			{%- if tag contains ':primary' -%}
+				{%- assign class = class | append: " product-card__label--primary" | strip -%}
+			{%- elsif tag contains ':secondary' -%}
+				{%- assign class = class | append: " product-card__label--secondary" | strip -%}
+			{%- endif -%}
+
+			{%- assign clipped_tag = tag | remove: 'label__' | remove: ':primary' | remove: ':secondary' -%}
+ {% if clipped_tag != blank %}
+			<li	class="{{- class -}}" style="background-color: #4caf50; padding: 4px 6px;  border-radius: 5px;margin-bottom: 2px; list-style: none;">
+				<span class="visually-hidden">
+					{{- 'products.product_card.product_label' | t -}}:
+				</span>
+
+				{{- clipped_tag -}}
+			</li>
+{% endif %}
+			{%- assign tag_index = tag_index | plus: 1 -%}
+
+			{%- if tag_index > 3 -%}
+				{%- break -%}
+			{%- endif -%}
+		{%- endif -%}
+	{%- endfor -%}
+        </span>
+        <div class="product-name">{{ product.title }}</div>
+        
+    </a>
+        <div class="customquickview" prohandle="{{ product.handle }}" data-product-card-handle="{{ product.handle }}">
+<svg xmlns="http://www.w3.org/2000/svg" 
+     width="24" height="24" viewBox="0 0 24 24" 
+     fill="none" stroke="#5a9d62" stroke-width="2" 
+     stroke-linecap="round" stroke-linejoin="round" 
+     class="feather feather-eye">
+  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+  <circle cx="12" cy="12" r="3"></circle>
+</svg>
+
+  </div>
+    </div>
+  {% assign hidden_value = '' %}
+  {% assign coverage_countries = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
+  {% comment %} does this product have a Wholesaler option, and does any value survive coverage filtering? {% endcomment %}
+  {% assign has_wholesaler_option = false %}
+  {% assign wholesaler_has_visible_value = false %}
+  {% for pcl_option in product.options_with_values %}
+    {% if pcl_option.name contains 'Wholesaler' %}
+      {% assign has_wholesaler_option = true %}
+      {% for pcl_value in pcl_option.values %}
+        {% assign pcl_value_up = pcl_value | upcase %}
+        {% for pcl_item in coverage_countries %}
+          {% assign pcl_item_up = pcl_item | upcase %}
+          {% if pcl_item_up contains pcl_value_up %}
+            {% assign wholesaler_has_visible_value = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  {% assign hide_purchase_controls = false %}
+  {% if has_wholesaler_option and wholesaler_has_visible_value == false %}
+    {% assign hide_purchase_controls = true %}
+  {% endif %}
+  <div class="custom-list-wholesaler">
+      {% for option in product.options_with_values %}
+        {% if option.name contains 'Wholesaler' and hide_purchase_controls %}
+          <span class="custom-list-wholesaler-placeholder custom_dropdown" style="font-weight:400;color:#8a8a8a;">No wholesaler available</span>
+        {% else %}
+              <select id="mySelect{{ forloop.index }}" class="custom_dropdown custom-list-wholesaler custom{{ option.name | handleize }} custom{{ customindex }} customselect">
+                  {% for value in option.values %}
+                        {%- assign hide_option = false -%}
+                        {%- if option.name contains 'Wholesaler' -%}
+                          {%- assign hide_option = true -%}
+                          {%- for item in coverage_countries -%}
+                            {%- assign item_up = item | upcase -%}
+                            {%- assign value_up = value | upcase -%}
+                            {%- if item_up contains value_up -%}
+                              {%- assign hide_option = false -%}
+                              {%- break -%}
+                            {%- endif -%}
+                          {%- endfor -%}
+                        {%- endif -%}
+                        {% unless hide_option %}
+                          {% if hidden_value == '' %}
+                            {% assign hidden_value = value | handleize %}
+                          {% endif %}
+                          <option class="custom{{ value | handleize }}"  value="{{ value | handleize }}">{{ value }}</option>
+                        {% endunless %}
+                  {% endfor %}
+              </select>
+        {% endif %}
+      {% endfor %}
+  </div>
+
+  {% assign selected_seller_handle = hidden_value | downcase | strip %}
+  {% assign seller_account_number = '' %}
+  {% if customer %}
+    {% for item in coverage_countries %}
+      {% assign clean_item = item | strip %}
+      {% assign clean_item_down = clean_item | downcase %}
+      {% case selected_seller_handle %}
+        {% when 'symbion' %}
+          {% if clean_item_down contains 'symbion' %}
+            {% assign seller_account_number = clean_item | remove_first: 'Symbion' | remove_first: 'SYMBION' | strip %}
+            {% break %}
+          {% endif %}
+        {% when 'ch2' %}
+          {% if clean_item_down contains 'ch2' %}
+            {% assign seller_account_number = clean_item | remove_first: 'Ch2' | remove_first: 'CH2' | remove_first: 'ch2' | strip %}
+            {% break %}
+          {% endif %}
+        {% when 'sigma' %}
+          {% if clean_item_down contains 'sigma' %}
+            {% assign seller_account_number = clean_item | remove_first: 'Sigma' | remove_first: 'SIGMA' | strip %}
+            {% break %}
+          {% endif %}
+        {% when 'api' %}
+          {% if clean_item_down contains 'api' %}
+            {% assign seller_account_number = clean_item | remove_first: 'Api' | remove_first: 'API' | strip %}
+            {% break %}
+          {% endif %}
+      {% endcase %}
+    {% endfor %}
+  {% endif %}
+ {% if customer %}
+     <div class="custom_price-section custom-list-price">
+        
+         	<div class="custom_wapper">
+                <div class="custom_list-price">{{  product.variants.first.compare_at_price | money }}</div>
+                <div class="custom_your-price">{{  product.variants.first.price | money }}</div>
+                <div class="custom_profit">
+                {% if  product.variants.first.compare_at_price >  product.variants.first.price %}
+                    {% assign profit =  product.variants.first.compare_at_price | minus:  product.variants.first.price %}
+                      {% if profit != blank %}
+                          <div class="custom_profit">Saving: {{ profit | money }}</div>
+                      {% endif %}
+                {% endif %}
+                </div>
+          </div>
+        
+    </div>
+     {% else %}
+       {% endif %}
+   {% if customer and hide_purchase_controls %}
+<div class="custom_quantity custom-list-quantity wholesaler-unavailable-notice">
+  <p style="color:#8a8a8a;font-weight:normal;margin:0;white-space:nowrap;text-align:center;width:100%;">Not available</p>
+</div>
+{% endif %}
+   {% if customer and hide_purchase_controls == false %}
+<div class="custom_quantity custom-list-quantity">
+  <span style="width: 100%;color: #16a34a"></span>
+    <button class="decrease">-</button>
+    <input class="myinputt" type="number" value="1" min="1">
+    <button class="increase">+</button>
+  {% if product.handle == 'adalimumab-1' %}
+    {% else %}
+  <span class="custom-variant-stock" style="width: 100%;"></span>
+  {% endif %}
+</div>
+<form method="post" action="/cart/add" style="width: 96px;">
+  <input id="my-variant-profit" type="hidden" name="properties[Saving Per Item]" class="itemperdiscount" value="">
+       <input  type="hidden" name="properties[Wholesaler Account No.1]" value="{% if selected_seller_handle contains 'api' %}{{ seller_account_number }}{% endif %}"  class="API">
+      <input  type="hidden" name="properties[Wholesaler Account No.2]" value="{% if selected_seller_handle contains 'sigma' %}{{ seller_account_number }}{% endif %}"  class="Sigma">
+      <input  type="hidden" name="properties[Wholesaler Account No.3]" value="{% if selected_seller_handle contains 'symbion' %}{{ seller_account_number }}{% endif %}"  class="Symbion">
+    <input  type="hidden" name="properties[Wholesaler Account No.4]" value="{% if selected_seller_handle contains 'ch2' %}{{ seller_account_number }}{% endif %}"  class="Ch2">
+  <input type="hidden" name="id" class="my-add-to-cart-value custom-idd" value="{{ product.variants.first.id }}" />
+  <input min="1" type="hidden" class="add-to-card-input" id="quantity" name="quantity" value="1"/>
+  {% if product.variants.first.inventory_quantity > 0 %}
+    <button type="submit" value="Add to cart" class="custom_add_to-Cart_button">Add to cart</button>
+  {% comment %}
+    <span class="product-sold-out" style="width: 100px; padding: 10px 10px; background: #8cce93; color: #fff; border-radius: 10px;">Sold Out</span>
+    {% endcomment %}
+  {% else %}
+     {% comment %}
+    <span class="product-sold-out" style="width: 100px; padding: 10px 10px; background: #8cce93; color: #fff; border-radius: 10px;">Sold Out</span>
+        {% endcomment %}
+     <button type="submit" value="Add to cart" class="custom_add_to-Cart_button" disabled >Add to cart</button>
+  {% endif %}
+       {% if product.handle == 'adalimumab-1' %}
+    {% else %}
+ <span class="order-label backorder-order">back ordered </span>     
+         {% endif %}
+</form>
+     {% else %}
+  {% endif %}
+  {% comment %}
+    <div class="custom_more-info custom-list-product-info" style="color: #000;">More info</div>
+{% endcomment %}
+<div class="th_prd_wl_btn" data-product_id="{{product.id}}" data-variant_id="{{product.selected_or_first_available_variant.id}}"></div>
+</div>
+</div>
+
+<div class="custom-product-info custom-hidden-class">
+  <span class="mysimple-close" style="position: fixed; width: 100%; height: 100%; z-index: 14;"></span>
+  <div class="custom-product-info-wrap">
+    <div class="custom-close-pop" style="position: absolute; top: 10px; right: 15px; border: 1px solid #000; padding: 6px 10px 7px 10px; border-radius: 50%;cursor: pointer;background: #fff;">X</div>
+    <div class="my-pop-data" style="max-height: 600px;width: 100%;overflow: scroll;">
+     <strong>Indication:</strong><br></br>{{ product.metafields.custom.indication | metafield_tag }}<br>
+      <p><strong>Generic Name:</strong> {{ product.metafields.custom.generic_name.value }}<br></p>
+      <p><strong>Strength:</strong>{{ product.metafields.custom.strength.value }}<br></p>
+      <p><strong>Dosage:</strong>{{ product.metafields.custom.dosage.value }}<br></p>
+      <p><strong>Shelflife Months:</strong>  {{ product.metafields.custom.shelflife_months_.value }}<br></p>
+      <p><strong>Pack Size:</strong> {{ product.metafields.custom.packsize.value }}<br></p>
+      <p><strong>Tablet Description:</strong>{{ product.metafields.custom.tablet_description | metafield_tag }}<br></p>
+      <p><strong>Segment :</strong>{{ product.metafields.custom.segment.value }}<br></p>
+      <p><strong>Innovator:</strong>{{ product.metafields.custom.innovator.value }}<br></p>
+      <p><strong>PBSListed:</strong>{{ product.metafields.custom.pbslisted.value }}<br></p>
+      <p><strong>RPBSlisted:</strong>{{ product.metafields.custom.rpbslisted.value }}<br></p>
+      <p><strong>Schedule:</strong>{{ product.metafields.custom.schedule.value }}<br></p>
+      <p><strong>Storage Conditions:</strong>{{ product.metafields.custom.storage_conditions | metafield_tag }}<br></p>
+      <p><strong>Active Ingredients:</strong> {{ product.metafields.custom.active_ingredients_ | metafield_tag }}<br></p>
+      {% if product.metafields.custom.warnings.value != blank %}
+      <p><strong>Warnings:</strong>{{ product.metafields.custom.warnings.value }}<br></p>
+      {% endif %}
+      {% if product.metafields.custom.pi_url.value != blank %}
+      <p><strong>PI URL:</strong><a href="{{ product.metafields.custom.pi_url.value }}" target="blank">{{ product.metafields.custom.pi_url.value }}</a><br></p>
+      {% endif %}
+      {% if product.metafields.custom.cmi_url.value != blank %}
+      <p><strong>CMI URL:</strong><a href="{{ product.metafields.custom.cmi_url.value }}" target="blank">{{ product.metafields.custom.cmi_url.value }}</a></p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+

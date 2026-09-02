@@ -1,0 +1,268 @@
+<style>
+.js-header-cart-item-count {
+	position: relative;
+	top: 3px;
+}
+.quantityselector {
+  background: #fff;
+}
+.quantityselector {
+  position: relative;
+  left: 24px;
+}
+
+.quantity-number[type="number"]
+.quantity-number[type="number"]{
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+.quantity-number[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.quantity-number {
+  padding: 0 !important;
+
+}
+.quantity-number[type="number"] {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 50px; /* adjust as needed */
+    text-align: center;
+}
+
+
+
+.quantitycontainer{opacity: 0;}
+.quantity-container {
+  position: absolute;
+  right: 0;
+  top: -29px;
+z-index: 10;
+}
+.quantityselector,
+.plus-only {
+  display: none;
+}
+
+/* plus-only button */
+.plus-only {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #30623D;
+  color: #b2e78a;
+  border: none;
+  font-size: 24px;
+justify-content: center;
+  align-items: center;
+}
+.quantity-number {
+  color: #30623D;font-weight: bold;
+}
+/* selector style */
+.quantityselector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 40px;
+}
+
+.quantityselector button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #30623D;
+  color: #b2e78a;
+  font-size: 22px;
+}
+
+</style>
+
+
+{% comment %}{% assign cart_qty = 0 %}
+  {% for item in cart.items %}
+    {% if item.product_id == product.id %}
+      {% assign cart_qty = item.quantity %}
+      {% assign cart_key = item.key %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="quantity-container"
+       data-initial="{{ cart_qty }}"
+       data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+       
+    <button class="plus-only quickaddbtn">+</button>
+
+    <div class="quantityselector">
+      <button class="decrease">−</button>
+      <span class="quantity-number">{{ cart_qty }}</span>
+      <button class="increase">+</button>
+    </div>
+  </div>{% endcomment %}
+
+{% for variant in product.variants %}
+  {% assign cart_qty = 0 %}
+  {% assign cart_key = "" %}
+
+  {% for item in cart.items %}
+    {% if item.variant_id == variant.id %}
+      {% assign cart_qty = item.quantity %}
+      {% assign cart_key = item.key %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="quantity-container quantitycontainer{{product.id}}"
+       data-initial="{{ cart_qty }}"
+       data-variant-id="{{ variant.id }}"
+       data-cart-key="{{ cart_key }}" {%if forloop.index == 1%} style="z-index: 12;opacity: 1;"{%endif%}>
+       
+    <button class="plus-only {%if cart_qty == 0 %}quickaddbtn{%endif%}">+</button>
+
+    <div class="quantityselector" style="display:none;">
+      <button class="decrease">−</button>
+<input 
+    type="number" 
+    class="quantity-number" 
+    value="{{ cart_qty }}" 
+    min="0" 
+    step="1" 
+    data-variant-id="{{ variant.id }}">
+      {% comment %}<span class="quantity-number">{{ cart_qty }}</span>{% endcomment %}
+      <button class="increase">+</button>
+    </div>
+  </div>
+
+{% endfor %}
+ 
+ <div class="mainvariatns">
+                 {% for variant in product.variants %}
+          <input type="hidden" class="{{ variant.title
+  | replace: ' ', ''
+  | remove: '/'
+  | remove: '.'
+  | remove: '+'
+  | remove: '('
+  | remove: ')'
+  | downcase
+}}
+
+" variant-price="{{ variant.price | money }}" inventory="{{ variant.inventory_quantity }}" data-index="{{ variant.id }}" product-id="{{ variant.id }}" value="{{ variant.id  }}">
+            {% endfor %}
+</div>
+
+
+
+
+<script>
+$(document).ready(function(){
+    $(".custominputbox{{product.id}}").click(function(){
+var cruent = $(this).parent().parent().parent().parent();
+        var swatch_options = [];
+
+        // Get all selected values
+        $('.custominputbox{{product.id}}').each(function() {
+            if($(this).is(':checked')) { 
+                var ProVariantVal = $(this).val();
+
+                // Remove spaces, replace + with -, convert to lowercase
+                var trimmedValue = ProVariantVal.replace(/\s+/g, '');
+                var ProductVariantOption = trimmedValue.replace(/\+/g, '-').toLowerCase();
+
+                swatch_options.push(ProductVariantOption);
+            }
+        });
+
+        // Combine to class name
+      var result = swatch_options.join('').replace(/\s+/g, '');
+
+        var ProductID = $('.' + result).val();
+        var ProductInventory = $('.' + result).attr('inventory');
+        var ProductVariantPrice = $('.' + result).attr('variant-price');
+
+      $(cruent).find(".cusotm-cart-id").val(ProductID);
+
+        if (typeof ProductID !== 'undefined') {
+            // Loop through all quantity containers
+            $('.quantitycontainer{{product.id}}').each(function(){
+                var containerVariantId = $(this).data('variant-id');
+                
+                if(containerVariantId == ProductID){
+                   $(this).css({'opacity': '1','z-index': '12'});   // Show matching variant
+                } else {
+                 $(this).css({'opacity': '0','z-index': '10'});    // Hide others
+                }
+            });
+
+            if (typeof ProductInventory !== 'undefined') {
+                if(ProductInventory > 0){
+                    // Variant in stock - optional extra logic
+                } else {
+                    // Variant out of stock - optional extra logic
+                } 
+            }
+        }
+    });
+});
+</script>
+<script>
+$(document).ready(function(){
+
+    // When a select dropdown changes
+    $(".customselector{{ product.id }}").on("change", function(){
+
+        var $card = $(this).closest(".collection__item"); // adjust to your product wrapper
+        var swatch_options = [];
+
+        // Loop only the selects inside this product card
+        $card.find(".customselector{{ product.id }}").each(function(){
+            var selectedVal = $(this).val();
+
+           if(selectedVal){
+    // Remove all spaces and all dashes
+    var cleanedValue = selectedVal.replace(/[\s-]+/g, '').toLowerCase();
+    swatch_options.push(cleanedValue);
+}
+
+        });
+
+        // Build variant class name
+        var result = swatch_options.join('').replace(/\s+/g, '');
+//alert(result);
+        // Find the hidden variant input inside this card
+        var $variantInput = $card.find("." + result);
+        var ProductID = $variantInput.val();
+        var ProductInventory = $variantInput.attr("inventory");
+        var ProductVariantPrice = $variantInput.attr("variant-price");
+
+        // Update the add-to-cart hidden input
+        $card.find(".my-add-to-cart-value").val(ProductID);
+//alert(ProductID);
+        // Show/hide quantity containers inside this product card
+        $card.find(".quantitycontainer{{ product.id }}").each(function(){
+            var containerVariantId = $(this).data("variant-id");
+
+            if(containerVariantId == ProductID){
+                $(this).css({'opacity': '1','z-index': '12'});
+            } else {
+                $(this).css({'opacity': '0','z-index': '10'});
+            }
+        });
+
+        // Optional: inventory check
+        if (ProductInventory !== undefined){
+            if(ProductInventory > 0){
+                // In stock logic
+            } else {
+                // Out of stock logic
+            }
+        }
+
+    });
+
+});
+</script>

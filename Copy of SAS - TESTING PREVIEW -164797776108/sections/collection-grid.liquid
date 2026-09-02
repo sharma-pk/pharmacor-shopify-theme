@@ -1,0 +1,820 @@
+{% comment %}
+  Section: Welcome Dashboard
+  Description: Personalized dashboard for returning customers with dynamic data and theme-editable fields
+{% endcomment %}
+{% if customer %}
+<div class="welcome-box">
+  {% comment %} {% render 'collection-list',product:product %} {% endcomment %}
+
+  <div class="collections-list-wrapper">
+    <div class="filters_home">
+      {%- assign active_filters_size = 0 -%}
+      {%- assign filters_type = section.settings.filters_type -%}
+
+      {%- for filter in collection.filters -%}
+        {%- case filter.type -%}
+          {%- when 'list', 'boolean' -%}
+            {%- assign active_filters_size = active_filters_size | plus: filter.active_values.size -%}
+          {%- when 'price_range' -%}
+            {%- if filter.min_value.value > 0 or filter.max_value.value < filter.range_max -%}
+              {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                {%- assign active_filters_size = active_filters_size | plus: 1 -%}
+              {%- endif -%}
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+
+      {% comment %}
+        {% for block in section.blocks %}
+            {% assign collection = collections[block.settings.collection] %}
+        {%endfor %}
+      {% endcomment %}
+      <div class="collection__header-row sort_with_icons">
+        {%- render 'product-filters-and-sort-bar', product_list: collection, without_filter_button: true -%}
+        {% comment %}  {% endcomment %}
+
+        <div class="sort_with_icons">
+          <div class="grid-lists-iconss" bis_skin_checked="1">
+            
+            <div class="list-view-btn active iocns" bis_skin_checked="1">
+              <span>
+                <svg width="37" height="29" viewBox="0 0 37 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="7.70667" y="0.480713" width="28.992" height="4.40385" fill="#30623D"></rect>
+                  <circle cx="2.20193" cy="2.68264" r="2.20193" fill="#30623D"></circle>
+                  <rect x="7.70667" y="12.2243" width="28.992" height="4.40385" fill="#30623D"></rect>
+                  <circle cx="2.20193" cy="14.4263" r="2.20193" fill="#30623D"></circle>
+                  <rect x="7.70667" y="23.9679" width="28.992" height="4.40385" fill="#30623D"></rect>
+                  <circle cx="2.20193" cy="26.1698" r="2.20193" fill="#30623D"></circle>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list_of_collections">
+       
+
+        <div id="custom" class="custom-collection-page-tabcontent">
+          <style>
+            .custom-btn-boxes{border: 2px solid #30623d!important;
+              padding-top: 20px!important;
+              padding-bottom: 20px!important;
+              cursor: pointer!important;}
+                  .accordion__item.product-filters__form-item{display: none!important;}
+            .custom-collection-content{display: grid !important;
+              grid-template-columns: 1fr 1fr 1fr!important;}
+            .nav-tabs {
+              overflow: hidden;
+            }
+
+            .nav-tabs button {
+              background: transparent;
+              float: left;
+              border: none;
+              cursor: pointer;
+              padding: 10px 30px;margin-right: 6px;
+              font-size: 16px;
+              transition: 0.3s;border: 2px solid #30623d;
+              border-radius: 30px;
+              margin-bottom: 10px !important;
+            }
+
+            .nav-tabs button:hover {
+              background: #30623d;
+              color: #fff;
+            }
+
+            .nav-tabs button.active-tab {
+              background: #30623d;
+              color: #fff;
+            }
+            .tab-section {
+              display: none;
+            }
+            .list_of_collections{background: transparent!important;
+              padding: 12px!important;}
+
+            /* ── A–Z Strip ── */
+            .az-nav-tabs {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 6px;
+              margin-bottom: 16px;
+              margin-top: 16px;
+            }
+            .az-nav-tabs button {
+              background: transparent;
+              border: 2px solid #30623d;
+              border-radius: 30px;
+              cursor: pointer;
+              padding: 6px 14px;
+              font-size: 14px;
+              font-weight: 600;
+              min-width: 40px;
+              text-align: center;
+              transition: background 0.2s, color 0.2s;
+            }
+            .az-nav-tabs button:hover { background: #30623d; color: #fff; }
+            .az-nav-tabs button.active-az { background: #30623d; color: #fff; }
+            .az-product-item { display: none !important; width: 100%; box-sizing: border-box; }
+            .az-product-item.az-visible { display: block !important; }
+            .az-product-item.az-visible .customitem,
+            .az-product-item.az-visible .collection__item,
+            .az-product-item.az-visible .custom-main-inner-wrap { display: block !important; }
+            .az-no-products { display: none; padding: 30px 0; text-align: center; color: #7D7777; font-size: 16px; }
+            @media only screen and (max-width: 767px) {
+              .az-nav-tabs button { padding: 5px 10px; font-size: 12px; min-width: 34px; }
+            }
+          </style>
+
+          <div class="nav-tabs">
+            <button class="tab-btn active-tab" data-tab="mainCollection">
+              {% if section.settings.custom_name != blank %}
+                {{ section.settings.custom_name }}
+              {% else %}
+                {{ collection.title }}
+              {% endif %}
+            </button>
+
+            {% for block in section.blocks %}
+              {% assign block_collection = collections[block.settings.collection] %}
+              <button class="tab-btn" data-tab="custom{{ block.id }}">
+                {% if block.settings.custom_name != blank -%}
+                  {{- block.settings.custom_name -}}
+                {%- else %}
+                  {{ block_collection.title -}}
+                {%- endif %}
+              </button>
+            {% endfor %}
+          </div>
+          <div class="custom-cart-list-main">
+            <div class="custom_labels">
+              <div class="custom-list-image">Image</div>
+              <div class="custom-list-product-name">Product Name</div>
+              <div class="custom-list-wholesaler">
+                <div style="width: 50%;">Wholesaler</div>
+                <div style="width: 50%;">Strength/Pack Size</div>
+              </div>
+              {% if customer %}
+                <div class="custom-list-price">Price</div>
+
+                <div class="custom-list-quantity">Quantity</div>
+          
+              {% else %}
+                <div class="custom-list-product-info">Product Info</div>
+              {% endif %}
+            </div>
+
+            <!-- First tab: main collection -->
+            <div
+              id="mainCollection"
+              class="my-collection-list-tabcontent custom-product-parent tab-section"
+              style="display:block"
+            >
+              <div class="az-nav-tabs" data-az-group="mainCollection">
+                <button class="az-btn active-az" data-letter="ALL">All</button>
+                {% assign az_letters = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z" | split: "," %}
+                {% for letter in az_letters %}
+                  <button class="az-btn" data-letter="{{ letter }}">{{ letter }}</button>
+                {% endfor %}
+              </div>
+              <div class="az-no-products" id="no-products-mainCollection">No products found.</div>
+
+              <div class="custom-product-card-list" style="width:100%;">
+                <div class="custom-product-card-list-wrap az-products-wrapper" id="products-mainCollection">
+                  {% paginate collection.products by 1000 %}
+                    {% for product in collection.products %}
+                      {% assign first_char = product.title | strip | upcase | slice: 0 %}
+                      <div class="az-product-item az-visible" data-letter="{{ first_char }}">
+                        {% render 'custom-list-item', product: product, section: section, title: collection %}
+                      </div>
+                    {% endfor %}
+                  {% endpaginate %}
+                </div>
+                <div class="text-center">
+                  <button class="loadMore btn">{{ section.settings['load-more'] }}</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loop tabs -->
+            {% for block in section.blocks %}
+              {% assign block_collection = collections[block.settings.collection] %}
+              {% if block_collection %}
+                <div id="custom{{ block.id }}" class="my-collection-list-tabcontent custom-product-parent tab-section">
+                  <div class="az-nav-tabs" data-az-group="custom{{ block.id }}">
+                    <button class="az-btn active-az" data-letter="ALL">All</button>
+                    {% assign az_letters = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z" | split: "," %}
+                    {% for letter in az_letters %}
+                      <button class="az-btn" data-letter="{{ letter }}">{{ letter }}</button>
+                    {% endfor %}
+                  </div>
+                  <div class="az-no-products" id="no-products-custom{{ block.id }}">No products found.</div>
+
+                  <div class="custom-product-card-list" style="width: 100%;">
+                    <div class="custom-product-card-list-wrap az-products-wrapper" id="products-custom{{ block.id }}">
+                      {% paginate block_collection.products by 1000 %}
+                        {% for product in block_collection.products %}
+                          {% assign first_char = product.title | strip | upcase | slice: 0 %}
+                          <div class="az-product-item az-visible" data-letter="{{ first_char }}">
+                            {% render 'custom-list-item', product: product, section: section, title: block_collection %}
+                          </div>
+                        {% endfor %}
+                      {% endpaginate %}
+                    </div>
+                    <div class="text-center">
+                      <button class="loadMore btn">
+                        {{ section.settings['load-more'] }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+  
+      </div>
+    </div>
+  </div>
+</div>
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  /* ===============================
+     DROPDOWN SYNC (Optimized)
+  =============================== */
+  const mySelect = document.getElementById('mySelect');
+  if (mySelect) {
+    const wholesalerSelects = document.querySelectorAll('.custom-list-wholesaler');
+
+    function handleDropdownChange() {
+      const selectedValue = mySelect.value;
+      wholesalerSelects.forEach(select => {
+        const option = select.querySelector(`option[value="${selectedValue}"]`);
+        if (option) select.value = selectedValue;
+      });
+
+      // trigger change once after update
+      setTimeout(() => {
+        wholesalerSelects.forEach(s => s.dispatchEvent(new Event('change')));
+      }, 50);
+    }
+
+    mySelect.addEventListener('change', handleDropdownChange);
+    handleDropdownChange();
+  }
+
+
+  /* ===============================
+     HOVER VARIANT (Optimized)
+  =============================== */
+  if (window.innerWidth > 992) {
+    const hoverTargets = document.querySelectorAll('.collection__item, .featured-products__col, .products-thumbnails__product');
+
+    function hideAllVariants() {
+      document.querySelectorAll('.custom-variant').forEach(v => v.style.display = 'none');
+    }
+
+    function initHover() {
+      hoverTargets.forEach(item => {
+        const variant = item.querySelector('.custom-variant');
+        if (!variant) return;
+
+        item.addEventListener('mouseenter', () => {
+          variant.style.display = 'block';
+        });
+
+        item.addEventListener('mouseleave', () => {
+          variant.style.display = 'none';
+        });
+      });
+    }
+
+    hideAllVariants();
+    initHover();
+
+    // Re-init on Shopify navigation change
+    const originalPush = history.pushState;
+    history.pushState = function () {
+      originalPush.apply(history, arguments);
+      setTimeout(() => {
+        hideAllVariants();
+        initHover();
+      }, 800);
+    };
+
+    window.addEventListener('popstate', () => {
+      setTimeout(() => {
+        hideAllVariants();
+        initHover();
+      }, 800);
+    });
+  }
+
+
+  /* ===============================
+     ADD TO CART (Optimized)
+  =============================== */
+
+  document.body.addEventListener("click", function(e){
+    const btn = e.target.closest(".custom-btn-boxes");
+    if(!btn) return;
+    if (btn.classList.contains('atc-loading')) return;
+
+    const parentForm = btn.closest("form");
+    if(!parentForm) return;
+
+    const addingVariantId = resolveWholesalerVariantId(parentForm);
+    const properties = buildWholesalerCartProperties(parentForm, addingVariantId);
+
+    const formobj = {
+      quantity: parentForm.querySelector(".custom-class-quantity")?.value || 1,
+      id: addingVariantId,
+      properties: properties
+    };
+
+    btn.classList.add('atc-loading');
+    const btnText = btn.querySelector('.js-product-add-to-cart-button-text');
+    const originalText = btnText ? btnText.textContent : null;
+    if (btnText) btnText.textContent = 'Adding...';
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formobj)
+    })
+    .then(res => res.json())
+    .then((addedItem) => {
+      if (addedItem && addedItem.status) {
+        showATCNotification(addedItem.description || 'Could not add to cart.', 'error');
+        return;
+      }
+
+      // Refresh cart bubble
+      const bubble = document.getElementById('cart-icon-bubble');
+      if (bubble) {
+        fetch(window.location.href)
+          .then(r => r.text())
+          .then(html => {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const newBubble = doc.querySelector('#cart-icon-bubble');
+            if (newBubble) bubble.innerHTML = newBubble.innerHTML;
+          });
+      }
+
+      const itemTitle = addedItem && addedItem.product_title ? addedItem.product_title : 'Item';
+      showATCNotification(itemTitle + ' added to cart!', 'success');
+
+      refreshCartDrawer(() => {
+        {% if settings.home-page-drawer %}
+          document.querySelector(".header__icon--cart")?.click();
+          document.body.classList.add("cart-open");
+        {% endif %}
+      });
+    })
+    .catch(err => {
+      console.log('cart add error:', err);
+      showATCNotification('Could not add to cart.', 'error');
+    })
+    .finally(() => {
+      btn.classList.remove('atc-loading');
+      if (btnText && originalText !== null) btnText.textContent = originalText;
+    });
+  });
+
+  function showATCNotification(message, type) {
+    const existing = document.querySelector('.atc-toast-notification');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'atc-toast-notification';
+    toast.textContent = message;
+    toast.style.cssText = 'position:fixed;top:90px;right:20px;background:' +
+      (type === 'success' ? '#30623D' : '#c0392b') +
+      ';color:#fff;padding:14px 24px;border-radius:8px;font-size:14px;font-weight:600;z-index:999999;opacity:0;transform:translateY(-10px);transition:all 0.3s ease;';
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+    }, 10);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px)';
+      setTimeout(() => toast.remove(), 200);
+    }, 2000);
+  }
+
+
+  /* ===============================
+     CART DRAWER REFRESH (Optimized)
+  =============================== */
+  function refreshCartDrawer(done){
+    const drawer = document.getElementById("CartDrawer");
+    if(!drawer) return;
+
+    const sectionKey = drawer.dataset.sectionId;
+
+    fetch(`/?sections=${encodeURIComponent(sectionKey)}&_=${Date.now()}`)
+      .then(res => res.json())
+      .then(res => {
+        const html = res[sectionKey];
+        if(html){
+          swapDrawerHTML(html);
+          if(done) done();
+        } else {
+          fallback();
+        }
+      })
+      .catch(fallback);
+
+    function fallback(){
+      fetch(`/?section_id=cart-drawer&_=${Date.now()}`)
+        .then(res => res.text())
+        .then(html => {
+          swapDrawerHTML(html);
+          if(done) done();
+        });
+    }
+
+    function swapDrawerHTML(newHtml){
+      const temp = document.createElement('div');
+      temp.innerHTML = newHtml;
+
+      const newContainer = temp.querySelector(".js-cart-container");
+      if(newContainer){
+        drawer.querySelector(".js-cart-container").innerHTML = newContainer.innerHTML;
+      }
+
+      const newFooter = temp.querySelector(".cart-drawer__footer");
+      if(newFooter){
+        drawer.querySelector(".cart-drawer__footer").innerHTML = newFooter.innerHTML;
+      }
+    }
+  }
+
+});
+</script>
+
+
+<script>
+(function () {
+  var ITEMS_PER_PAGE = 10;
+  var tabState = {};
+
+  function getItems(panel, letter) {
+    if (letter === 'ALL') return Array.prototype.slice.call(panel.querySelectorAll('.az-product-item'));
+    return Array.prototype.slice.call(panel.querySelectorAll('.az-product-item[data-letter="' + letter + '"]'));
+  }
+
+  function filterProducts(panel, letter) {
+    tabState[panel.id] = { letter: letter, visibleCount: 0 };
+    panel.querySelectorAll('.az-product-item').forEach(function (item) { item.classList.remove('az-visible'); });
+    var items = getItems(panel, letter);
+    var showCount = Math.min(ITEMS_PER_PAGE, items.length);
+    for (var i = 0; i < showCount; i++) { items[i].classList.add('az-visible'); }
+    tabState[panel.id].visibleCount = showCount;
+    var noProducts = panel.querySelector('.az-no-products');
+    if (noProducts) noProducts.style.display = items.length === 0 ? 'block' : 'none';
+    var loadMoreBtn = panel.querySelector('.loadMore');
+    if (loadMoreBtn) loadMoreBtn.style.display = items.length > ITEMS_PER_PAGE ? 'block' : 'none';
+  }
+
+  function loadMore(panel) {
+    var state = tabState[panel.id];
+    if (!state) return;
+    var items = getItems(panel, state.letter);
+    var end = Math.min(state.visibleCount + ITEMS_PER_PAGE, items.length);
+    for (var i = state.visibleCount; i < end; i++) { items[i].classList.add('az-visible'); }
+    state.visibleCount = end;
+    if (state.visibleCount >= items.length) {
+      var loadMoreBtn = panel.querySelector('.loadMore');
+      if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+    }
+  }
+
+  // ── 1. Collection Tab switching (preserves active A-Z letter across tabs) ──
+  document.querySelectorAll('.nav-tabs .tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var activeLetter = 'ALL';
+      var activeAzBtn = document.querySelector('.tab-section[style*="display:block"] .az-btn.active-az, .tab-section[style*="display: block"] .az-btn.active-az');
+      if (activeAzBtn) activeLetter = activeAzBtn.getAttribute('data-letter');
+
+      document.querySelectorAll('.nav-tabs .tab-btn').forEach(function (b) { b.classList.remove('active-tab'); });
+      document.querySelectorAll('.tab-section').forEach(function (p) { p.style.display = 'none'; });
+      btn.classList.add('active-tab');
+      var panel = document.getElementById(btn.getAttribute('data-tab'));
+      if (!panel) return;
+      panel.style.display = 'block';
+
+      var azStrip = panel.querySelector('.az-nav-tabs');
+      if (azStrip) {
+        azStrip.querySelectorAll('.az-btn').forEach(function (b) { b.classList.remove('active-az'); });
+        var matchBtn = azStrip.querySelector('[data-letter="' + activeLetter + '"]');
+        if (matchBtn) matchBtn.classList.add('active-az');
+      }
+      filterProducts(panel, activeLetter);
+    });
+  });
+
+  // ── 2. A–Z filtering within a tab ──
+  document.querySelectorAll('.az-nav-tabs').forEach(function (strip) {
+    strip.querySelectorAll('.az-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        strip.querySelectorAll('.az-btn').forEach(function (b) { b.classList.remove('active-az'); });
+        btn.classList.add('active-az');
+        filterProducts(strip.closest('.tab-section'), btn.getAttribute('data-letter'));
+      });
+    });
+  });
+
+  // ── 3. Load More ──
+  document.querySelectorAll('.tab-section .loadMore').forEach(function (btn) {
+    btn.style.display = 'none';
+    btn.addEventListener('click', function () { loadMore(btn.closest('.tab-section')); });
+  });
+
+  // ── 4. Init: show first 10 in the active tab on page load ──
+  var firstPanel = document.querySelector('.tab-section[style*="display:block"], .tab-section[style*="display: block"]');
+  if (firstPanel) filterProducts(firstPanel, 'ALL');
+
+})();
+</script>
+{% else %}
+  <script>
+    window.location.href = "/account/login";
+  </script>
+{% endif %}
+{% schema %}
+{
+  "name": "Collection Grid",
+  "settings": [
+    {
+      "type": "select",
+      "id": "filters_type",
+      "label": "Filters type",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "Sidebar"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "horizontal",
+      "info": "Used only for desktop"
+    },
+    {
+      "type": "text",
+      "id": "load-more",
+      "label": "Load More Button Text",
+      "default": "Load More"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "See All Products"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "custom_name",
+      "label": "Custom Collection Name"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
+          "type": "text",
+          "id": "custom_name",
+          "label": "Custom Collection Name"
+        },
+        {
+          "type": "select",
+          "id": "variant_picker",
+          "label": "Variant picker",
+          "options": [
+            {
+              "value": "radio",
+              "label": "Buttons"
+            },
+            {
+              "value": "select",
+              "label": "Dropdown"
+            }
+          ],
+          "default": "radio"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Grid"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  $(".serach_btn").on("click", function() {
+      var searchValue = $("#searchInput").val().trim();
+      var searchLower = searchValue.toLowerCase();
+
+      // 1️⃣ For .collection__item
+      $(".collection__item").each(function() {
+          var title = $(this).find('.product-card__title').text().toLowerCase();
+          if (title.includes(searchLower)) {
+              $(this).show();
+          } else {
+              $(this).hide();
+          }
+      });
+
+      // 2️⃣ For .custom_product-section
+      $(".custom_product-section,.custom-main-inner-wrap").each(function() {
+          var title = $(this).find('.product-name').text().toLowerCase();
+          if (title.includes(searchLower)) {
+              $(this).show();
+          } else {
+              $(this).hide();
+          }
+      });
+  });
+  {% comment %}  {% endcomment %}
+   const optionMenu = document.querySelector(".select-menu");
+  if (optionMenu) {
+    const selectBtn = optionMenu.querySelector(".select-btn"),
+      options = optionMenu.querySelectorAll(".option"),
+      sBtn_text = optionMenu.querySelector(".sBtn-text");
+
+    selectBtn.addEventListener("click", () =>
+      optionMenu.classList.toggle("active")
+    );
+
+    options.forEach((option) => {
+      option.addEventListener("click", () => {
+        let selectedOption = option.querySelector(".option-text").innerText;
+        sBtn_text.innerText = selectedOption;
+
+        optionMenu.classList.remove("active");
+      });
+    });
+  }
+</script>
+<style>
+  .select-menu {
+    max-width: 330px;
+    margin: 50px auto;
+  }
+  .select-menu .select-btn {
+    display: flex;
+    height: 55px;
+    background: #fff;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 8px;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .select-menu .options {
+    position: absolute;
+    width: 330px;
+    overflow-y: auto;
+    max-height: 295px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation-name: fadeInDown;
+    -webkit-animation-name: fadeInDown;
+    animation-duration: 0.35s;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 0.35s;
+    -webkit-animation-fill-mode: both;
+  }
+  .select-menu .options .option {
+    display: flex;
+    height: 55px;
+    cursor: pointer;
+    padding: 0 16px;
+    border-radius: 8px;
+    align-items: center;
+    background: #fff;
+  }
+  .select-menu .options .option:hover {
+    background: #f2f2f2;
+  }
+  .select-menu .options .option i {
+    font-size: 25px;
+    margin-right: 12px;
+  }
+  .select-menu .options .option .option-text {
+    font-size: 18px;
+    color: #333;
+  }
+
+  .select-btn i {
+    font-size: 25px;
+    transition: 0.3s;
+  }
+
+  .select-menu.active .select-btn i {
+    transform: rotate(-180deg);
+  }
+  .select-menu.active .options {
+    display: block;
+    opacity: 0;
+    z-index: 10;
+    animation-name: fadeInUp;
+    -webkit-animation-name: fadeInUp;
+    animation-duration: 0.4s;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 0.4s;
+    -webkit-animation-fill-mode: both;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      transform: translate3d(0, 30px, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+  }
+  @keyframes fadeInDown {
+    from {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+    to {
+      transform: translate3d(0, 20px, 0);
+      opacity: 0;
+    }
+  }
+</style>
+
+<style>
+  /* Sorting dropdown */
+  .custom-sorting {
+    margin-bottom: 20px;
+  }
+  .custom-sorting label {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+
+  /* Products grid */
+  .custom-product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .product-item {
+    width: calc(25% - 20px);
+    box-sizing: border-box;
+    border: 1px solid #eee;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .product-item img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .product-item h3 {
+    font-size: 16px;
+    margin: 10px 0 5px;
+  }
+
+  .product-item p {
+    font-weight: bold;
+    color: #333;
+  }
+</style>
