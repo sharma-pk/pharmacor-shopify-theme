@@ -33,7 +33,7 @@
           <span>{{ forloop.index }}. {{ block.settings.question }}</span>
           <span class="sasf-item__arrow">→</span>
         </button>
-        <div class="sasf-item__answer">{{ block.settings.answer }}</div>
+        <div class="sasf-item__answer">{{ block.settings.answer | newline_to_br }}</div>
       </div>
     {% endif %}
   {% endfor %}

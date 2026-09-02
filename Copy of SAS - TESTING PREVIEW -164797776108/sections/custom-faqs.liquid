@@ -88,7 +88,7 @@
           </div>
         </div>
         <div class="faq-my-smile-answer-{{ section.id }}">
-          <p>{{ block.settings.answer }}</p>
+          <p>{{ block.settings.answer | newline_to_br }}</p>
         </div>
       </div>
     {% endfor %}

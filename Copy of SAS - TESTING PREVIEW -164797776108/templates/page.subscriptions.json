@@ -137,50 +137,64 @@
         "faq_L6XPYn": {
           "type": "faq",
           "settings": {
-            "question": "1. How do I start a subscription?",
-            "answer": "On the product page, choose \"Subscribe and save\" instead of one-time purchase, pick when your first order should start, and add to cart as normal.."
+            "question": "1. How does Subscribe & Save work?",
+            "answer": "Subscribe & Save is a buy 6 months, get the 7th month free offer. Your order is delivered and invoiced monthly. We recommend setting up your subscription based on your average monthly usage so you can maximise your free stock in the 7th month. You can choose the date your monthly order is processed, and your subscription can start on any date or in any month.\n\nExample: If you use 45 units of Ezetimibe each month and choose 1 January as your start date, a recurring order for 45 units will be processed on the 1st of each month from January to June. On 1 July, you'll receive 45 units free."
           }
         },
         "faq_YWLLEq": {
           "type": "faq",
           "settings": {
-            "question": "2. How do I get my 7th month free?",
-            "answer": "Every 6 consecutive orders on a subscription earns you the 7th month free automatically — no code needed."
+            "question": "2. What's the difference between Subscribe & Save and the Punch Card?",
+            "answer": "Subscribe & Save is ideal for products with consistent monthly usage, as stock is delivered automatically each month.\n\nThe Punch Card is better suited to higher-cost products that you prefer to order only when a customer or prescription requires them. Please ask your Pharmacor Sales Rep for more information."
           }
         },
         "faq_KiEHiG": {
           "type": "faq",
           "settings": {
-            "question": "3. Can I change my quantity or delivery date?",
-            "answer": "Yes — open \"Manage your subscriptions\" from your account, click Edit on the subscription, and update the date, quantity, or wholesaler account. You can choose whether the change applies to just this order or every month going forward."
+            "question": "3. What happens after I receive my free 7th month?",
+            "answer": "Your subscription automatically rolls over into a new 7-month cycle, so you'll continue receiving your monthly orders and earn another free month after the next six paid months."
           }
         },
         "faq_w8UFLf": {
           "type": "faq",
           "settings": {
-            "question": "4. How do I pause, skip, or cancel?",
-            "answer": "From \"Manage your subscriptions\", use Drop Now to push your next order out a month, or Edit for more options. You can cancel anytime and there's no penalty."
+            "question": "4. Is Subscribe & Save available on all products?",
+            "answer": "No. Subscribe & Save is only available on selected products. If a product does not display the Subscribe & Save option, it is not included in the program."
           }
         },
         "faq_qeqzq9": {
           "type": "faq",
           "settings": {
-            "question": "5. Can I switch wholesalers on a subscription?",
-            "answer": "Yes, if your account is covered by more than one wholesaler. Open Edit on the subscription and choose a different wholesaler account from the dropdown."
+            "question": "5. Can I put my Subscribe & Save subscription on hold?",
+            "answer": "Yes. You can pause your subscription for as long as you need. When you're ready to start receiving stock again, simply reactivate your subscription from your Subscriptions page."
           }
         },
         "faq_Aw4eE9": {
           "type": "faq",
           "settings": {
-            "question": "6. What happens if a product is out of stock?",
-            "answer": "If an item is out of stock on your scheduled delivery date, that cycle is automatically paused and pushed to the next month — you won't be charged for it."
+            "question": "6. Can I choose/change the date when my order is processed?",
+            "answer": "Yes. You can select your preferred processing date when setting up your first subscription. You can also change this date at any time from your Subscriptions page."
           }
         },
         "faq_NarT77": {
           "type": "faq",
           "settings": {
-            "question": "7. What happens if I cancel and want to restart later?",
-            "answer": "Reactivating a cancelled or paused subscription resets your delivery schedule to start one month from today.."
+            "question": "7. What happens if the price of the product changes?",
+            "answer": "Your monthly order will be charged at the current product price at the time it is processed. If the price increases or decreases, your subscription price will automatically adjust accordingly."
+          }
+        },
+        "faq_dropnow01": {
+          "type": "faq",
+          "settings": {
+            "question": "8. What happens when I need my order sooner than the scheduled date?",
+            "answer": "If you need your stock earlier than the scheduled date, you can go to your Subscriptions page and click the \"Drop Now\" button for the SKU you need. This will bring the order forward so you can receive the stock sooner."
+          }
+        },
+        "faq_cancel01": {
+          "type": "faq",
+          "settings": {
+            "question": "9. What happens when you cancel your subscription?",
+            "answer": "If you cancel your subscription, your scheduled drops for that molecule will stop. If you need the molecule again in the future, you can always restart a new subscription.\n\nWe recommend pausing your subscription instead of cancelling if you may need it again, as this makes it easier to resume your subscription without losing your progress."
           }
         }
       },
@@ -191,7 +205,9 @@
         "faq_w8UFLf",
         "faq_qeqzq9",
         "faq_Aw4eE9",
-        "faq_NarT77"
+        "faq_NarT77",
+        "faq_dropnow01",
+        "faq_cancel01"
       ],
       "name": "Custom FAQ Accordion",
       "settings": {
