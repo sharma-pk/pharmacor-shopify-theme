@@ -2,7 +2,20 @@
 // header-menu.liquid, header-mobile-menu-list.liquid and sections/header.liquid.
 // Edit here once instead of in each file separately.
 
+// CSS class names Liquid actually renders (case-sensitive, must match the markup exactly) — not the same thing as the lowercase brand keys below
 var WHOLESALER_BRAND_CLASS = { api: 'API', sigma: 'Sigma', symbion: 'Symbion', ch2: 'Ch2' };
+
+// single priority order used everywhere a default brand is picked (cart-reconciliation, header widget, card first-paint) — always lowercase; this is the internal brand key, distinct from WHOLESALER_BRAND_CLASS's casing
+var WHOLESALER_BRAND_PRIORITY = ['api', 'sigma', 'symbion', 'ch2'];
+
+// derives a brand key from free text (a value, label, or option text) by case-insensitive substring match against WHOLESALER_BRAND_PRIORITY, in priority order — the one place raw/mixed-case text gets normalized into the lowercase brand key; everything downstream only ever deals with that normalized key, never raw text again
+function resolveWholesalerBrand(text) {
+  var upper = (text || '').toString().toUpperCase();
+  for (var i = 0; i < WHOLESALER_BRAND_PRIORITY.length; i++) {
+    if (upper.indexOf(WHOLESALER_BRAND_PRIORITY[i].toUpperCase()) !== -1) return WHOLESALER_BRAND_PRIORITY[i];
+  }
+  return '';
+}
 
 // account numbers can be alphanumeric — this only strips stray whitespace/newlines baked into a Liquid-rendered attribute, never real characters
 function sanitizeWholesalerNumber(value) {
@@ -26,10 +39,13 @@ function getWholesalerCachedValue(brand) {
   return raw.replace(new RegExp(brand, 'gi'), '').trim();
 }
 
-// live account number for a brand from the customer's actual coverage — honors a multi-number override if one is picked for this brand
+// live account number for a brand: active-brand override first, then this brand's own remembered number (independent of which brand is active), then its first coverage match
 function getLiveWholesalerNumberForBrand(brand) {
   var override = (typeof resolveSelectedWholesalerAccountOverride === 'function') ? resolveSelectedWholesalerAccountOverride() : null;
   if (override && override.brand === brand) return override.number;
+
+  var remembered = sanitizeWholesalerNumber((localStorage.getItem('selected_' + brand) || '').replace(new RegExp(brand, 'gi'), ''));
+  if (remembered && isWholesalerCovered(brand + remembered)) return remembered;
 
   var coverage = window.__wholesalerCoverage || [];
   var match = coverage.filter(function (item) { return item.indexOf(brand) !== -1; })[0];
@@ -54,8 +70,13 @@ function resolveSelectedWholesalerAccountOverride() {
 
   var coverage = window.__wholesalerCoverage || [];
   var chosenLower = chosenNumber.toLowerCase().replace(/\s+/g, '').trim();
-  // compare with spaces stripped on both sides — the coverage array keeps the raw "api 2312"-style spacing, some stored selections don't
-  var match = coverage.filter(function (item) { return item.replace(/\s+/g, '').indexOf(chosenLower) !== -1; })[0];
+  // exact match only, in either "brand+number" or bare-number form — was a substring match, so "1" could match "123456"
+  var match = coverage.filter(function (item) {
+    var itemClean = item.replace(/\s+/g, '');
+    if (itemClean === chosenLower) return true; // full "brand+number" form
+    var itemNumber = itemClean.replace(/api|sigma|symbion|ch2/gi, '');
+    return itemNumber === chosenLower; // bare-number form
+  })[0];
   if (!match) return null;
 
   var brand = null;
@@ -69,7 +90,7 @@ function resolveSelectedWholesalerAccountOverride() {
   return { brand: brand, number: number };
 }
 
-// only overwrites the number on whichever brand field Liquid already populated — never switches brand
+// Only overwrites the number on whichever brand field Liquid already populated (never switches brand); routed per card/form scope through applyWholesalerValue() so sibling brand fields get cleared too, instead of leaving stale ones that could produce two populated brands on one cart line.
 function applyWholesalerNumberOverride() {
   var override = resolveSelectedWholesalerAccountOverride();
   if (!override) return;
@@ -78,12 +99,17 @@ function applyWholesalerNumberOverride() {
   if (!targetClass) return;
 
   var fields = document.querySelectorAll('.' + targetClass);
-  fields.forEach ? fields.forEach(applyOverrideToField) : Array.prototype.forEach.call(fields, applyOverrideToField);
+  var scopes = [];
+  var fieldsArr = fields.forEach ? fields : Array.prototype.slice.call(fields);
+  fieldsArr.forEach(function (field) {
+    if (!field.value) return; // blank means this product/card isn't using this brand — leave it alone
+    var scope = field.closest('.custom-main-inner-wrap') || field.closest('form') || document;
+    if (scopes.indexOf(scope) === -1) scopes.push(scope);
+  });
 
-  function applyOverrideToField(field) {
-    if (!field.value) return; // blank means this product isn't using this brand — leave it alone
-    field.value = override.number;
-  }
+  scopes.forEach(function (scope) {
+    applyWholesalerValue(scope, override.brand, override.number);
+  });
 }
 
 // re-enabled — the earlier corruption was from the unrelated custom-style.js dropdown-sync loop (now fixed), not this function
@@ -106,6 +132,59 @@ function applyWholesalerValue(scope, brand, value) {
   if (!targetClass) return;
   var targets = root.querySelectorAll('.' + targetClass);
   targets.forEach(function (target) { target.value = sanitizeWholesalerNumber(value); });
+}
+
+// single entry point every wholesaler brand-picker (dropdown, radio, Shopify variant option) should call on change — replaces each page re-implementing "figure out the brand, find the scope, apply it"
+function handleWholesalerSelectionChange(el) {
+  if (!el) return;
+  var raw = el.value || el.getAttribute('data-option-value') || el.textContent || '';
+  var brand = resolveWholesalerBrand(raw);
+  if (!brand) return;
+  var scope = el.closest('.custom-main-inner-wrap') || el.closest('.custom-variant') || el.form || el.closest('form') || document;
+  applyWholesalerValue(scope, brand, getLiveWholesalerNumberForBrand(brand));
+}
+
+// exact match by number (itemnumber attribute) among .wholwseller-input elements — was a CSS attribute-contains selector ([itemnumber*="1"] matched "123456" too); pass an explicit candidates list (e.g. only the currently-visible brand's items) to avoid matching a different brand's number that happens to share a value; defaults to every .wholwseller-input on the page
+function findWholesellerInputByNumber(number, candidates) {
+  if (!number) return null;
+  var list = candidates || document.querySelectorAll('.wholwseller-input');
+  for (var i = 0; i < list.length; i++) {
+    if ((list[i].getAttribute('itemnumber') || '').trim() === number) return list[i];
+  }
+  return null;
+}
+
+// True unless there's clear evidence this card's own Wholesaler selector doesn't list `brand` — used only to stop a site-wide brand switch (the header widget) from overwriting a card that never offered that brand. Fails open (returns true) whenever it can't positively identify the card's Wholesaler selector, rather than guessing.
+function cardSupportsWholesalerBrand(scope, brand) {
+  if (!scope || scope === document || !WHOLESALER_BRAND_CLASS[brand]) return true;
+
+  // explicit marker first — <option data-brand="..."> is ground truth when Liquid rendered it, no guessing needed
+  var brandedOptions = scope.querySelectorAll('option[data-brand]');
+  if (brandedOptions.length) {
+    var markedFound = false;
+    brandedOptions.forEach(function (opt) { if (opt.getAttribute('data-brand') === brand) markedFound = true; });
+    return markedFound;
+  }
+
+  // fallback: the wholesaler <select> specifically, identified by its options carrying a known brand class — not just any select carrying the shared "custom-list-wholesaler" class, which every option's select gets, wholesaler or not
+  var selects = scope.querySelectorAll('select');
+  for (var i = 0; i < selects.length; i++) {
+    var hasAnyBrandOption = WHOLESALER_BRAND_PRIORITY.some(function (b) { return selects[i].querySelector('option.custom' + b); });
+    if (hasAnyBrandOption) return !!selects[i].querySelector('option.custom' + brand);
+  }
+
+  // fallback: radio-based cards — only trust this if at least one radio in the group actually looks like a wholesaler brand (otherwise it's a Size/Color group, not Wholesaler)
+  var radios = scope.querySelectorAll('.radioinput, .radio-input');
+  var looksLikeWholesalerGroup = false;
+  var found = false;
+  radios.forEach(function (r) {
+    var b = resolveWholesalerBrand(r.value);
+    if (b) looksLikeWholesalerGroup = true;
+    if (b === brand) found = true;
+  });
+  if (looksLikeWholesalerGroup) return found;
+
+  return true; // no recognizable Wholesaler selector found — don't guess, leave existing behavior alone
 }
 
 // Cart-line merge logic, shared by layout/theme.liquid (cart-page variant

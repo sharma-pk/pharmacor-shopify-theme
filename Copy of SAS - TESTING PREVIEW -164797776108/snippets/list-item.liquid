@@ -411,6 +411,22 @@ grid-template-columns: 32% 40% auto 35% 10% !important;
     <div class="custom-list-wholesaler">
 
       {% assign hidden_value = '' %}
+      {% comment %} default brand = API>Sigma>Symbion>CH2 priority (matches the header widget and cart reconciliation), not raw Shopify option order, so first paint is consistent across products before any JS runs {% endcomment %}
+      {% assign coverage_data = coverage_countries | join: ',' | downcase %}
+      {% for wholesaler_option in product.options_with_values %}
+        {% if wholesaler_option.name contains 'Wholesaler' %}
+          {% assign option_values_down = wholesaler_option.values | join: ',' | downcase %}
+          {% if hidden_value == '' and option_values_down contains 'api' and coverage_data contains 'api' %}
+            {% assign hidden_value = 'api' %}
+          {% elsif hidden_value == '' and option_values_down contains 'sigma' and coverage_data contains 'sigma' %}
+            {% assign hidden_value = 'sigma' %}
+          {% elsif hidden_value == '' and option_values_down contains 'symbion' and coverage_data contains 'symbion' %}
+            {% assign hidden_value = 'symbion' %}
+          {% elsif hidden_value == '' and option_values_down contains 'ch2' and coverage_data contains 'ch2' %}
+            {% assign hidden_value = 'ch2' %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
       {% for option in product.options_with_values %}
 
         {% if option.name contains 'Wholesaler' and hide_purchase_controls %}
@@ -444,7 +460,9 @@ grid-template-columns: 32% 40% auto 35% 10% !important;
     {% assign hidden_value = value | handleize %}
   {% endif %}
   <option class="custom{{ value | handleize }}"
-          value="{{ value | handleize }}">
+          value="{{ value | handleize }}"
+          {% if option.name contains 'Wholesaler' %}data-brand="{{ value | handleize }}"{% endif %}
+          {% if hidden_value == value | handleize %}selected{% endif %}>
       {{ value }}
   </option>
 {% endif %}

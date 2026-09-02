@@ -1253,12 +1253,6 @@ function handleVariantChange(el){
   var section = el.closest('.custom-variant');
   if (!section) return;
 
-  // live-computed from coverage, not the header widget's cache
-  var apivalue     = getLiveWholesalerNumberForBrand('api');
-  var sigmavale    = getLiveWholesalerNumberForBrand('sigma');
-  var symbionvale  = getLiveWholesalerNumberForBrand('symbion');
-  var ch2          = getLiveWholesalerNumberForBrand('ch2');
-
   // Collect checked radios inside this product
   var inputs = section.querySelectorAll('input.radioinput:checked');
   var values = [];
@@ -1296,45 +1290,26 @@ function handleVariantChange(el){
     }
   }
 
-  // --- Handle wholesaler accounts (scoped to this product's own section) ---
+  // --- Handle wholesaler accounts (scoped to this product's own section) — same shared resolution used on every other page ---
   applyWholesalerValue(section);
 
-  if (values.includes('API')) {
-    applyWholesalerValue(section, 'api', apivalue);
-    if (!apivalue) $(variantInput).addClass('emptybutton');
-    else $(variantInput).removeClass('emptybutton');
-  }
-  else if (values.includes('Sigma')) {
-    applyWholesalerValue(section, 'sigma', sigmavale);
-    if (sigmavale) $(variantInput).removeClass('emptybutton');
-  }
-  else if (values.includes('Symbion')) {
-    applyWholesalerValue(section, 'symbion', symbionvale);
-    if (symbionvale) $(variantInput).removeClass('emptybutton');
-  }
-  else if (values.includes('CH2')) {
-    applyWholesalerValue(section, 'ch2', ch2);
-    if (ch2) $(variantInput).removeClass('emptybutton');
+  var brand = values.includes('API') ? 'api' : values.includes('Sigma') ? 'sigma' : values.includes('Symbion') ? 'symbion' : values.includes('CH2') ? 'ch2' : '';
+  if (brand) {
+    var number = getLiveWholesalerNumberForBrand(brand);
+    applyWholesalerValue(section, brand, number);
+    if (number) $(variantInput).removeClass('emptybutton');
+    else if (brand === 'api') $(variantInput).addClass('emptybutton'); // matches prior behavior: only API added the empty state, others only cleared it
   }
 }
 
-// product page: switching the Wholesaler option radio/select never touched the .API/.Sigma/.Symbion/.Ch2 hidden inputs — wrong number went to cart
+// product page: switching the Wholesaler option radio/select never touched the .API/.Sigma/.Symbion/.Ch2 hidden inputs — routes through the one shared handleWholesalerSelectionChange() (wholesaler-shared.js) now
 document.addEventListener('change', function (e) {
   var el = e.target;
   if (!el.matches('[data-option]')) return;
   if (!el.getAttribute('data-option').toLowerCase().includes('wholesaler')) return;
+  if (el.type === 'radio' && !el.checked) return;
 
-  var value = (el.type === 'radio' ? (el.checked ? el.value : null) : el.value) || '';
-  if (!value) return;
-
-  var upper = value.toUpperCase();
-  var brand = upper.includes('API') ? 'api' : upper.includes('SIGMA') ? 'sigma' : upper.includes('SYMBION') ? 'symbion' : upper.includes('CH2') ? 'ch2' : '';
-  if (!brand) return;
-
-  var scope = el.form || el.closest('[data-js-product-variant]')?.closest('form') || el.closest('form');
-  if (!scope) return;
-
-  applyWholesalerValue(scope, brand, getLiveWholesalerNumberForBrand(brand));
+  if (typeof handleWholesalerSelectionChange === 'function') handleWholesalerSelectionChange(el);
 });
 
 window.updateMoqBadge = function(productId, radioEl) {
@@ -1387,13 +1362,6 @@ window.updateMoqBadge = function(productId, radioEl) {
 /* ======================================
    HELPER FUNCTIONS
 ====================================== */
-function getSelectedValues() {
-  return Object.keys(localStorage)
-    .filter(key => key.startsWith('selected_'))
-    .map(key => localStorage.getItem(key))
-    .filter(value => typeof value === 'string' && value && value !== 'undefined');
-}
-
 // Extract account number, removing brand prefix (numbers can contain letters, so only whitespace is stripped)
 function extractAccountNumber(value, brand = '') {
   if (!value || typeof value !== 'string') return '';
@@ -1625,8 +1593,6 @@ document.addEventListener('change', async (e) => {
       ? window.wholesaleParsed.find(item => item.brand?.toUpperCase() === brandFromSelect)
       : null;
 
-    // Get selected values from localStorage
-    const selectedValues = getSelectedValues();
     let wholesalerValue = '';
 
     // if the customer explicitly picked a specific number for this brand (multi-number brands like API), honor it first
@@ -1635,12 +1601,9 @@ document.addEventListener('change', async (e) => {
       wholesalerValue = chosenOverride.number;
     }
 
-    if (!wholesalerValue && Array.isArray(selectedValues)) {
-      const found = selectedValues.find(v =>
-        typeof v === 'string' &&
-        v.toUpperCase().includes(brandFromSelect)
-      );
-      if (found) wholesalerValue = extractAccountNumber(found, brandFromSelect);
+    // was pooling every "selected_*" localStorage key together (including unrelated ones like selected_wholeseller/selected_country) and matching on string content in unpredictable key order — getLiveWholesalerNumberForBrand resolves this brand's number precisely, same as every other add-to-cart path
+    if (!wholesalerValue && brandFromSelect && typeof getLiveWholesalerNumberForBrand === 'function') {
+      wholesalerValue = getLiveWholesalerNumberForBrand(brandFromSelect.toLowerCase());
     }
 
     if (!wholesalerValue && match?.value) {

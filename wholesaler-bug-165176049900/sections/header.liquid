@@ -1293,27 +1293,26 @@
 
       var variantId  = btn.getAttribute("data-variant-id");
 
-      // wholesaler values (localStorage se)
+      // wholesaler values — live-resolved the same way every other add-to-cart path does
       var variantinput = parent.querySelector(".radioinput:checked");
       var checkval     = variantinput ? variantinput.value : "";
 
-      // re-check cached value against current coverage before using it
-      function coveredOrBlank(raw){
-        if (typeof isWholesalerCovered === "function") {
-          return isWholesalerCovered(raw) ? raw : "";
-        }
-        return raw;
+      // was reading localStorage directly, ignoring the header widget's active override cookie that every other handler already respects
+      function liveNumberFor(brand){
+        if (typeof getLiveWholesalerNumberForBrand === "function") return getLiveWholesalerNumberForBrand(brand);
+        var raw = (localStorage.getItem("selected_" + brand) || "").replace(new RegExp(brand, "gi"), "");
+        return (typeof isWholesalerCovered === "function" && !isWholesalerCovered(raw)) ? "" : raw;
       }
 
       var apivalue="", sigmavale="", symbionvale="", ch2="";
       if(checkval.includes("API")){
-        apivalue = coveredOrBlank((localStorage.getItem("selected_api")||"").replace(/api/gi,""));
+        apivalue = liveNumberFor("api");
       }else if(checkval.includes("Sigma")){
-        sigmavale = coveredOrBlank((localStorage.getItem("selected_sigma")||"").replace(/sigma/gi,""));
+        sigmavale = liveNumberFor("sigma");
       }else if(checkval.includes("Symbion")){
-        symbionvale = coveredOrBlank((localStorage.getItem("selected_symbion")||"").replace(/symbion/gi,""));
+        symbionvale = liveNumberFor("symbion");
       }else if(checkval.includes("CH2")){
-        ch2 = coveredOrBlank((localStorage.getItem("selected_ch2")||"").replace(/ch2/gi,""));
+        ch2 = liveNumberFor("ch2");
       }
 
       // Saving Per Item — same myvarientid/variantprofit lookup pattern used

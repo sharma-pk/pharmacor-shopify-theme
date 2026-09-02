@@ -275,45 +275,9 @@
   {%- endunless -%}
 {%- endif -%}
 
-{% assign apiselleritem = '' %}
-{% assign sigmaselleritem = '' %}
-{% assign symbionselleritem = '' %}
-{% assign ch2selleritem = '' %}
-
-{% assign defaulseller = false %}
-
+{% comment %} apiselleritem/sigmaselleritem/symbionselleritem/ch2selleritem/defaulseller used to be computed here but never read anywhere in this file — removed; coverage_countries below is what's actually used {% endcomment %}
 {% if customer %}
   {% assign coverage_countries = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
-
-  {% for item in coverage_countries %}
-    {% assign clean_item = item | downcase | replace: ' ', '' %}
-
-    {% if clean_item contains 'api' %}
-      {% assign apiselleritem = clean_item | remove: 'api' %}
-      {% assign defaulseller = true %}
-      {% break %}
-    {% endif %}
-  {% endfor %}
-
-  {% if defaulseller == false %}
-    {% for item in coverage_countries %}
-      {% assign clean_item = item | downcase | replace: ' ', '' %}
-
-      {% if clean_item contains 'symbion' %}
-        {% assign symbionselleritem = clean_item | remove: 'symbion' %}
-        {% assign defaulseller = true %}
-        {% break %}
-      {% elsif clean_item contains 'sigma' %}
-        {% assign sigmaselleritem = clean_item | remove: 'sigma' %}
-        {% assign defaulseller = true %}
-        {% break %}
-      {% elsif clean_item contains 'ch2' %}
-        {% assign ch2selleritem = clean_item | remove: 'ch2' %}
-        {% assign defaulseller = true %}
-        {% break %}
-      {% endif %}
-    {% endfor %}
-  {% endif %}
 {% endif %}
 
 <div
@@ -670,9 +634,10 @@
         {{ product_variants }}
       </script>
    
-      {% comment %} pre-pass: does this product have any wholesaler option that survives coverage filtering? {% endcomment %}
+      {% comment %} single pre-pass over product.options_with_values: (a) does this product have a wholesaler option that survives coverage filtering, and (b) its default brand by API>Sigma>Symbion>CH2 priority (matches the header widget and cart reconciliation), not raw Shopify option order — used to be two separate loops over the same data {% endcomment %}
       {% assign has_wholesaler_option = false %}
       {% assign wholesaler_has_visible_value = false %}
+      {% assign coverage_data = coverage_countries | join: ',' | downcase %}
       {% for option in product.options_with_values %}
         {% if option.name contains 'Wholesaler' %}
           {% assign has_wholesaler_option = true %}
@@ -686,6 +651,17 @@
               {% endif %}
             {% endfor %}
           {% endfor %}
+
+          {% assign option_values_down = option.values | join: ',' | downcase %}
+          {% if hidden_value == '' and option_values_down contains 'api' and coverage_data contains 'api' %}
+            {% assign hidden_value = 'api' %}
+          {% elsif hidden_value == '' and option_values_down contains 'sigma' and coverage_data contains 'sigma' %}
+            {% assign hidden_value = 'sigma' %}
+          {% elsif hidden_value == '' and option_values_down contains 'symbion' and coverage_data contains 'symbion' %}
+            {% assign hidden_value = 'symbion' %}
+          {% elsif hidden_value == '' and option_values_down contains 'ch2' and coverage_data contains 'ch2' %}
+            {% assign hidden_value = 'ch2' %}
+          {% endif %}
         {% endif %}
       {% endfor %}
       {% assign hide_purchase_controls = false %}
@@ -736,34 +712,11 @@
 
               {% unless hide_option %}
                 {% assign value_handle = value | handleize %}
-                {% assign value_down = value | downcase %}
-                {% assign option_account_number = '' %}
-                {% assign option_brand = '' %}
-                {% if option.name contains 'Wholesaler' %}
-                  {% if value_down contains 'api' %}
-                    {% assign option_brand = 'api' %}
-                  {% elsif value_down contains 'sigma' %}
-                    {% assign option_brand = 'sigma' %}
-                  {% elsif value_down contains 'symbion' %}
-                    {% assign option_brand = 'symbion' %}
-                  {% elsif value_down contains 'ch2' %}
-                    {% assign option_brand = 'ch2' %}
-                  {% endif %}
-                  {% if option_brand != '' %}
-                    {% for item in coverage_countries %}
-                      {% assign item_down = item | downcase %}
-                      {% if item_down contains option_brand %}
-                        {% assign option_account_number = item | remove_first: 'Api' | remove_first: 'API' | remove_first: 'api' | remove_first: 'Sigma' | remove_first: 'SIGMA' | remove_first: 'sigma' | remove_first: 'Symbion' | remove_first: 'SYMBION' | remove_first: 'symbion' | remove_first: 'Ch2' | remove_first: 'CH2' | remove_first: 'ch2' | strip %}
-                        {% break %}
-                      {% endif %}
-                    {% endfor %}
-                  {% endif %}
-                {% endif %}
                 <option
                   class="custom{{ value_handle }}{% if hidden_value == value_handle %} is-active{% endif %}"
                   value="{{ value_handle }}"
-                  data-brand="{{ option_brand }}"
-                  data-account-number="{{ option_account_number }}"
+                  {% if option.name contains 'Wholesaler' %}data-brand="{{ value_handle }}"{% endif %}
+                  {% if hidden_value == value_handle %}selected{% endif %}
                 >
                   {{ value }}
                 </option>
@@ -791,20 +744,9 @@
             // Ensure hidden input's data-value-wholesale matches initial selected option
             hiddenInput.dataset.valueWholesale = select.value;
 
-            // Update hidden input's data-value-wholesale whenever dropdown changes,
-            // and — critically — also update the actual .API/.Sigma/.Symbion/.Ch2
-            // cart-property fields for this card, since those are what actually get
-            // submitted to /cart/add.js. Without this, switching the dropdown away
-            // from the server-rendered default wholesaler had no effect on checkout.
+            // Bookkeeping only — custom-style.js's shared `.custom_dropdown` handler now owns applying the live account number; this used to race it with a stale static one
             select.addEventListener('change', function() {
               hiddenInput.dataset.valueWholesale = this.value;
-              const card = select.closest('.custom-main-inner-wrap');
-              const chosenOption = select.options[select.selectedIndex];
-              const brand = chosenOption ? chosenOption.getAttribute('data-brand') : '';
-              const accountNumber = chosenOption ? chosenOption.getAttribute('data-account-number') : '';
-              if (card && brand && typeof applyWholesalerValue === 'function') {
-                applyWholesalerValue(card, brand, accountNumber);
-              }
             });
           });
           </script>

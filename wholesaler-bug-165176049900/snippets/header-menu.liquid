@@ -373,7 +373,22 @@
                   <ul class="wholeseller-wraper">
                     {% assign coverage_countries = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
                     {% assign coverage_data = coverage_countries | join: ',' | downcase %}
-                   
+
+                    {% comment %} was referenced but never assigned, so nothing was ever checked before JS ran — now uses cart-reconciliation's API>Sigma>Symbion>CH2 priority {% endcomment %}
+                    {% assign firstwholeseller = false %}
+                    {% assign firstwholeseller2 = false %}
+                    {% assign firstwholeseller3 = false %}
+                    {% assign firstwholeseller4 = false %}
+                    {% if coverage_data contains 'api' %}
+                      {% assign firstwholeseller = true %}
+                    {% elsif coverage_data contains 'sigma' %}
+                      {% assign firstwholeseller2 = true %}
+                    {% elsif coverage_data contains 'symbion' %}
+                      {% assign firstwholeseller3 = true %}
+                    {% elsif coverage_data contains 'ch2' %}
+                      {% assign firstwholeseller4 = true %}
+                    {% endif %}
+
                     {% if coverage_data contains 'api' %}
                       <li>
                         <input
@@ -527,10 +542,17 @@
                         const checkedInput = document.querySelector('.wholwseller-input:checked');
                         const checkedMatchesBrand = checkedInput && checkedInput.closest('.wholwseller-item')?.dataset.value.includes(selected);
                         if (!checkedMatchesBrand) {
-                          const firstMatch = document.querySelector('.wholwseller-item.active .wholwseller-input');
-                          if (firstMatch) {
-                            firstMatch.checked = true;
-                            firstMatch.dispatchEvent(new Event('change', { bubbles: true }));
+                          // prefer this brand's own remembered number over just the first one, so switching brands and back doesn't lose a previous pick
+                          const rememberedNumber = (typeof getLiveWholesalerNumberForBrand === 'function') ? getLiveWholesalerNumberForBrand(selected) : '';
+                          // scoped to .wholwseller-item.active only (this brand's own visible numbers), so a number that happens to match a different brand's number can't be picked instead
+                          const activeCandidates = document.querySelectorAll('.wholwseller-item.active .wholwseller-input');
+                          let target = (rememberedNumber && typeof findWholesellerInputByNumber === 'function')
+                            ? findWholesellerInputByNumber(rememberedNumber, activeCandidates)
+                            : null;
+                          target = target || document.querySelector('.wholwseller-item.active .wholwseller-input');
+                          if (target) {
+                            target.checked = true;
+                            target.dispatchEvent(new Event('change', { bubbles: true }));
                           }
                         }
                       }
@@ -820,19 +842,20 @@
         }
       }
 
+      // findWholesellerInputByNumber lives in assets/wholesaler-shared.js (loaded before this script) — single definition, used both here and in the remembered-number restore above
+
       // --- Determine active number and activate corresponding input (re-validated every load, not just once) ---
       const savedNumber = (getCookie(selectedCookieName) || '').trim() || null;
       const activeNumber = savedNumber || defaultNumber;
 
-      // an empty activeNumber matches nothing per the CSS spec ([attr*=""] never matches), so guard it explicitly
-      let input = activeNumber ? document.querySelector(`.wholwseller-input[itemnumber*="${activeNumber}"]`) : null;
+      let input = activeNumber ? findWholesellerInputByNumber(activeNumber) : null;
 
       if (!input) {
         // nothing resolvable from cookie/default (stale, cleared, or blank) — clear any stale cookie and fall back,
         // preferring another number under the same brand before jumping to a different brand entirely
         if (savedNumber) deleteCookie(selectedCookieName);
         const lastBrand = localStorage.getItem('selected_wholeseller');
-        input = (defaultNumber && document.querySelector(`.wholwseller-input[itemnumber*="${defaultNumber}"]`))
+        input = (defaultNumber && findWholesellerInputByNumber(defaultNumber))
           || (lastBrand && document.querySelector('.wholwseller-input.custom' + lastBrand))
           || document.querySelector('.wholwseller-input');
       }
@@ -852,7 +875,7 @@
         inp.addEventListener('change', function () {
           // activate visually
           activateInput(this);
-          moveCheckedToTop();
+          // no moveCheckedToTop() here — it moves the clicked <li> in the DOM, which drops :hover on a hover-opened menu and closes it mid-interaction; still runs on page load above, before the menu is open
 
           // store chosen number cookie
           const selectedNumber = (this.getAttribute('itemnumber') || '').trim();

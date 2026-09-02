@@ -394,6 +394,21 @@
             {% endif %}
           {% endfor %}
 
+          {% comment %} was referenced but never assigned, so nothing was ever selected — now uses the same API>Sigma>Symbion>CH2 priority as header-menu.liquid {% endcomment %}
+          {% assign firstwholeseller = false %}
+          {% assign firstwholeseller2 = false %}
+          {% assign firstwholeseller3 = false %}
+          {% assign firstwholeseller4 = false %}
+          {% if has_api %}
+            {% assign firstwholeseller = true %}
+          {% elsif has_sigma %}
+            {% assign firstwholeseller2 = true %}
+          {% elsif has_symbion %}
+            {% assign firstwholeseller3 = true %}
+          {% elsif has_ch2 %}
+            {% assign firstwholeseller4 = true %}
+          {% endif %}
+
           <select id="wholeseller-select" class="wholeseller-wraper">
             {% if has_api %}
               <option

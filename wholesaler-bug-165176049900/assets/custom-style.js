@@ -104,15 +104,12 @@ triggerClickByClass(ch2val);
 
 function handleRadioInputClick(parentDepth) {
   return function (event) {
-    var selectedval = event.target.value.toLowerCase();
+    var brand = resolveWholesalerBrand(event.target.value);
     var parent = event.target.closest('.radio-input');
     for (var i = 0; i < parentDepth && parent; i++) parent = parent.parentElement;
-    if (!parent) return;
+    if (!parent || !brand) return;
 
-    if (selectedval.includes('sigma')) applyWholesalerValue(parent, 'sigma', getLiveWholesalerNumberForBrand('sigma'));
-    else if (selectedval.includes('api')) applyWholesalerValue(parent, 'api', getLiveWholesalerNumberForBrand('api'));
-    else if (selectedval.includes('symbion')) applyWholesalerValue(parent, 'symbion', getLiveWholesalerNumberForBrand('symbion'));
-    else if (selectedval.includes('ch2')) applyWholesalerValue(parent, 'ch2', getLiveWholesalerNumberForBrand('ch2'));
+    applyWholesalerValue(parent, brand, getLiveWholesalerNumberForBrand(brand));
   };
 }
 
@@ -128,48 +125,21 @@ document.addEventListener('click', function (event) {
   if (!event.target.classList.contains('radio-input')) return;
   if (!event.target.checked) return;
 
-  var customval = event.target.value.toLowerCase();
+  var brand = resolveWholesalerBrand(event.target.value);
+  if (!brand) return;
 
   var parent = event.target.closest('#quick-view');
   if (!parent) return;
 
-  if (customval.includes('sigma')) applyWholesalerValue(parent, 'sigma', getLiveWholesalerNumberForBrand('sigma'));
-  else if (customval.includes('api')) applyWholesalerValue(parent, 'api', getLiveWholesalerNumberForBrand('api'));
-  else if (customval.includes('symbion')) applyWholesalerValue(parent, 'symbion', getLiveWholesalerNumberForBrand('symbion'));
-  else if (customval.includes('ch2')) applyWholesalerValue(parent, 'ch2', getLiveWholesalerNumberForBrand('ch2'));
+  applyWholesalerValue(parent, brand, getLiveWholesalerNumberForBrand(brand));
 });
 
 
 
 
+    // routes through the one shared handleWholesalerSelectionChange() (wholesaler-shared.js) instead of its own brand/scope logic
     $('.custom_dropdown').change(function () {
-
-      $(this)
-        .parent()
-        .find('.custom_dropdown option')
-        .each(function () {
-          if ($(this).is(':selected')) {
-            var customval = $(this).val();
-            // checked-radio lookup stays document-wide (one global header selector);
-            // only the hidden-field writes are scoped to this product's container.
-            var container = $(this).parent().parent().parent().parent()[0];
-            if (!container) return;
-
-            if (customval.includes('sigma')) {
-              const checkedRadio = document.querySelector('.wholwseller-input.customsigma:checked');
-              applyWholesalerValue(container, 'sigma', checkedRadio ? checkedRadio.value.replace('sigma', '') : '');
-            } else if (customval.includes('api')) {
-              const customApiRadio = document.querySelector('.wholwseller-input.customapi:checked');
-              applyWholesalerValue(container, 'api', customApiRadio ? customApiRadio.value.replace('api', '') : '');
-            } else if (customval.includes('symbion')) {
-              const customsymbionRadio = document.querySelector('.wholwseller-input.customsymbion:checked');
-              applyWholesalerValue(container, 'symbion', customsymbionRadio ? customsymbionRadio.value.replace('symbion', '') : '');
-            } else if (customval.includes('ch2')) {
-              const customch2Radio = document.querySelector('.wholwseller-input.customch2:checked');
-              applyWholesalerValue(container, 'ch2', customch2Radio ? customch2Radio.value.replace('ch2', '') : '');
-            }
-          }
-        });
+      if (typeof handleWholesalerSelectionChange === 'function') handleWholesalerSelectionChange(this);
     });
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -574,24 +544,25 @@ document.addEventListener("DOMContentLoaded", function() {
   let value = $(event.target).val();
   let values = $(this).attr('itemnumber');
 
-  // If no wholesale account number → clear fields and stop
-  if (!values || values.trim() === '') {
-    $('.API, .Sigma, .Symbion, .Ch2').val('');
-    return;
-  }
+  var brand = (typeof resolveWholesalerBrand === 'function') ? resolveWholesalerBrand(value) : '';
+  if (!brand) return;
 
-  // clear all four before setting the matching one, so stale values don't linger
-  $('.API, .Sigma, .Symbion, .Ch2').val('');
+  var number = (values || '').trim();
 
-  if (value.includes('api')) {
-    $('.API').val(values);
-  } else if (value.includes('symbion')) {
-    $('.Symbion').val(values);
-  } else if (value.includes('ch2')) {
-    $('.Ch2').val(values);
-  } else if (value.includes('sigma')) {
-    $('.Sigma').val(values);
-  }
+  // apply per card scope, not one blind page-wide clear+set — that wasn't atomic per card and could leave two brands populated
+  if (typeof applyWholesalerValue !== 'function') return;
+
+  var targetClass = { api: 'API', sigma: 'Sigma', symbion: 'Symbion', ch2: 'Ch2' }[brand];
+  var scopes = [];
+  document.querySelectorAll('.' + targetClass).forEach(function (field) {
+    var scope = field.closest('.custom-main-inner-wrap') || field.closest('form') || document;
+    if (scopes.indexOf(scope) === -1) scopes.push(scope);
+  });
+  // skip cards that don't actually offer this brand, so switching the active brand site-wide can't overwrite a card's only valid brand with one it never supported
+  scopes.forEach(function (scope) {
+    if (typeof cardSupportsWholesalerBrand === 'function' && !cardSupportsWholesalerBrand(scope, brand)) return;
+    applyWholesalerValue(scope, brand, number);
+  });
 });
 
   document.addEventListener("DOMContentLoaded", function() {
