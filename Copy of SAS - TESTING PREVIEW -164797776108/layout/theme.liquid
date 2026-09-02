@@ -50,7 +50,17 @@
 				&ndash; {{ shop.name }}
 			{%- endunless -%}
 		{%- endcapture -%}
-  
+  {% if request.page_type == 'index' and customer == nil %}
+  <style>
+    html {
+      visibility: hidden;
+    }
+  </style>
+
+  <script>
+    window.location.replace("{{ routes.account_login_url }}");
+  </script>
+{% endif %}
     {%- render 'head-theme-meta', layout: 'theme' -%}
 
     {%- render 'custom-variables.css' -%}
