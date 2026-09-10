@@ -19,16 +19,26 @@
 		{%- assign delivery_date_property_names = delivery_date_property_names_str | strip | split: ',' -%}
 		{%- for name in delivery_date_property_names -%} ... {%- endfor -%}
 
-	Casing matters here: every read site compares EXACTLY (Liquid
-	'property.first == property_name'), and the first entry is written verbatim
-	as the cart property key, so these must match the customer-facing key
-	character for character. Keep them comma-separated with no spaces around
-	the commas and no trailing newline.
+	Casing matters here. The strictest reader is account-order-row.liquid,
+	which compares exactly and case-sensitively ('property.first ==
+	property_name'); account-template.liquid is looser (downcase + contains).
+	The first entry is also written verbatim as the cart property key. So
+	these must match the customer-facing key character for character. Keep
+	them comma-separated, with no spaces around the commas and no trailing
+	newline.
 
 	Note the reader repos that match case-insensitively (pharmacor-cronjob-app,
 	pharmacor-hubspot-project, pharmacor-checkout-extension) keep their own
 	lists LOWERCASED; custom-subscription's list matches this file's casing.
 
 	RENAME-DELIVERY-DATE-HERE: add the new name to the FRONT of the list below
-	(new,old,older,...) — nothing else anywhere in the theme needs to change.
+	(new,old,older,...). That covers the JS write sites and both Liquid read
+	sites automatically — but NOT these three product-page cart-line inputs,
+	which hardcode the key deliberately and must be hand-edited to match the
+	new first entry:
+	  - snippets/product-form-content.liquid:516  name="properties[...]"
+	  - snippets/product-quantity.liquid:116,197  name="properties[...]"
+	Miss them and the product page keeps writing the old key while the JS
+	add-to-cart paths write the new one. Readers accept both names, so this
+	degrades quietly instead of failing loudly.
 {%- endcomment -%}Processed Date,Delivery Date
