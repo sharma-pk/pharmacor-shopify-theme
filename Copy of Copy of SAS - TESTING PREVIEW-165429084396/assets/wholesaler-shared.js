@@ -8,11 +8,43 @@ var WHOLESALER_BRAND_CLASS = { api: 'API', sigma: 'Sigma', symbion: 'Symbion', c
 // single priority order used everywhere a default brand is picked (cart-reconciliation, header widget, card first-paint) — always lowercase; this is the internal brand key, distinct from WHOLESALER_BRAND_CLASS's casing
 var WHOLESALER_BRAND_PRIORITY = ['api', 'sigma', 'symbion', 'ch2'];
 
-// DELIVERY_DATE_PROPERTY_KEY is a global set by an inline <script> in
-// layout/theme.liquid, BEFORE this file loads — derived from the single
-// source of truth in snippets/delivery-date-property-names.liquid. Not
-// redefined here; this file (and every other inline script below it) just
-// reads window.DELIVERY_DATE_PROPERTY_KEY.
+// The cart-line property key for the customer's chosen date. Normally set as
+// window.DELIVERY_DATE_PROPERTY_KEY by an inline <script> in layout/theme.liquid
+// that runs BEFORE this file loads, derived from the single source of truth in
+// snippets/delivery-date-property-names.liquid.
+//
+// Resolved defensively rather than read bare. MERGE_COMPARISON_PROPERTY_KEYS
+// below reads this at top level, so a bare DELIVERY_DATE_PROPERTY_KEY would
+// throw a ReferenceError while this file is still parsing if that inline block
+// ever moves, or if this <script> gains defer/async — taking every function in
+// this file down with it (wholesaler selection, cart reconciliation, line-uid
+// computation), not just the date handling.
+//
+// RENAME-DELIVERY-DATE-HERE: only the last-resort literal below. It is a
+// safety net, not a second source of truth — because the snippet keeps old
+// names in its list, every reader still accepts a stale fallback value, so a
+// missed update here degrades to "writes the previous key" rather than
+// "writes a key nothing recognizes".
+var DELIVERY_DATE_KEY = (function () {
+  if (typeof window === 'undefined') return 'Processed Date';
+  if (window.DELIVERY_DATE_PROPERTY_KEY) return window.DELIVERY_DATE_PROPERTY_KEY;
+  if (window.DELIVERY_DATE_PROPERTY_NAMES && window.DELIVERY_DATE_PROPERTY_NAMES[0]) {
+    return window.DELIVERY_DATE_PROPERTY_NAMES[0];
+  }
+  if (window.console && window.console.warn) {
+    window.console.warn(
+      '[wholesaler-shared] window.DELIVERY_DATE_PROPERTY_KEY is missing — the inline <script> in layout/theme.liquid did not run before this file. Falling back to "Processed Date".'
+    );
+  }
+  return 'Processed Date';
+})();
+
+// Republish the resolved key so the inline scripts that load after this file
+// (layout/theme.liquid, sections/product-template.liquid, sections/header.liquid)
+// also read a defined global instead of throwing.
+if (typeof window !== 'undefined' && !window.DELIVERY_DATE_PROPERTY_KEY) {
+  window.DELIVERY_DATE_PROPERTY_KEY = DELIVERY_DATE_KEY;
+}
 
 // derives a brand key from free text (a value, label, or option text) by case-insensitive substring match against WHOLESALER_BRAND_PRIORITY, in priority order — the one place raw/mixed-case text gets normalized into the lowercase brand key; everything downstream only ever deals with that normalized key, never raw text again
 function resolveWholesalerBrand(text) {
@@ -229,7 +261,7 @@ var MERGE_COMPARISON_PROPERTY_KEYS = [
   'Wholesaler Account No.2',
   'Wholesaler Account No.3',
   'Wholesaler Account No.4',
-  DELIVERY_DATE_PROPERTY_KEY,
+  DELIVERY_DATE_KEY,
   'subscription',
   'Shipping Option',
   '_line_uid'
@@ -333,7 +365,7 @@ function buildWholesalerCartProperties(parentForm, variantId, extraProperties) {
     'Wholesaler Account No.4': wholesaler4,
     'Saving Per Item': savingPerItem
   };
-  base[DELIVERY_DATE_PROPERTY_KEY] = _wholesalerFieldValue(parentForm, '#delivery_date');
+  base[DELIVERY_DATE_KEY] = _wholesalerFieldValue(parentForm, '#delivery_date');
   for (var key in (extraProperties || {})) { base[key] = extraProperties[key]; }
 
   var properties = normalizeLineProperties(base);
