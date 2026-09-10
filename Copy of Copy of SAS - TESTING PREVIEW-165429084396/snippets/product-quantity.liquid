@@ -5,6 +5,11 @@
     show_label: Boolean (Default: false) set true for show label quantity widget
   ------------------------------------------------------------------------------
 {% endcomment %}
+{%- comment -%} Write key for the customer's chosen date — first entry of the single source of truth in snippets/delivery-date-property-names.liquid. Never hardcode it here. {%- endcomment -%}
+{%- capture delivery_date_property_names_str -%}
+	{%- render 'delivery-date-property-names' -%}
+{%- endcapture -%}
+{%- assign delivery_date_property_key = delivery_date_property_names_str | strip | split: ',' | first -%}
 <style>
   .collection__item .product-quantity__container.text{width: fit-content;margin-bottom: 20px;}
 </style>
@@ -113,7 +118,7 @@
     <input
       type="date"
       id="delivery_date"
-      name="properties[Processed Date]"
+      name="properties[{{ delivery_date_property_key }}]"
       min="{{ 'now' | date: '%Y-%m-%d' }}"
     >
   </div>
@@ -194,7 +199,7 @@
           <input
             type="date"
             id="delivery_date"
-            name="properties[Processed Date]"
+            name="properties[{{ delivery_date_property_key }}]"
             min="{{ 'now' | date: '%Y-%m-%d' }}"
           >
         </div>

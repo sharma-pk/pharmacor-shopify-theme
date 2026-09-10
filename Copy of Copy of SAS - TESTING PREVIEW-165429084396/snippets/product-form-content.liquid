@@ -1,3 +1,8 @@
+{%- comment -%} Write key for the customer's chosen date — first entry of the single source of truth in snippets/delivery-date-property-names.liquid. Never hardcode it here. {%- endcomment -%}
+{%- capture delivery_date_property_names_str -%}
+	{%- render 'delivery-date-property-names' -%}
+{%- endcapture -%}
+{%- assign delivery_date_property_key = delivery_date_property_names_str | strip | split: ',' | first -%}
 {% if template.name == 'product' %}
   <style>
 #inventoryLocationInformation {
@@ -513,7 +518,7 @@ padding: 16px !important;
         <input
           type="date"
           id="delivery_date"
-          name="properties[Processed Date]"
+          name="properties[{{ delivery_date_property_key }}]"
           min="{{ 'now' | date: '%Y-%m-%d' }}"
         >
       </div>

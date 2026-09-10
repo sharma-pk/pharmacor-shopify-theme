@@ -32,13 +32,9 @@
 	lists LOWERCASED; custom-subscription's list matches this file's casing.
 
 	RENAME-DELIVERY-DATE-HERE: add the new name to the FRONT of the list below
-	(new,old,older,...). That covers the JS write sites and both Liquid read
-	sites automatically — but NOT these three product-page cart-line inputs,
-	which hardcode the key deliberately and must be hand-edited to match the
-	new first entry:
-	  - snippets/product-form-content.liquid:516  name="properties[...]"
-	  - snippets/product-quantity.liquid:116,197  name="properties[...]"
-	Miss them and the product page keeps writing the old key while the JS
-	add-to-cart paths write the new one. Readers accept both names, so this
-	degrades quietly instead of failing loudly.
+	(new,old,older,...) — nothing else anywhere in the theme needs to change.
+	Every write site derives its key from this list: the three product-page
+	cart-line inputs via {{ delivery_date_property_key }}, and the JS
+	add-to-cart paths via window.DELIVERY_DATE_PROPERTY_KEY. Both Liquid read
+	sites loop over the full list.
 {%- endcomment -%}Processed Date,Delivery Date
