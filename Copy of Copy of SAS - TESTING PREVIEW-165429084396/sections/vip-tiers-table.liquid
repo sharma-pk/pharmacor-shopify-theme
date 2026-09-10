@@ -1,0 +1,448 @@
+
+<style>
+  .wrapper-{{ section.id }} {
+  width: 100%;margin-top: 80px;
+  margin-bottom: 100px;margin-left: 12px; margin-right: 12px;
+}
+  .wrapper-{{ section.id }} h2{font-size: 40px;
+  line-height: 1.3;
+  color: #30623D;
+  margin: 0 0 20px;
+  font-weight: 700;
+  text-align: center;}
+
+.cusotm-price-mode{font-size: 18px; font-weight: bold;}
+.wrapper-{{ section.id }} p{font-size: 14px;line-height: 16px;}
+.main-container-{{ section.id }} {
+  max-width: 1500px;
+  margin: 0 auto;
+  background: #f5faf7;
+  border-radius: 12px;
+  padding: 30px;
+  
+}
+
+.grid-header-{{ section.id }} {
+  display: grid;
+  grid-template-columns: 2% 13% 8% 11% 14% 11% 18% 13%;
+  gap: 10px;
+  padding: 0 20px 15px 20px;
+  text-align: center;
+}
+.grid-top-content{margin-bottom: 20px;}
+.grid-bottom-content{margin-top: 20px;}
+.column-title-{{ section.id }} {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.membership-row-{{ section.id }} {
+  border-radius: 12px;
+  padding: 25px 20px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 2% 13% 8% 11% 14% 11% 18% 13%;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+}
+
+.level-one {
+  background: #e6f5e2;
+}
+
+.level-two {
+  background: #cceeb6;
+}
+
+.level-three {
+  background: #b2e78a;
+}
+
+.rank-num-{{ section.id }} {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2d5a2d;
+}
+
+.plan-title-{{ section.id }} {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2d5a2d;
+}
+
+.data-field-{{ section.id }} {
+  font-size: 16px;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.empty-field-{{ section.id }} {
+  font-size: 16px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.info-text-{{ section.id }} {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
+.price-label-{{ section.id }} {
+  font-size: 18px;
+  font-weight: 600;
+  color: #7d7777;
+  margin-bottom: 3px;
+}
+
+.price-info-{{ section.id }} {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.3;
+}
+
+.bonus-text-{{ section.id }} {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
+@media (max-width: 1400px) {
+  .main-container-{{ section.id }} {
+    padding: 20px;
+  }
+ 
+  .membership-row-{{ section.id }} {
+    padding: 20px 15px;
+  }
+  .membership-row-{{ section.id }} > div {
+    flex-shrink: 0;
+  }
+}
+@media (max-width: 1024px) {
+  .grid-header-{{ section.id }},
+  .membership-row-{{ section.id }} {
+    overflow-x: scroll;
+    padding: 0px;
+    padding-bottom: 5px;
+    grid-template-columns: 50px 150px 110px 150px 130px 150px 170px 120px;
+  }
+  .level-one{padding-top: 16px; padding-bottom: 16px;}
+  .level-two{padding-top: 16px; padding-bottom: 16px;}
+  .level-three{padding-top: 16px; padding-bottom: 16px;}
+}
+@media (max-width: 1024px) {
+.wrapper-{{ section.id }} {margin-top: 20px; margin-bottom: 50px;}
+}
+</style>
+
+
+
+<div class="wrapper-{{ section.id }}">
+  <h2>{{ section.settings.table_title }}</h2>
+  <div class="main-container-{{ section.id }}">
+    <div class="grid-header-{{ section.id }} grid-top-content">
+      <div class="column-title-{{ section.id }}" style="color: #2d5a2d; font-weight: bold;">Tier</div>
+      <div class="column-title-{{ section.id }}" style="color: #2d5a2d; font-weight: bold;">PharMate Club</div>
+      <div class="column-title-{{ section.id }}">Points per<br>dollar spend</div>
+      <div class="column-title-{{ section.id }}">Joining/Upgrading<br>Points</div>
+      <div class="column-title-{{ section.id }}">Price</div>
+      <div class="column-title-{{ section.id }}">Stock</div>
+      <div class="column-title-{{ section.id }}">Merchandise</div>
+      <div class="column-title-{{ section.id }}">Exclusive</div>
+    </div>
+
+    {% for block in section.blocks %}
+      {% if block.type == "tier" %}
+      <div class="membership-row-{{ section.id }} {{ block.settings.level }}">
+        <div class="rank-num-{{ section.id }}">{{ block.settings.rank }}</div>
+        <div class="plan-title-{{ section.id }}">{{ block.settings.plan_title }}</div>
+        <div class="data-field-{{ section.id }}">{{ block.settings.points_per_dollar }}</div>
+        <div class="data-field-{{ section.id }}">{{ block.settings.joining_points }}</div>
+        <div class="info-text-{{ section.id }}">{{ block.settings.price }}</div>
+        <div class="info-text-{{ section.id }}">{{ block.settings.stock }}</div>
+        <div class="info-text-{{ section.id }}">{{ block.settings.merchandise }}</div>
+        <div class="bonus-text-{{ section.id }}">{{ block.settings.exclusive }}</div>
+      </div>
+    {% elsif block.type == "tier-2nd" %}
+          <div class="membership-row-{{ section.id }} {{ block.settings.level }}">
+        <div class="rank-num-{{ section.id }}">{{ block.settings.rank }}</div>
+        <div class="plan-title-{{ section.id }}">{{ block.settings.plan_title }}</div>
+        <div class="data-field-{{ section.id }}">{{ block.settings.points_per_dollar }}</div>
+        <div class="data-field-{{ section.id }}">{{ block.settings.joining_points }}</div>
+        <div class="info-text-{{ section.id }}">{{ block.settings.price }}</div>
+        <div class="info-text-{{ section.id }}">{{ block.settings.stock }}<span class="cusotm-price-mode">{{ block.settings.price-text }}</span></div>
+        <div class="info-text-{{ section.id }}"><span class="cusotm-price-mode">{{ block.settings.price-text-m }}</span>{{ block.settings.merchandise }}</div>
+        <div class="bonus-text-{{ section.id }}">{{ block.settings.exclusive }}</div>
+      </div>
+      
+    {% elsif block.type == "tier-3rd" %}
+          <div class="membership-row-{{ section.id }} {{ block.settings.level }}">
+        <div class="rank-num-{{ section.id }}">{{ block.settings.rank }}</div>
+        <div class="plan-title-{{ section.id }}">{{ block.settings.plan_title }}</div>
+        <div class="data-field-{{ section.id }}">{{ block.settings.points_per_dollar }}</div>
+        <div class="data-field-{{ section.id }}">{{ block.settings.joining_points }}</div>
+        <div class="info-text-{{ section.id }}">{{ block.settings.price }}</div>
+        <div class="info-text-{{ section.id }}">{{ block.settings.stock }}<span class="cusotm-price-mode">{{ block.settings.price-text }}</span></div>
+        <div class="info-text-{{ section.id }}"><span class="cusotm-price-mode">{{ block.settings.price-text-m }}</span>{{ block.settings.merchandise }}</div>
+        <div class="bonus-text-{{ section.id }}">{{ block.settings.exclusive }}</div>
+      </div>
+    {% endif %}
+    {% endfor %}
+        <div class="grid-header-{{ section.id }} grid-bottom-content">
+      <div class="column-title-{{ section.id }}" style="color: #f5faf7; opacity: 0;">Tier</div>
+      <div class="column-title-{{ section.id }}" style="color: #f5faf7; opacity: 0;">PharMate Club</div>
+      <div class="column-title-{{ section.id }}">Fill Points</div>
+      <div class="column-title-{{ section.id }}">Value to be decided</div>
+      <div class="column-title-{{ section.id }}">Value to be decided</div>
+      <div class="column-title-{{ section.id }}" style="color: #f5faf7; opacity: 0;">Stock</div>
+      <div class="column-title-{{ section.id }}" style="color: #f5faf7; opacity: 0;">Merchandise</div>
+      <div class="column-title-{{ section.id }}" style="color: #f5faf7; opacity: 0;">Exclusive</div>
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "VIP Tiers Table",
+  "settings": [
+    {
+      "type": "text",
+      "id": "table_title",
+      "label": "Table Title",
+      "default": "VIP Tiers"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tier",
+      "name": "Tier Row",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "rank",
+          "label": "Rank Number",
+          "default": "1"
+        },
+        {
+          "type": "text",
+          "id": "plan_title",
+          "label": "Plan Title",
+          "default": "Mate"
+        },
+        {
+          "type": "text",
+          "id": "points_per_dollar",
+          "label": "Points per Dollar",
+          "default": "1"
+        },
+        {
+          "type": "text",
+          "id": "joining_points",
+          "label": "Joining / Upgrading Points",
+          "default": "500"
+        },
+        {
+          "type": "richtext",
+          "id": "price",
+          "label": "Price Info",
+          "default": "<p>–</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "stock",
+          "label": "Stock Info",
+          "default": "<p>–</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "merchandise",
+          "label": "Merchandise Info",
+          "default": "<p>–</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "exclusive",
+          "label": "Exclusive Info",
+          "default": "<p>–</p>"
+        },
+        {
+          "type": "select",
+          "id": "level",
+          "label": "Tier Background",
+          "default": "level-one",
+          "options": [
+            { "value": "level-one", "label": "Level One (Light Green)" },
+            { "value": "level-two", "label": "Level Two (Medium Green)" },
+            { "value": "level-three", "label": "Level Three (Dark Green)" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tier-2nd",
+      "name": "2nd Tier",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "rank",
+          "label": "Rank Number",
+          "default": "1"
+        },
+        {
+          "type": "text",
+          "id": "plan_title",
+          "label": "Plan Title",
+          "default": "Mate"
+        },
+        {
+          "type": "text",
+          "id": "points_per_dollar",
+          "label": "Points per Dollar",
+          "default": "1"
+        },
+        {
+          "type": "text",
+          "id": "joining_points",
+          "label": "Joining / Upgrading Points",
+          "default": "500"
+        },
+        {
+          "type": "richtext",
+          "id": "price",
+          "label": "Price Info",
+          "default": "<p>–</p>"
+        },
+        
+        {
+          "type": "richtext",
+          "id": "stock",
+          "label": "Stock Info",
+          "default": "<p>–</p>"
+        },
+        {
+          "type": "text",
+          "id": "price-text",
+          "label": "Stock Price"
+        },
+        {
+          "type": "richtext",
+          "id": "merchandise",
+          "label": "Merchandise Info",
+          "default": "<p>–</p>"
+        },
+        {
+          "type": "text",
+          "id": "price-text-m",
+          "label": "Merchandise Price"
+        },
+        {
+          "type": "richtext",
+          "id": "exclusive",
+          "label": "Exclusive Info",
+          "default": "<p>–</p>"
+        },
+        {
+          "type": "select",
+          "id": "level",
+          "label": "Tier Background",
+          "default": "level-one",
+          "options": [
+            { "value": "level-one", "label": "Level One (Light Green)" },
+            { "value": "level-two", "label": "Level Two (Medium Green)" },
+            { "value": "level-three", "label": "Level Three (Dark Green)" }
+          ]
+        }
+      ]
+    },
+     {
+      "type": "tier-3rd",
+      "name": "3rd Tier",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "rank",
+          "label": "Rank Number",
+          "default": "1"
+        },
+        {
+          "type": "text",
+          "id": "plan_title",
+          "label": "Plan Title",
+          "default": "Mate"
+        },
+        {
+          "type": "text",
+          "id": "points_per_dollar",
+          "label": "Points per Dollar",
+          "default": "1"
+        },
+        {
+          "type": "text",
+          "id": "joining_points",
+          "label": "Joining / Upgrading Points",
+          "default": "500"
+        },
+        {
+          "type": "richtext",
+          "id": "price",
+          "label": "Price Info",
+          "default": "<p>–</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "stock",
+          "label": "Stock Info",
+          "default": "<p>–</p>"
+        },
+         {
+          "type": "text",
+          "id": "price-text",
+          "label": "Stock Price"
+        },
+        {
+          "type": "richtext",
+          "id": "merchandise",
+          "label": "Merchandise Info",
+          "default": "<p>–</p>"
+        },
+        {
+          "type": "text",
+          "id": "price-text-m",
+          "label": "Merchandise Price"
+        },
+        {
+          "type": "richtext",
+          "id": "exclusive",
+          "label": "Exclusive Info",
+          "default": "<p>–</p>"
+        },
+        {
+          "type": "select",
+          "id": "level",
+          "label": "Tier Background",
+          "default": "level-one",
+          "options": [
+            { "value": "level-one", "label": "Level One (Light Green)" },
+            { "value": "level-two", "label": "Level Two (Medium Green)" },
+            { "value": "level-three", "label": "Level Three (Dark Green)" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "VIP Tiers Table",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

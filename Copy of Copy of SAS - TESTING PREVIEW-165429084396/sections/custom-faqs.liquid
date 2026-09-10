@@ -1,0 +1,168 @@
+<style>
+  .custom-main-wrapper-faqs{padding-left: 12px; padding-right: 12px;}
+  .faq-my-smile-wrapper-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: 70px 40px;
+    border-radius: 8px;
+    max-width: 1200px;
+    margin: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    margin-top: 30px;
+  }
+
+  .faq-my-smile-wrapper-{{ section.id }} h2 {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 20px;
+    color: #30623d;
+    font-weight: bold;
+  }
+
+  .faq-my-smile-box-{{ section.id }} {
+    border-top: 1px solid #30623d;
+    cursor: pointer;
+    padding: 20px;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .faq-my-smile-box-{{ section.id }}:last-child {
+    border-bottom: 1px solid #30623d;
+  }
+
+  .faq-my-smile-box-{{ section.id }}:hover {
+    {% comment %} background: #e8f3ef; {% endcomment %}
+  }
+
+  .faq-my-smile-question-{{ section.id }} {
+    color: #444;
+    font-size: 20px;
+    position: relative;
+    padding-right: 20px;
+  }
+
+  .faq-my-smile-icon-{{ section.id }} {
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease;
+    font-size: 18px;
+    color: #2e5c3f;
+  }
+
+  .faq-my-smile-answer-{{ section.id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    color: #555;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .faq-my-smile-box-{{ section.id }}.active .faq-my-smile-icon-{{ section.id }} {
+    transform: translateY(-50%) rotate(90deg);
+  }
+  .faq-my-smile-answer-{{ section.id }} p{padding-top: 15px;}
+
+
+  @media only screen and (max-width: 767px){
+   .faq-my-smile-wrapper-{{ section.id }} {padding: 30px 12px; margin: 0px;}
+   .faq-my-smile-box-{{ section.id }} {padding: 20px 0px;}
+  }
+</style>
+<div class="custom-main-wrapper-faqs" id="custom-main-wrapper-faqs">
+  <div class="faq-my-smile-wrapper-{{ section.id }}">
+    <h2>{{ section.settings.heading }}</h2>
+
+    {% for block in section.blocks %}
+      <div class="faq-my-smile-box-{{ section.id }}">
+        <div class="faq-my-smile-question-{{ section.id }}">
+          {{ block.settings.question }}
+          <div class="faq-my-smile-icon-{{ section.id }}">
+              <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1.71704 7.8103H15.0541" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8.38556 1.1416L15.0541 7.81013L8.38556 14.4786" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+          </div>
+        </div>
+        <div class="faq-my-smile-answer-{{ section.id }}">
+          <p>{{ block.settings.answer | newline_to_br }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const faqBoxes = document.querySelectorAll(".faq-my-smile-box-{{ section.id }}");
+
+    faqBoxes.forEach(box => {
+      const answer = box.querySelector(".faq-my-smile-answer-{{ section.id }}");
+
+      box.addEventListener("click", () => {
+        faqBoxes.forEach(otherBox => {
+          if (otherBox !== box) {
+            otherBox.classList.remove("active");
+            otherBox.querySelector(".faq-my-smile-answer-{{ section.id }}").style.maxHeight = null;
+          }
+        });
+
+        box.classList.toggle("active");
+        if (box.classList.contains("active")) {
+          answer.style.maxHeight = answer.scrollHeight + "px";
+        } else {
+          answer.style.maxHeight = null;
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Custom FAQ Accordion",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FAQS"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f3f8f8"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit, Sed Do Eiusm"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom FAQ Accordion",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

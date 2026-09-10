@@ -1,0 +1,154 @@
+  <style>
+    .custom-collection-list{margin-top: {{section.settings.margin-top}}px;margin-bottom: {{section.settings.margin-bottom}}px;}
+    .main-block-container{{section.id}}{width: 100%;}
+    .inner-block-container{{section.id}}{max-width: 1400px; display: flex;gap: 20px;margin: 0 auto;padding: 30px;justify-content: center;align-items: initial;}
+    .item-flex{{section.id}} {display: grid;grid-template-columns: repeat(2,1fr);gap: 20px;padding: 10px;}
+    .main-box{{section.id}} { width: 100%;border: 2px solid #5aa870;border-radius: 10px;padding: 30px 14px;background-color: #ffffff;text-align: center;}
+    .main-box{{section.id}} .title{{section.id}} {display: inline-block;margin: 40px;margin-top: 40px;margin-top: 20px;}
+    .main-box{{section.id}} .title{{section.id}} a{padding: 15px 85px;font-size: 25px;background-color: {{block.settings.button_background_color}};color: {{block.settings.button_text_color}};border-radius: 40px;text-decoration: none;}
+    .main-box{{section.id}} .item{{section.id}} {cursor: pointer;transition: .4s;background-color:{{ block.settings.item_background_color }};border-radius: 30px;padding: 20px;}
+    .main-box{{section.id}} .item{{section.id}} a{border-radius: 30px;padding: 16px 10px;color: {{ block.settings.item_text_color }};text-decoration: none;}
+    
+   {% for block in section.blocks %}
+     .my-sub{background-color: {{ block.settings.sub_background_color }};}
+       .my-sub a{color: {{ block.settings.sub_text_color }};}
+      .main-box{{section.id}} .item{{section.id}}:hover{background-color: {{ block.settings.button_background_color }};cursor: pointer;transition: .4s;}
+      .main-box{{section.id}} .item{{section.id}}:hover a{color: {{ block.settings.button_text_color }};}
+    {% endfor %}
+ @media only screen and (max-width: 991px) {
+   .inner-block-container{{section.id}}{display: inherit;padding: 10px;}
+   .main-box{{section.id}} {padding: 24px 10px;margin: 0 auto;margin-bottom: 0px;margin-bottom: 30px;}
+     .custom-collection-list{margin-top: 20px; margi-bottom: 20px;}
+   .main-box{{section.id}} .title{{section.id}} a{padding: 15px 50px;}
+ }
+     @media only screen and (max-width: 520px) {
+      .item-flex{{section.id}} {display: grid;grid-template-columns: repeat(1,1fr);
+                               }
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="custom-collection-list">
+<h1 style="text-align: center; color: {{ section.settings.title-color }}; margin: 12px 0px;">{{ section.settings.title }}</h1>
+  <div class="main-block-container{{section.id}}">
+    <div class="inner-block-container{{section.id}}">
+       {% for block in section.blocks %}
+
+<div class="main-box{{section.id}}" style="border-color: {{ block.settings.button_background_color }};">
+  {% if block.settings.title != blank %}
+  <div class="title{{section.id}}">
+    <a href="{{ block.settings.title_url }}" style="background-color: {{ block.settings.button_background_color }}; color: {{ block.settings.button_text_color }};">
+      {{ block.settings.title }}
+    </a>
+  </div>
+  {% endif %}
+    <div class="item-flex{{section.id}}">
+{% if block.settings.collection %}
+    {% assign collections = block.settings.collection %}
+    {% for collection in collections %}
+    <div class="item{{section.id}} my-sub">
+      <a href="{{ collection.url }}">
+        {{ collection.title }}
+      </a>
+    </div>
+    {% endfor %}
+  {% else %}
+  {% endif %}
+</div>
+</div>
+         {% endfor %}
+    </div>
+  </div>
+</div>
+   
+{% schema %}
+{
+  "name": "Custom Collection List",
+  "settings": [
+     {
+          "type": "text",
+           "id": "title",
+          "label": "Main Title"
+        },
+     {
+          "type": "color",
+           "id": "title-color",
+          "label": "Main Title Color"
+        },
+    {
+			"type": "range",
+			"id": "margin-top",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"default": 0,
+			"unit": "px",
+			"label": "Margin Top"
+		},
+    {
+			"type": "range",
+			"id": "margin-bottom",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"default": 0,
+			"unit": "px",
+			"label": "Margin Bottom"
+		}
+  ],
+  "blocks": [
+    {
+      "type": "block",
+      "name": "Shop Box",
+      "settings": [
+        {
+      "type": "collection_list",
+      "id": "collection",
+      "label": "Select Collections"
+    },
+         {
+          "type": "text",
+           "id": "title",
+          "label": "Title Text"
+        },
+        {
+          "type": "url",
+          "id": "title_url",
+          "label": "Title URL"
+        },
+        {
+          "type": "color",
+          "id": "button_background_color",
+          "label": "Button Background Color",
+            "default": "#5aa870"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",          
+          "label": "Button Text Color",
+          "default": "#ffffff"
+        },
+       {
+         "type": "header",
+       "content": "Sub Collection Design"
+       },
+           {
+          "type": "color",
+          "id": "sub_background_color",
+          "label": "Background Color",
+            "default": "#5aa870"
+        },
+        {
+          "type": "color",
+          "id": "sub_text_color",          
+          "label": "Text Color",
+          "default": "#ffffff"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Collection List"
+    }
+  ]
+}
+{% endschema %}

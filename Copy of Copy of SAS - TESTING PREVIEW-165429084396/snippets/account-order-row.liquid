@@ -1,0 +1,438 @@
+{%- comment -%}
+	Renders one order row for the account order-history / future-delivery lists.
+	Params:
+		order                - required, an order from customer.orders
+		only_first_line_item - optional boolean, when true only the first line item is shown
+{%- endcomment -%}
+
+{%- capture delivery_date_property_names_str -%}
+	{%- render 'delivery-date-property-names' -%}
+{%- endcapture -%}
+{%- assign delivery_date_property_names = delivery_date_property_names_str | strip | split: ',' -%}
+
+{%- assign order_delivery_date = '' -%}
+{%- for property_name in delivery_date_property_names -%}
+	{%- if order_delivery_date == '' -%}
+		{%- for line_item in order.line_items -%}
+			{%- if order_delivery_date == '' -%}
+				{%- for property in line_item.properties -%}
+					{%- if property.first == property_name and property.last != blank -%}
+						{%- assign order_delivery_date = property.last -%}
+					{%- endif -%}
+				{%- endfor -%}
+			{%- endif -%}
+		{%- endfor -%}
+	{%- endif -%}
+{%- endfor -%}
+
+{%- assign order_date_value = order.attributes['Order Date'] -%}
+{%- assign order_note_attr_value = '' -%}
+{%- if order.note_attributes != blank -%}
+	{%- assign note_order_date_attr = order.note_attributes | where: 'name', 'Order Date' | first -%}
+	{%- if note_order_date_attr != blank -%}
+		{%- assign order_note_attr_value = note_order_date_attr.value -%}
+	{%- endif -%}
+	{%- for property_name in delivery_date_property_names -%}
+		{%- if order_note_attr_value == blank -%}
+			{%- assign note_date_attr = order.note_attributes | where: 'name', property_name | first -%}
+			{%- if note_date_attr != blank -%}
+				{%- assign order_note_attr_value = note_date_attr.value -%}
+			{%- endif -%}
+		{%- endif -%}
+	{%- endfor -%}
+{%- endif -%}
+
+{%- comment -%} Processed Date (or, for old orders, Delivery Date) takes priority over Order Date when both are present. {%- endcomment -%}
+{%- assign relevant_order_date = '' -%}
+
+{%- if order_delivery_date != blank -%}
+	{%- assign relevant_order_date = order_delivery_date -%}
+{%- elsif order_note_attr_value != blank -%}
+	{%- assign relevant_order_date = order_note_attr_value -%}
+{%- elsif order_date_value != blank -%}
+	{%- assign relevant_order_date = order_date_value -%}
+{%- endif -%}
+
+{%- assign today_date = 'now' | date: '%Y-%m-%d' -%}
+{%- assign is_future_order = false -%}
+
+{%- if relevant_order_date != blank and relevant_order_date > today_date -%}
+	{%- assign is_future_order = true -%}
+{%- endif -%}
+
+{%- assign row_line_items = order.line_items -%}
+
+{%- if only_first_line_item -%}
+	{%- assign row_line_items = order.line_items | slice: 0, 1 -%}
+{%- endif -%}
+
+<li class="account__accordion">
+	<div class="accordion__item account__content-wrapper js-accordion-item">
+		<button
+			class="accordion__control account__content js-accordion-control"
+			type="button"
+			aria-expanded="false"
+			aria-controls="{{- order.id -}}"
+			aria-label="{{ 'customer.orders.show_order' | t | escape }} {{- order.name -}}"
+		>
+			<span class="account__content-col account__content-col--number" aria-hidden="true">
+				<span class="account__content-col-heading account__content-col-heading--mobile">
+					{{- "customer.orders.order_number" | t -}}
+				</span>
+
+				{{- order.name -}}
+			</span>
+
+			<span class="account__content-col account__content-col--date" aria-hidden="true">
+				<span class="account__content-col-heading account__content-col-heading--mobile">
+					{{- "customer.orders.date" | t -}}
+				</span>
+
+				{{- order.created_at | date: '%d.%m.%Y' -}}
+			</span>
+
+			<span class="account__content-col account__content-col--status" aria-hidden="true">
+				<span class="account__content-col-heading account__content-col-heading--mobile">
+					{{- "customer.orders.payment_status" | t -}}
+				</span>
+
+				{% capture order_status %}
+					{% if order.financial_status_label == 'Paid' or order.financial_status_label == 'Payée' or order.financial_status_label == 'Bezahlt' or order.financial_status_label == 'Pagada' or order.financial_status_label == 'Pagato' %}
+						account__order-status--paid
+					{% elsif order.financial_status_label == 'Fulfilled' or order.financial_status_label == 'Confirmée' or order.financial_status_label == 'Erfüllt' or order.financial_status_label == 'Concluida' or order.financial_status_label == 'Evaso' %}
+						account__order-status--fulfilled
+					{% endif %}
+				{% endcapture %}
+
+				<span class="account__order-status {{ order_status | strip_newlines }}">
+					{{- order.financial_status_label -}}
+				</span>
+			</span>
+
+			<span class="account__content-col account__content-col--quantity" aria-hidden="true">
+				<span class="account__content-col-heading account__content-col-heading--mobile">
+					{{- "customer.orders.quantity" | t -}}
+				</span>
+
+				{{- order.item_count -}}
+			</span>
+
+			<span class="account__content-col account__content-col--total" aria-hidden="true">
+				<span class="account__content-col-heading account__content-col-heading--mobile">
+					{{- "customer.orders.total" | t -}}
+				</span>
+
+				{{- order.total_net_amount | money -}}
+			</span>
+
+			<span class="account__icon" aria-hidden="true">
+				{%- render "icons", icon: "arrow-down" -%}
+			</span>
+		</button>
+
+		<div
+			class="accordion__content accordion__content--animate js-accordion-content"
+			id="{{- order.id -}}"
+			style="height: 0"
+		>
+			<div class="account__accordion-content js-accordion-inner">
+				<div class="visually-hidden">
+					<p>
+						{{ "customer.orders.order_number" | t }}
+						{{ order.name | split: "#" }}
+					</p>
+
+					<p>
+						{{ "customer.orders.date" | t }}
+						{{ order.created_at | date: '%d.%m.%Y' }}
+					</p>
+
+					<p>
+						{{ "customer.orders.payment_status" | t }}
+						{{ order.financial_status_label }}
+					</p>
+
+					<p>
+						{{ "customer.orders.quantity" | t }}
+						{{ order.item_count }}
+					</p>
+
+					<p>
+						{{ "customer.orders.total" | t }}
+						{{ order.total_price | money }}
+					</p>
+				</div>
+
+				<div class="account__accordion-info account__accordion-info--mobile" aria-hidden="true">
+					<span class="account__content-col">
+						<p class="account__content-col-heading account__content-col-heading--mobile">
+							{{- "customer.orders.date" | t -}}
+						</p>
+
+						{{- order.created_at | date: '%d.%m.%Y' -}}
+					</span>
+
+					<span class="account__content-col">
+						<p class="account__content-col-heading account__content-col-heading--mobile">
+							{{- "customer.orders.quantity" | t -}}
+						</p>
+
+						{{- order.item_count -}}
+					</span>
+
+					<span class="account__content-col">
+						<p class="account__content-col-heading account__content-col-heading--mobile">
+							{{- "customer.orders.total" | t -}}
+						</p>
+
+						{{- order.total_price | money -}}
+					</span>
+				</div>
+
+				{%- for line_item in row_line_items -%}
+					<div class="account__order-detail">
+						<div class="account__order-detail-col account__order-detail-col--image">
+							{%- if line_item.image != blank -%}
+								{%- assign item_image = line_item.image -%}
+							{%- else -%}
+								{%- assign item_image = settings.product_default_image -%}
+							{%- endif -%}
+
+							<picture>
+								<img
+									class="account__image"
+									src="{{- item_image | image_url: width: 80, height: 80 -}}"
+									srcset="{{ item_image | image_url: width: 80, height: 80 }} 1x, {{ item_image | image_url: width: 160, height: 160 }} 2x"
+									alt="{{- item_image.alt -}}"
+									width="80"
+									height="80"
+								/>
+							</picture>
+						</div>
+
+						<div class="account__order-detail-col account__order-detail-col--info">
+							<div class="account__order-detail-headings">
+								<p class="account__order-detail-headings-title">
+									{{- line_item.product.title -}}
+								</p>
+
+								{%- unless line_item.product.has_only_default_variant -%}
+									<p>{{- line_item.variant.title -}}</p>
+								{%- endunless -%}
+
+								{%- assign property_size = line_item.properties | size -%}
+
+								{%- unless line_item.selling_plan_allocation == nil and property_size == 0 -%}
+									<ul class="account__order-detail-properties">
+										{%- unless line_item.selling_plan_allocation == nil -%}
+											<li>
+												{{- line_item.selling_plan_allocation.selling_plan.name -}}
+											</li>
+										{%- endunless -%}
+
+										{%- if property_size != 0 -%}
+											{%- for property in line_item.properties -%}
+												{% assign property_first_char = property.first | slice: 0 %}
+
+												{%- if property.last != blank and property_first_char != '_' -%}
+													<li>
+														{{- property.first -}}:&nbsp;
+
+														{%- if property.last contains '/uploads/' -%}
+															<a href="{{ property.last }}">{{ property.last | split: '/' | last }}</a>
+														{%- else -%}
+															{{- property.last -}}
+														{%- endif -%}
+													</li>
+												{%- endif -%}
+											{%- endfor -%}
+										{%- endif -%}
+									</ul>
+								{%- endunless -%}
+
+								{%- if line_item.line_level_discount_allocations != blank -%}
+									<ul class="account__order-detail-properties nd2" role="list" aria-label="{{ 'customer.order.discount' | t | escape }}">
+										{%- for discount_allocation in line_item.line_level_discount_allocations -%}
+											<li>
+												{% render 'icons', icon: 'discount' %} {{- discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money -}})
+											</li>
+										{%- endfor -%}
+									</ul>
+								{%- endif -%}
+							</div>
+
+							<div class="account__order-detail-prices">
+								<div class="account__order-detail-col account__order-detail-col--prices">
+									<p class="account__order-detail-label">
+										{{- "customer.order.price" | t -}}
+									</p>
+
+									<div class="account__order-detail-value">
+										{%- if line_item.original_price != line_item.final_price or line_item.unit_price_measurement -%}
+											<dl>
+												{%- if line_item.original_price != line_item.final_price -%}
+													<dt>
+														<span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+													</dt>
+													<dd class="regular-price">
+														<s>{{ line_item.original_price | money }}</s>
+													</dd>
+													<dt>
+														<span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
+													</dt>
+													<dd>
+														<span class="account__order-price-new">{{ line_item.final_price | money }}</span>
+													</dd>
+												{%- else -%}
+													<dt>
+														<span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+													</dt>
+													<dd>
+														{{ line_item.original_price | money }}
+													</dd>
+												{%- endif -%}
+												{% if line_item.unit_price_measurement %}
+													<dt>
+														<span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+													</dt>
+													<dd>
+														<small>
+															{{ line_item.unit_price | money }}
+
+															<span aria-hidden="true">/</span>
+
+															{%- if line_item.unit_price_measurement.reference_value != 1 -%}
+																{{- line_item.unit_price_measurement.reference_value -}}
+															{%- endif -%}
+
+															{{ line_item.unit_price_measurement.reference_unit }}
+														</small>
+													</dd>
+												{% endif %}
+											</dl>
+										{%- else -%}
+											<span>{{ line_item.final_price | money }}</span>
+										{%- endif -%}
+									</div>
+								</div>
+
+								<div class="account__order-detail-col account__order-detail-col--prices">
+									<p class="account__order-detail-label">
+										{{- "customer.order.quantity" | t -}}
+									</p>
+
+									<p class="account__order-detail-value">
+										{{- line_item.quantity -}}
+									</p>
+								</div>
+
+								<div class="account__order-detail-col account__order-detail-col--prices">
+									<p class="account__order-detail-label">
+										{{- "customer.order.total" | t -}}
+									</p>
+
+									<div class="account__order-detail-value">
+										{%- if line_item.original_line_price != line_item.final_line_price -%}
+											<dl>
+												<dt>
+													<span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+												</dt>
+												<dd class="regular-price">
+													<s>{{ line_item.original_line_price | money }}</s>
+												</dd>
+												<dt>
+													<span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
+												</dt>
+												<dd>
+													<span class="account__order-price-new">{{ line_item.final_line_price | money }}</span>
+												</dd>
+											</dl>
+										{%- else -%}
+											{{ line_item.original_line_price | money }}
+										{%- endif -%}
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<form method="post" action="/cart/add" class="my-reorder" style="display: flex; position: absolute; z-index: -2; width: 100%; align-items: start;justify-content: end; position: absolute;">
+							<input type="hidden" name="id" class="myinputvalue" value="{{ line_item.variant_id }}">
+							<input min="1" style="position: absolute;  z-index: -12; visibility: hidden;" type="number" id="quantity" name="quantity" value="{{ line_item.quantity }}"/>
+							{%- unless line_item.selling_plan_allocation == nil and property_size == 0 -%}
+								{%- unless line_item.selling_plan_allocation == nil -%}
+									<input
+										type="hidden"
+										name="properties[Selling Plan]"
+										value="{{ line_item.selling_plan_allocation.selling_plan.name }}"
+										readonly
+									/>
+								{%- endunless -%}
+
+								{%- if property_size != 0 -%}
+									{%- for property in line_item.properties -%}
+										{% assign property_first_char = property.first | slice: 0 %}
+
+										{%- if property.last != blank and property_first_char != '_' -%}
+											<input
+												type="hidden"
+												name="properties[{{ property.first }}]"
+												value="{% if property.last contains '/uploads/' %}{{ property.last | split: '/' | last }}{% else %}{{ property.last }}{% endif %}"
+												readonly
+											/>
+										{%- endif -%}
+									{%- endfor -%}
+								{%- endif -%}
+							{%- endunless -%}
+							<button type="submit" class="button button--secondary button--secondary-border button--small account__order-view-button reorder-all-button myaddtocart{{ forloop.index }}">Reorder</button>
+						</form>
+
+						{%- assign property_size = line_item.properties | size -%}
+					</div>
+				{%- endfor -%}
+
+				<div class="account__accordion-footer">
+					{%- if order.shipping_address.summary != blank -%}
+						<div class="account__order-address">
+							<span class="account__order-address-heading">
+								{{- "customer.account.shipping_address" | t -}}
+							</span>
+
+							<span class="account__order-address-value">
+								{{- order.shipping_address.summary -}}
+							</span>
+						</div>
+					{%- endif -%}
+
+					<div class="account__order-subtotal">
+						<span class="account__order-subtotal-heading">
+							{{- "customer.account.subtotal" | t -}}
+						</span>
+
+						<span class="account__order-subtotal-value">
+							{{- order.total_net_amount | money -}}
+						</span>
+					</div>
+
+					<div class="account__order-view">
+						{%- if is_future_order -%}
+							<button
+								type="button"
+								class="button button--secondary button--secondary-border button--small account__order-view-button cancel-order-button"
+								data-order-id="{{ order.id }}"
+								data-order-name="{{ order.name }}"
+							>
+								Cancel Order
+							</button>
+						{%- endif -%}
+
+						<a href="{{ order.customer_url }}" class="button button--secondary button--secondary-border button--small account__order-view-button">
+							{{- "customer.order.view_order" | t -}}
+						</a>
+
+						<span style="cursor: pointer;" class="button button--secondary button--secondary-border button--small account__order-view-button reorder-all-button mydynamic-quick-add">Reorder</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</li>

@@ -1,0 +1,668 @@
+<div class="page-width section-{{ section.id }}-padding pharmacor-top">
+  <h1 class="title title--primary" style="margin-bottom: 30px;">{{ section.settings.heading }}</h1>
+
+  <div id="pharmacor-drafts-login" style="display: none; text-align: center; padding: 40px 0;">
+    <p style="font-size: 16px; margin-bottom: 16px;">Please log in to view your draft orders.</p>
+    <a href="/account/login" class="button">Log In</a>
+  </div>
+  <div id="pharmacor-drafts-loading" style="display: none; padding: 20px 0; color: #666;">Loading draft orders...</div>
+  <div id="pharmacor-drafts-empty" style="display: none; padding: 40px 0; text-align: center; color: #666;">
+    <p style="font-size: 16px;">No draft orders found.</p>
+    <a href="/collections/all" class="button" style="margin-top: 16px;">Continue Shopping</a>
+  </div>
+  <div
+    id="pharmacor-drafts-error"
+    style="display: none; padding: 14px; background: #ffebee; color: #c62828; border-radius: 8px; margin-bottom: 16px;"
+  ></div>
+  <div id="pharmacor-drafts-list"></div>
+  <div id="pharmacor-drafts-pagination" style="display: none; margin-top: 24px; text-align: center;">
+    <button id="pharmacor-drafts-load-more" class="button" type="button" style="min-width: 200px;">Load More</button>
+  </div>
+</div>
+
+<style>
+  .pharmacor-top h1.title.title--primary {
+    text-align: center;
+    width: 100%;
+  }
+  .page-width.pharmacor-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 50px 80px;
+    max-width: 1432px;
+    margin: 0 auto;
+    flex-direction: column;
+    width: 100%;
+  }
+  div#pharmacor-drafts-list {
+    width: 100%;
+  }
+  .pharmacor-draft-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    background: #fafafa;
+  }
+  .pharmacor-draft-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .pharmacor-draft-card__title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+  }
+  .pharmacor-draft-card__status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .pharmacor-draft-card__status--open {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  .pharmacor-draft-card__status--completed {
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+  .pharmacor-draft-card__status--invoice_sent {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  .pharmacor-draft-card__meta {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 14px;
+  }
+  .pharmacor-draft-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .pharmacor-draft-item:last-child {
+    border-bottom: none;
+  }
+  .pharmacor-draft-item__image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #eee;
+    flex-shrink: 0;
+  }
+  .pharmacor-draft-item__info {
+    flex: 1;
+    min-width: 0;
+  }
+  .pharmacor-draft-item__title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pharmacor-draft-item__variant {
+    font-size: 12px;
+    color: #888;
+  }
+  .pharmacor-draft-item__account {
+    display: block;
+    font-size: 12px;
+    color: #2c653c;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .pharmacor-draft-item__qty {
+    font-size: 13px;
+    color: #555;
+    white-space: nowrap;
+  }
+  .pharmacor-draft-item__price {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pharmacor-draft-item__discount {
+    font-size: 11px;
+    color: #2e7d32;
+  }
+  .pharmacor-draft-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #e0e0e0;
+  }
+  .pharmacor-draft-card__total {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .pharmacor-draft-card__actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .pharmacor-draft-btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+    text-decoration: none;
+    line-height: 1.2;
+    font-family: inherit;
+  }
+  .pharmacor-draft-btn-action:hover {
+    opacity: 0.85;
+  }
+  .pharmacor-draft-btn-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .pharmacor-draft-btn-checkout {
+    background: #2c653c;
+    color: #fff;
+  }
+  .pharmacor-draft-btn-add-items {
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+  }
+  .pharmacor-draft-btn-add-items:hover {
+    background: #f5f5f5;
+  }
+  .pharmacor-draft-btn-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: pharmacor-draft-spin 0.6s linear infinite;
+  }
+  @keyframes pharmacor-draft-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media screen and (max-width: 749px) {
+    .pharmacor-draft-card__header,
+    .pharmacor-draft-card__footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .pharmacor-draft-card__actions {
+      width: 100%;
+    }
+    .pharmacor-draft-btn-action {
+      flex: 1;
+      text-align: center;
+    }
+    .page-width.pharmacor-top {
+      padding: 50px 20px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    'use strict';
+
+    var RESET_DELAY = 1000;
+
+    var customerId = {% if customer %}{{ customer.id | json }}{% else %}null{% endif %};
+    if (!customerId) {
+      var urlParams = new URLSearchParams(window.location.search);
+      customerId = urlParams.get('customerId') || null;
+    }
+
+    var loginEl = document.getElementById('pharmacor-drafts-login');
+    if (!customerId) {
+      if (loginEl) loginEl.style.display = 'block';
+      return;
+    }
+
+    var pcConfig = window.PharmaCorConfig || {};
+    var APP_URL = pcConfig.APP_URL || 'https://offer.pharmacor.com.au';
+    var SHOP = pcConfig.SHOP || {% if shop %}{{ shop.permanent_domain | json }}{% else %}'my-test-store-custom-123.myshopify.com'{% endif %};
+
+    var listEl = document.getElementById('pharmacor-drafts-list');
+    var loadingEl = document.getElementById('pharmacor-drafts-loading');
+    var emptyEl = document.getElementById('pharmacor-drafts-empty');
+    var errorEl = document.getElementById('pharmacor-drafts-error');
+    var paginationEl = document.getElementById('pharmacor-drafts-pagination');
+    var loadMoreBtn = document.getElementById('pharmacor-drafts-load-more');
+
+    var nextCursor = null;
+    var draftsCache = {};
+
+    function formatDate(dateStr) {
+      try {
+        var d = new Date(dateStr);
+        return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      } catch(e) { return dateStr; }
+    }
+
+    function formatMoney(amount) {
+      var num = parseFloat(amount);
+      if (isNaN(num)) return amount;
+      return '$' + num.toFixed(2);
+    }
+
+    function statusLabel(status, order) {
+      if (status === 'COMPLETED' && order) return 'ORDER CREATED';
+      if (status === 'INVOICE_SENT') return 'INVOICE SENT';
+      return status;
+    }
+
+    function getMetafieldValue(draft, namespace, key) {
+      if (!draft.metafields) return null;
+      var mf = draft.metafields.find(function(m) {
+        return m.namespace === namespace && m.key === key;
+      });
+      return mf ? mf.value : null;
+    }
+
+    function renderDraftCard(draft) {
+      var isOpen = draft.status === 'OPEN';
+      var isInvoiceSent = draft.status === 'INVOICE_SENT';
+      var canUpdate = isOpen || isInvoiceSent;
+
+      var html = '<div class="pharmacor-draft-card" data-draft-id="' + draft.id + '">';
+      html += '<div class="pharmacor-draft-card__header">';
+      html += '<h3 class="pharmacor-draft-card__title">' + draft.name + '</h3>';
+      html += '<span class="pharmacor-draft-card__status pharmacor-draft-card__status--' + draft.status.toLowerCase() + '">'
+        + statusLabel(draft.status, draft.order) + '</span>';
+      html += '</div>';
+
+      html += '<div class="pharmacor-draft-card__meta">';
+      html += 'Created: ' + formatDate(draft.createdAt);
+      if (draft.updatedAt && draft.updatedAt !== draft.createdAt) {
+        html += ' &middot; Updated: ' + formatDate(draft.updatedAt);
+      }
+      html += '</div>';
+
+      html += '<div class="pharmacor-draft-card__items">';
+      (draft.lineItems || []).forEach(function(item) {
+        html += '<div class="pharmacor-draft-item">';
+        if (item.imageUrl) {
+          html += '<img class="pharmacor-draft-item__image" src="' + item.imageUrl + '&width=100" alt="' + (item.title || '') + '">';
+        } else {
+          html += '<div class="pharmacor-draft-item__image" style="display:flex;align-items:center;justify-content:center;font-size:20px;color:#ccc;">&#128722;</div>';
+        }
+        html += '<div class="pharmacor-draft-item__info">';
+        html += '<p class="pharmacor-draft-item__title">' + (item.productTitle || item.title) + '</p>';
+        if (item.variantTitle && item.variantTitle !== 'Default Title') {
+          html += '<span class="pharmacor-draft-item__variant">' + item.variantTitle + '</span>';
+        }
+        // Show only the wholesaler account matching this line item's brand
+        var itemVariantTitle = (item.variantTitle || '').toUpperCase();
+        var itemBrand = '';
+        ['API', 'SIGMA', 'SYMBION', 'CH2'].forEach(function(b) {
+          if (itemVariantTitle.indexOf(b) !== -1) itemBrand = b;
+        });
+        var itemBrandToIndex = { 'API': 1, 'SIGMA': 2, 'SYMBION': 3, 'CH2': 4 };
+        if (itemBrand && itemBrandToIndex[itemBrand]) {
+          var accIdx = itemBrandToIndex[itemBrand];
+          var accVal = getMetafieldValue(draft, 'custom', 'wholesaler_account_no_' + accIdx);
+          if (accVal) {
+            html += '<span class="pharmacor-draft-item__account">Wholesaler Account No.' + accIdx + ': ' + accVal + '</span>';
+          }
+        }
+        html += '</div>';
+        html += '<span class="pharmacor-draft-item__qty">x' + item.quantity + '</span>';
+        html += '<div style="text-align:right;">';
+        if (item.appliedDiscount) {
+          html += '<span class="pharmacor-draft-item__price">' + formatMoney(item.discountedUnitPrice) + '</span>';
+          html += '<div class="pharmacor-draft-item__discount">' + item.appliedDiscount.title + '</div>';
+        } else {
+          html += '<span class="pharmacor-draft-item__price">' + formatMoney(item.originalUnitPrice) + '</span>';
+        }
+        html += '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      html += '<div class="pharmacor-draft-card__footer">';
+      html += '<span class="pharmacor-draft-card__total">Total: ' + formatMoney(draft.totalPrice) + '</span>';
+      html += '<div class="pharmacor-draft-card__actions">';
+
+      if (canUpdate) {
+        html += '<button type="button" class="pharmacor-draft-btn-action pharmacor-draft-btn-add-items" data-draft-id="' + draft.id + '">'
+          + '<span>Update Items</span></button>';
+      }
+
+      if (isOpen || isInvoiceSent) {
+        html += '<button type="button" class="pharmacor-draft-btn-action pharmacor-draft-btn-checkout pharmacor-draft-btn-direct-checkout" data-draft-id="' + draft.id + '">'
+          + '<span>Checkout</span></button>';
+      }
+
+      if (draft.order && draft.order.statusPageUrl) {
+        html += '<a href="' + draft.order.statusPageUrl + '" class="pharmacor-draft-btn-action pharmacor-draft-btn-checkout" target="_blank">'
+          + 'View Order</a>';
+      }
+
+      html += '</div></div>';
+      html += '</div>';
+      return html;
+    }
+
+    function fetchDraftOrders(cursor) {
+      var url = APP_URL + '/api/proxy/draft-orders?customerId=' + customerId
+        + '&shop=' + encodeURIComponent(SHOP)
+        + '&tag=cart-draft-order&limit=10';
+      if (cursor) url += '&cursor=' + encodeURIComponent(cursor);
+      return fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+        if (!data.success) throw new Error(data.error || 'Failed to load draft orders');
+        return data;
+      });
+    }
+
+    function loadDrafts(cursor) {
+      if (!cursor) {
+        loadingEl.style.display = 'block';
+        emptyEl.style.display = 'none';
+        errorEl.style.display = 'none';
+      } else {
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.innerHTML = '<span class="pharmacor-draft-btn-spinner"></span> Loading...';
+      }
+
+      fetchDraftOrders(cursor).then(function(data) {
+        loadingEl.style.display = 'none';
+        if (!cursor && data.draftOrders.length === 0) {
+          emptyEl.style.display = 'block';
+          return;
+        }
+        var html = '';
+        data.draftOrders.forEach(function(draft) {
+          draftsCache[draft.id] = draft;
+          html += renderDraftCard(draft);
+        });
+        listEl.insertAdjacentHTML('beforeend', html);
+
+        if (data.pagination && data.pagination.hasNextPage) {
+          nextCursor = data.pagination.nextPageUrl
+            ? new URLSearchParams(data.pagination.nextPageUrl.split('?')[1]).get('cursor')
+            : null;
+          paginationEl.style.display = 'block';
+          loadMoreBtn.disabled = false;
+          loadMoreBtn.innerHTML = 'Load More';
+        } else {
+          paginationEl.style.display = 'none';
+        }
+        bindAddItemsButtons();
+      }).catch(function(e) {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+        errorEl.textContent = 'Error loading draft orders: ' + e.message;
+        console.error('[Pharmacor Drafts]', e);
+      });
+    }
+
+    function resetButtonAfterDelay(btn) {
+      setTimeout(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Update Items</span>';
+      }, RESET_DELAY);
+    }
+
+    function bindAddItemsButtons() {
+      var buttons = listEl.querySelectorAll('.pharmacor-draft-btn-add-items');
+      buttons.forEach(function(btn) {
+        if (btn._pharmacorBound) return;
+        btn._pharmacorBound = true;
+        btn.addEventListener('click', function() {
+          var draftId = btn.getAttribute('data-draft-id');
+          btn.disabled = true;
+          btn.innerHTML = '<span class="pharmacor-draft-btn-spinner"></span> Loading items...';
+          loadDraftItemsToCart(draftId, btn, false);
+        });
+      });
+
+      var checkoutButtons = listEl.querySelectorAll('.pharmacor-draft-btn-direct-checkout');
+      checkoutButtons.forEach(function(btn) {
+        if (btn._pharmacorBound) return;
+        btn._pharmacorBound = true;
+        btn.addEventListener('click', function() {
+          var draftId = btn.getAttribute('data-draft-id');
+          btn.disabled = true;
+          btn.innerHTML = '<span class="pharmacor-draft-btn-spinner"></span> Processing...';
+          loadDraftItemsToCart(draftId, btn, true);
+        });
+      });
+    }
+
+    function openCartDrawer(response) {
+      console.log('[Draft Orders] Opening cart drawer');
+
+      var cartDrawer = document.querySelector('cart-drawer') || document.querySelector('.cart-drawer');
+      if (!cartDrawer) {
+        console.warn('[Draft Orders] cart drawer not found → redirecting to cart');
+        return;
+      }
+
+      if (response && response.sections) {
+        var sections = [
+          { id: 'cart-drawer', selector: '#CartDrawer' },
+          { id: 'cart-icon-bubble' }
+        ];
+        sections.forEach(function(section) {
+          var el = document.querySelector(section.selector);
+          if (!el || !response.sections[section.id]) return;
+          var parsed = new DOMParser().parseFromString(
+            response.sections[section.id],
+            'text/html'
+          );
+          var source = parsed.querySelector(section.selector);
+          if (source) {
+            el.innerHTML = source.innerHTML;
+          }
+        });
+      }
+
+      cartDrawer.classList.remove('is-empty');
+      var drawerInner = cartDrawer.querySelector('.drawer__inner');
+      if (drawerInner) drawerInner.classList.remove('is-empty');
+      cartDrawer.classList.add('is-active');
+      document.body.classList.add('overflow-hidden');
+      console.log('[Draft Orders] Drawer opened');
+    }
+
+    function loadDraftItemsToCart(draftId, btn, redirectToCheckout) {
+      if (window._pharmacorDraftLoading) return;
+      window._pharmacorDraftLoading = true;
+      var draft = draftsCache[draftId];
+
+      if (!draft) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>' + (redirectToCheckout ? 'Checkout' : 'Update Items') + '</span>';
+        alert('Draft order data not found. Please refresh the page.');
+        window._pharmacorDraftLoading = false;
+        return;
+      }
+
+      // Collect all wholesale account numbers from metafields
+      var allAccounts = {};
+      for (var i = 1; i <= 4; i++) {
+        var val = getMetafieldValue(draft, 'custom', 'wholesaler_account_no_' + i);
+        if (val) allAccounts[i] = val;
+      }
+
+      // Brand to wholesaler account number mapping (matches variant change handler)
+      var brandToAccountIndex = { 'API': 1, 'SIGMA': 2, 'SYMBION': 3, 'CH2': 4 };
+
+      var items = [];
+      draft.lineItems.forEach(function(item) {
+        if (item.variantId) {
+          var numericId = item.variantId.replace('gid://shopify/ProductVariant/','');
+          var lineItem = {id: parseInt(numericId), quantity: item.quantity};
+
+          // Detect brand from variant title
+          var variantTitle = (item.variantTitle || '').toUpperCase();
+          var detectedBrand = '';
+          ['API', 'SIGMA', 'SYMBION', 'CH2'].forEach(function(brand) {
+            if (variantTitle.indexOf(brand) !== -1) detectedBrand = brand;
+          });
+
+          // Set all wholesaler properties to empty, then fill only the matching one
+          var props = {
+            'Wholesaler Account No.1': '',
+            'Wholesaler Account No.2': '',
+            'Wholesaler Account No.3': '',
+            'Wholesaler Account No.4': ''
+          };
+
+          if (detectedBrand && brandToAccountIndex[detectedBrand]) {
+            var accIndex = brandToAccountIndex[detectedBrand];
+            var accValue = allAccounts[accIndex] || '';
+            props['Wholesaler Account No.' + accIndex] = accValue;
+          }
+
+          lineItem.properties = props;
+          items.push(lineItem);
+        }
+      });
+
+      if (items.length === 0) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>' + (redirectToCheckout ? 'Checkout' : 'Update Items') + '</span>';
+        alert('No items in this draft order.');
+        window._pharmacorDraftLoading = false;
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="pharmacor-draft-btn-spinner"></span> ' + (redirectToCheckout ? 'Processing...' : 'Adding...');
+      var cartDrawer = document.querySelector('cart-drawer');
+      var sectionsToRender = ['cart-drawer', 'cart-icon-bubble'];
+      if (cartDrawer && typeof cartDrawer.getSectionsToRender === 'function') {
+        try {
+          sectionsToRender = cartDrawer.getSectionsToRender().map(function (s) {
+            return s.id;
+          });
+        } catch (e) {}
+      }
+
+      fetch('/cart/clear.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}'
+      }).then(function () {
+        return fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({
+            items: items,
+            sections: sectionsToRender.join(','),
+            sections_url: window.location.pathname
+          })
+        });
+      }).then(function (res) {
+        if (!res.ok) {
+          throw new Error('Failed to add items: ' + res.status);
+        }
+        return res.json();
+      }).then(function (response) {
+        window._pharmacorDraftLoading = false;
+        try {
+          sessionStorage.setItem('pharmacor_active_draft_id', draftId);
+        } catch (e) {}
+
+        if (redirectToCheckout) {
+          btn.innerHTML = '<span>Redirecting to checkout...</span>';
+          window.location.href = '/checkout';
+        } else {
+          btn.disabled = false;
+          btn.innerHTML = '<span>Items Added ✓</span>';
+          openCartDrawer(response);
+          resetButtonAfterDelay(btn);
+        }
+
+      }).catch(function (e) {
+        window._pharmacorDraftLoading = false;
+        btn.disabled = false;
+        btn.innerHTML = '<span>' + (redirectToCheckout ? 'Checkout' : 'Update Items') + '</span>';
+        console.error('[Pharmacor Drafts] Add items error:', e);
+      });
+    }
+
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', function() {
+        if (nextCursor) loadDrafts(nextCursor);
+      });
+    }
+
+    function initWhenReady() {
+      pcConfig = window.PharmaCorConfig || {};
+      APP_URL = pcConfig.APP_URL || 'https://offer.pharmacor.com.au';
+      SHOP = pcConfig.SHOP || {% if shop %}{{ shop.permanent_domain | json }}{% else %}'my-test-store-custom-123.myshopify.com'{% endif %};
+      loadDrafts(null);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { setTimeout(initWhenReady, 100); });
+    } else {
+      setTimeout(initWhenReady, 100);
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Draft Orders",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your Draft Orders"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

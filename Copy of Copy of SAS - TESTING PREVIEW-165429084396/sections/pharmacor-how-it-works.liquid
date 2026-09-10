@@ -1,0 +1,472 @@
+{% comment %}
+  Pharmacor How It Works Section — Card Steps Layout
+  Shopify Liquid Section
+{% endcomment %}
+
+<section class="pharma-hiw" id="pharma-hiw-{{ section.id }}">
+  <div class="pharma-hiw__inner">
+
+    <!-- Header -->
+    <div class="pharma-hiw__header">
+      <div class="pharma-hiw__title-wrap">
+        {% comment %} <span class="pharma-hiw__arrow pharma-hiw__arrow--left">&#8594;</span> {% endcomment %}
+        <h2 class="pharma-hiw__title">{{ section.settings.title }}</h2>
+        {% comment %} <span class="pharma-hiw__arrow pharma-hiw__arrow--right">&#8592;</span> {% endcomment %}
+      </div>
+      <p class="pharma-hiw__subtitle">{{ section.settings.subtitle }}</p>
+    </div>
+
+    <!-- Step Cards -->
+    <div class="pharma-hiw__cards">
+
+      <!-- Step 1 -->
+      <div class="pharma-hiw__card">
+        <div class="pharma-hiw__badge">1</div>
+        <div class="pharma-hiw__icon-wrap">
+          {% if section.settings.step_1_icon != blank %}
+            <img src="{{ section.settings.step_1_icon | img_url: 'master' }}" alt="" class="pharma-hiw__icon-img">
+          {% else %}
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#30623d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <ellipse cx="12" cy="7" rx="9" ry="3"/>
+  <path d="M3 7v4c0 1.66 4.03 3 9 3s9-1.34 9-3V7"/>
+  <path d="M3 11v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+</svg>
+          {% endif %}
+        </div>
+        <h3 class="pharma-hiw__card-title">{{ section.settings.step_1_title }}</h3>
+        <div class="pharma-hiw__divider"></div>
+        <p class="pharma-hiw__card-text">{{ section.settings.step_1_text }}</p>
+      </div>
+
+      <!-- Arrow -->
+      <div class="pharma-hiw__connector" aria-hidden="true">
+        <span class="pharma-hiw__dots">&#183;&#183;&#183;&#183;&#183;&#8594;</span>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="pharma-hiw__card">
+        <div class="pharma-hiw__badge">2</div>
+        <div class="pharma-hiw__icon-wrap">
+          {% if section.settings.step_2_icon != blank %}
+            <img src="{{ section.settings.step_2_icon | img_url: 'master' }}" alt="" class="pharma-hiw__icon-img">
+          {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#30623d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 12 20 22 4 22 4 12"/>
+              <rect x="2" y="7" width="20" height="5"/>
+              <line x1="12" y1="22" x2="12" y2="7"/>
+              <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+              <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+            </svg>
+          {% endif %}
+        </div>
+        <h3 class="pharma-hiw__card-title">{{ section.settings.step_2_title }}</h3>
+        <div class="pharma-hiw__divider"></div>
+        <p class="pharma-hiw__card-text">{{ section.settings.step_2_text }}</p>
+      </div>
+
+      <!-- Arrow -->
+      <div class="pharma-hiw__connector" aria-hidden="true">
+        <span class="pharma-hiw__dots">&#183;&#183;&#183;&#183;&#183;&#8594;</span>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="pharma-hiw__card">
+        <div class="pharma-hiw__badge">3</div>
+        <div class="pharma-hiw__icon-wrap">
+          {% if section.settings.step_3_icon != blank %}
+            <img src="{{ section.settings.step_3_icon | img_url: 'master' }}" alt="" class="pharma-hiw__icon-img">
+          {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#30623d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+              <path d="M18 7l-2-2 2-2 2 2-2 2z"/>
+            </svg>
+          {% endif %}
+        </div>
+        <h3 class="pharma-hiw__card-title">{{ section.settings.step_3_title }}</h3>
+        <div class="pharma-hiw__divider"></div>
+        <p class="pharma-hiw__card-text">{{ section.settings.step_3_text }}</p>
+      </div>
+
+    </div>
+
+    <!-- Footer Note -->
+    {% if section.settings.footer_text != blank %}
+    <div class="pharma-hiw__footer">
+      <div class="pharma-hiw__footer-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="#30623d">
+          <path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z"/>
+        </svg>
+      </div>
+      <p class="pharma-hiw__footer-text">{{ section.settings.footer_text }} <strong>{{ section.settings.footer_highlight }}</strong></p>
+    </div>
+  {% endif %}
+
+    <!-- CTA Button -->
+    {% if section.settings.cta_button_text != blank %}
+      <a href="{{ section.settings.cta_button_link }}" class="pharma-hiw__cta-btn">{{ section.settings.cta_button_text }}</a>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  #pharma-hiw-{{ section.id }} {
+    font-family: 'Neutrif Studio', sans-serif;
+    background-color: #f3f8f8;
+    padding: 40px 15px 60px;
+    box-sizing: border-box;
+  }
+
+  .pharma-hiw__inner {
+    max-width: 1170px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .pharma-hiw__header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .pharma-hiw__title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .pharma-hiw__title {
+    font-family: 'Neutrif Studio', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1.1;
+    color: #1e4a2a;
+    margin: 0;
+  }
+
+  .pharma-hiw__arrow {
+    font-size: 22px;
+    color: #5a9e6f;
+    display: inline-block;
+    opacity: 0.7;
+  }
+
+  .pharma-hiw__arrow--left {
+    transform: scaleX(-1);
+  }
+
+  .pharma-hiw__subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    color: #4a6a52;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Cards Row */
+  .pharma-hiw__cards {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 32px;
+  }
+
+  /* Connector Arrow */
+  .pharma-hiw__connector {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    margin-top: -60px;
+  }
+
+  .pharma-hiw__dots {
+    font-size: 20px;
+    color: #5a9e6f;
+    letter-spacing: 3px;
+    font-weight: 700;
+  }
+
+  /* Individual Card */
+  .pharma-hiw__card {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 32px 24px 28px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Step Badge */
+  .pharma-hiw__badge {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #30623d;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Neutrif Studio', sans-serif;
+  }
+
+  /* Icon */
+  .pharma-hiw__icon-wrap {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #e8f5e9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 16px 0 20px;
+  }
+
+  .pharma-hiw__icon-img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+  }
+
+  /* Card text */
+  .pharma-hiw__card-title {
+    font-family: 'Neutrif Studio', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e4a2a;
+    margin: 0 0 10px;
+  }
+
+  .pharma-hiw__divider {
+    width: 36px;
+    height: 2px;
+    background-color: #5a9e6f;
+    border-radius: 2px;
+    margin: 0 auto 14px;
+  }
+
+  .pharma-hiw__card-text {
+    font-size: 16px;
+    font-weight: 400;
+    color: #555;
+    margin: 0;
+    min-height:50px;
+    line-height: 1.6;
+  }
+
+  /* Footer Note */
+  .pharma-hiw__footer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: #dceede;
+    border-radius: 14px;
+    padding: 18px 24px;
+  }
+
+  .pharma-hiw__footer-icon {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #c2dfc8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pharma-hiw__footer-text {
+    font-size: 16px;
+    font-weight: 400;
+    color: #2a5c38;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+ .pharma-hiw__footer-text strong {
+    font-weight: 700;
+    color: #1e4a2a;
+  }
+
+  /* CTA Button */
+  .pharma-hiw__cta-btn {
+    display: block;
+    margin-top: 20px;
+    padding: 20px 24px;
+    background-color: #30623d;
+    color: #ffffff;
+    font-family: 'Neutrif Studio', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+  }
+
+  .pharma-hiw__cta-btn:hover {
+    background-color: #1e4a2a;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .pharma-hiw__cards {
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .pharma-hiw__connector {
+      transform: rotate(90deg);
+      margin: -20px 0;
+    }
+
+    .pharma-hiw__card {
+      width: 100%;
+    }
+
+    .pharma-hiw__title {
+      font-size: 30px;
+    }
+
+    .pharma-hiw__footer {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "How It Works",
+  "tag": "section",
+  "class": "section-pharma-hiw",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "How It Works"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Simple steps to earn rewards and enjoy exclusive perks"
+    },
+    {
+      "type": "header",
+      "content": "Step 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "step_1_icon",
+      "label": "Step 1 Icon (optional)"
+    },
+    {
+      "type": "text",
+      "id": "step_1_title",
+      "label": "Title",
+      "default": "Earn Pill Points"
+    },
+    {
+      "type": "text",
+      "id": "step_1_text",
+      "label": "Description",
+      "default": "Earn pill points for every dollar spent on the Pharmacor Portal."
+    },
+    {
+      "type": "header",
+      "content": "Step 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "step_2_icon",
+      "label": "Step 2 Icon (optional)"
+    },
+    {
+      "type": "text",
+      "id": "step_2_title",
+      "label": "Title",
+      "default": "Redeem Points"
+    },
+    {
+      "type": "text",
+      "id": "step_2_text",
+      "label": "Description",
+      "default": "Redeem pill points on eligible stock."
+    },
+    {
+      "type": "header",
+      "content": "Step 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "step_3_icon",
+      "label": "Step 3 Icon (optional)"
+    },
+    {
+      "type": "text",
+      "id": "step_3_title",
+      "label": "Title",
+      "default": "Unlock More Perks"
+    },
+    {
+      "type": "text",
+      "id": "step_3_text",
+      "label": "Description",
+      "default": "Progress to different levels and enjoy different perks."
+    },
+    {
+      "type": "header",
+      "content": "Footer Note"
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Footer Text",
+      "default": "The more you earn, the more you enjoy!"
+    },
+    {
+      "type": "text",
+      "id": "footer_highlight",
+      "label": "Footer Bold Text",
+      "default": "Climb the levels and unlock bigger rewards."
+    },
+    {
+      "type": "header",
+      "content": "CTA Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_text",
+      "label": "Button Text",
+      "default": "Make your points work - Redeem for stock and more"
+    },
+    {
+      "type": "url",
+      "id": "cta_button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "How It Works"
+    }
+  ]
+}
+{% endschema %}

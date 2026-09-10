@@ -1,0 +1,2697 @@
+{%- comment -%}
+  ------------------------------------------------------------------------------
+  	Section: Subscriptions template
+  ------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- style -%}
+  .subscription-outer {
+    padding: 120px 20px 40px;
+    background: #f3f8f8;
+    border-radius: 0px 0px 10px 10px;
+    margin-top: -111px;
+  }
+  .subscription-templates div.top-subscribes {
+    border-radius: 10px 10px 0px 0px;
+    background: #f3f8f8;
+  }
+  .subscription-templates div.top-subscribes h1 {
+    font-family: 'Neutrif Studio', sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 1.2;
+    letter-spacing: 0px;
+    text-align: center;
+    vertical-align: middle;
+    color: #ecf5ec;
+    margin: 0px;
+  }
+  .sub-modal__btn-row button {
+    width: 100%;
+  }
+  .sub-modal__btn-row {
+    margin-top: 20px;
+  }
+  .sub-modal__btn-row {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  @media screen and (max-width: 767px) {
+    .subscription-templates div.top-subscribes h1 {
+      font-size: 30px !important;
+    }
+    .subscription-outer {
+      margin-top: -85px;
+    }
+  }
+  .subs-page-bg {
+    background: #355441;
+    border-radius: 24px;
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 1px 0 40px;
+    overflow-x: hidden;
+  }
+  .subs-page-bg,
+  .subs-page-bg *,
+  .subs-page-bg *::before,
+  .subs-page-bg *::after {
+    box-sizing: border-box;
+  }
+  .subs-page {
+    width: 92%;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .subs-page .addresses__return {
+    display: flex;
+    align-items: center;
+    margin: 24px 0 0;
+    text-decoration: none;
+    font-size: calc(var(--body-font-size) * 0.875);
+    color: #fff;
+  }
+  .subs-page .addresses__return svg {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .subs-page__top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0 20px;
+  }
+  .subs-page__top--sub {
+    align-items: center;
+    margin: 4px 0 24px;
+  }
+  .subs-page__heading {
+    font-size: 40px;
+    font-weight: 800;
+    margin: 0;
+    color: #ecf5ec;
+    line-height: 1.05;
+    word-break: break-word;
+  }
+  .subs-page__top-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .subs-molecule-count {
+    background: #ecf5ec;
+    color: #355441;
+    border: none;
+    border-radius: 24px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .subs-link-btn {
+    border: 1px solid #d7ded8;
+    background: #fff;
+    border-radius: 20px;
+    padding: 3px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #333;
+    white-space: nowrap;
+  }
+  .subs-page__subheading {
+    font-size: clamp(18px, 4w, 25px);
+    font-weight: 600;
+    margin: 0;
+    color: #fff;
+  }
+  .subs-empty {
+    padding: 40px 0;
+    color: #dce8de;
+  }
+
+  .subs-filters {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .subs-filters select {
+    flex: 0 0 auto;
+    width: 260px;
+    max-width: 100%;
+    padding: 16px 18px;
+    border: 1px solid #cfe0d3;
+    border-radius: 16px;
+    font-size: 16px;
+    background: #fff;
+  }
+  .subs-filters select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23333' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 35px;
+  }
+  .subs-active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: -8px 0 20px;
+    min-height: 0;
+  }
+  .subs-active-filters:empty {
+    margin: 0;
+  }
+  .subs-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ecf5ec;
+    color: #1f4a2c;
+    border: 1px solid #cdeccb;
+    border-radius: 20px;
+    padding: 8px 12px 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .subs-filter-chip__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(31, 74, 44, 0.12);
+    color: #1f4a2c;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+  }
+  .subs-filter-chip__remove:hover {
+    background: rgba(31, 74, 44, 0.22);
+  }
+  .subs-filter-clear-all {
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #355441;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 4px;
+  }
+  @media only screen and (max-width: 600px) {
+    .subs-active-filters {
+      margin: -4px 0 16px;
+      gap: 8px;
+    }
+    .subs-filter-chip {
+      font-size: 12px;
+      padding: 7px 10px 7px 14px;
+    }
+  }
+  p#subsPaginationLabel {
+    opacity: 0.56;
+  }
+  #subsCardList {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0 16px;
+  }
+  .sub-card td:nth-child(1) {
+    width: 28%;
+  }
+  .sub-card td:nth-child(2) {
+    width: 42%;
+  }
+  .sub-card td:nth-child(3) {
+    width: 30%;
+  }
+  .sub-card td {
+    background: #fff;
+    border-top: 1px solid #e3e8e4;
+    border-bottom: 1px solid #e3e8e4;
+    padding: 28px 24px;
+    vertical-align: middle;
+  }
+  .sub-card td:first-child {
+    border-left: 1px solid #e3e8e4;
+    border-radius: 12px 0 0 12px;
+  }
+  .sub-card td:last-child {
+    border-right: 1px solid #e3e8e4;
+    border-radius: 0 12px 12px 0;
+  }
+  .sub-card.is-cancelled td {
+    background: #d3d4cc;
+    border-color: #dcdcd8;
+  }
+  .sub-card__title {
+    font-weight: 700;
+    font-size: 18px;
+    color: #1a1a1a;
+    margin: 0 0 14px;
+    word-break: break-word;
+  }
+  .sub-card td p.sub-card__meta {
+    font-weight: 400;
+    font-size: 18px;
+    color: #1a1a1a !important;
+    margin: 3px 0;
+    word-break: break-word;
+  }
+
+  .sub-card__cycle {
+    text-align: center;
+  }
+  .sub-card__cycle-heading {
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0 0 12px;
+  }
+  .sub-cycle-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .sub-cycle-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e6f2e8;
+    flex-shrink: 0;
+  }
+  .sub-cycle-dot.is-current {
+    background: #1f4a2c;
+  }
+  .sub-cycle-dot.is-free {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    box-sizing: border-box;
+    background: #bc9c22;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4px;
+    white-space: nowrap;
+  }
+  .sub-cycle-dot.is-free.is-next {
+    background: #1f4a2c;
+  }
+  .sub-card__tagline {
+    font-size: 15px;
+    color: #667;
+    margin: 0;
+  }
+
+  .sub-card__right {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 110px;
+    margin-left: auto;
+  }
+  .sub-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .sub-badge--active {
+    background: #c0dd96;
+    color: #245c2c;
+  }
+  .sub-badge--pause {
+    background: #fac775;
+    color: #7a4d0e;
+  }
+  .sub-badge--cancel {
+    background: #b8bbb0;
+    color: #000;
+  }
+
+  .sub-btn {
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #333;
+    background: #fff;
+    color: #222;
+    text-align: center;
+  }
+  .sub-card td button.sub-btn {
+    color: #222 !important;
+  }
+  .sub-btn--primary {
+    background: #1f4a2c;
+    color: #fff;
+    border-color: #1f4a2c;
+  }
+  .sub-btn[disabled] {
+    opacity: 0.6;
+    cursor: default;
+  }
+  .sub-btn .spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    animation: sub-spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  @keyframes sub-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .subs-pagination {
+    text-align: center;
+    margin-top: 24px;
+    color: #b9c9bd;
+    font-size: 14px;
+  }
+  .subs-pagination__pages {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .subs-pagination__pages span {
+    cursor: pointer;
+    color: #8ea393;
+    font-size: 16px;
+    padding: 4px 2px;
+  }
+  .subs-pagination__pages span.is-active {
+    font-weight: 700;
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+  }
+
+  /* ----------------------------------------------------------------------
+       Tablet / small-desktop: switch the card grid to a single stacked
+       column but keep table semantics disabled (grid) since JS/markup
+       already targets `.sub-card` as the row wrapper.
+    ------------------------------------------------------------------------ */
+  @media only screen and (max-width: 800px) {
+    #subsCardList,
+    #subsCardList tbody,
+    .sub-card,
+    .sub-card td {
+      display: block;
+      width: 100%;
+    }
+    #subsCardList {
+      border-spacing: 0;
+    }
+    .sub-card {
+      margin-bottom: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    .sub-card td {
+      width: 100% !important;
+      border-left: 1px solid #e3e8e4;
+      border-right: 1px solid #e3e8e4;
+      border-top: none;
+      border-bottom: none;
+      border-radius: 0 !important;
+      text-align: left;
+      padding: 20px 20px;
+    }
+    .sub-card td:first-child {
+      border-top: 1px solid #e3e8e4;
+      border-radius: 12px 12px 0 0 !important;
+    }
+    .sub-card td:last-child {
+      border-bottom: 1px solid #e3e8e4;
+      border-radius: 0 0 12px 12px !important;
+    }
+    .sub-card.is-cancelled td {
+      border-color: #dcdcd8;
+    }
+
+    .sub-card__cycle {
+      text-align: left;
+    }
+    .sub-cycle-dots {
+      justify-content: flex-start;
+    }
+
+    .sub-card__right {
+      width: 100%;
+      margin-left: 0;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .sub-card__right .sub-badge {
+      flex: 1 0 100%;
+    }
+    .sub-card__right .sub-btn {
+      flex: 1 1 auto;
+      min-width: 120px;
+      padding: 12px 14px;
+      font-size: 14px;
+    }
+  }
+
+  /* ----------------------------------------------------------------------
+       Phones (covers 320px - 430px and everything below tablet)
+    ------------------------------------------------------------------------ */
+  @media only screen and (max-width: 600px) {
+    .subs-page-bg {
+      border-radius: 16px;
+      margin: 12px auto;
+      padding: 1px 0 28px;
+    }
+    .subs-page {
+      width: 100%;
+      padding: 0 16px;
+    }
+
+    .subs-page .addresses__return {
+      margin: 16px 0 0;
+    }
+
+    .subs-page__top {
+      margin: 5px 0 10px;
+      gap: 10px;
+    }
+    .subs-page__top--sub {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 4px 0 20px;
+    }
+    .subs-page__top-right {
+      width: 100%;
+    }
+    .subs-link-btn {
+      flex: 1;
+      text-align: center;
+    }
+
+    .subs-molecule-count {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+
+    .subs-filters {
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .subs-filters select {
+      min-width: 0;
+      width: 100%;
+      padding: 14px 16px;
+      padding-right: 35px;
+      font-size: 15px;
+    }
+
+    .sub-card td {
+      padding: 18px 16px;
+    }
+    .sub-card__title {
+      font-size: 17px;
+      margin-bottom: 10px;
+    }
+    .sub-card td p.sub-card__meta {
+      font-size: 15px;
+    }
+    .sub-card__cycle-heading {
+      font-size: 16px;
+    }
+    .sub-cycle-dot {
+      width: 22px;
+      height: 22px;
+    }
+    .sub-cycle-dot.is-free {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
+      font-size: 9px;
+      padding: 3px;
+    }
+    .sub-cycle-dots {
+      gap: 6px;
+    }
+    .sub-card__tagline {
+      font-size: 13px;
+    }
+
+    .sub-card__right {
+      gap: 10px;
+    }
+    .sub-badge {
+      width: 100%;
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+    .sub-btn {
+      min-height: 44px;
+    }
+
+    .subs-pagination {
+      margin-top: 20px;
+    }
+    .subs-page__heading {
+      font-size: 34px;
+    }
+  }
+
+  .sub-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 30, 24, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 16px;
+  }
+  .sub-modal-overlay.is-open {
+    display: flex;
+  }
+  .sub-modal {
+    position: relative;
+    background: #fff;
+    border: 1.5px solid #cdeccb;
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 380px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .sub-modal--wide {
+    max-width: 460px;
+  }
+  .sub-modal h3 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: #1a1a1a;
+  }
+  .sub-modal p.sub-modal__desc {
+    color: #555;
+    font-size: 14px;
+    margin: 0 0 16px;
+  }
+  .sub-modal__field {
+    margin-bottom: 16px;
+  }
+  .sub-modal__field label {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  .sub-modal__field input[type='date'],
+  .sub-modal__field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d7ded8;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .sub-toggle-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .sub-toggle-row button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #d7ded8;
+    background: #fff;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .sub-toggle-row button.is-active {
+    background: #30623d;
+    color: #fff;
+    border-color: #30623d;
+  }
+  .sub-modal__note {
+    background: #f1efe8;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 13px;
+    color: #345;
+    margin: 16px 0;
+  }
+  .sub-modal__note .sub-toggle-row {
+    margin: 10px 0 0;
+  }
+  .sub-modal .sub-qty-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .sub-qty-btn {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 auto;
+    border-radius: 12px !important;
+    border: 1px solid #d7ded8 !important;
+    background: #fff !important;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .sub-qty-input {
+    width: 32px !important;
+    max-width: 32px;
+    flex: 0 0 auto;
+    text-align: center !important;
+    border: none !important;
+    background: transparent !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #1a1a1a !important;
+    -moz-appearance: textfield;
+    border-radius: 0 !important;
+  }
+  .sub-qty-input::-webkit-inner-spin-button,
+  .sub-qty-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .sub-qty-row #subB-qty-label {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+  .sub-qty-label__title {
+    font-size: 15px !important;
+    color: #345 !important;
+    font-weight: 600;
+  }
+  .sub-qty-label__variant {
+    font-size: 15px !important;
+    color: #667 !important;
+    font-weight: 400;
+  }
+  .sub-modal__btn-full {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .sub-modal__btn-full + .sub-modal__btn-full {
+    margin-top: 8px;
+  }
+  .sub-modal__close {
+    position: absolute;
+    top: 29px;
+    right: 24px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: #f2f4f2;
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 1;
+    color: #556;
+    cursor: pointer;
+  }
+  .sub-modal__close:hover {
+    background: #e6eae7;
+  }
+
+  @media only screen and (max-width: 480px) {
+    .sub-modal {
+      padding: 22px 18px;
+      border-radius: 14px;
+    }
+    .sub-modal h3 {
+      font-size: 22px;
+      margin-bottom: 12px;
+      padding-right: 30px;
+    }
+    .sub-modal__close {
+      top: 18px;
+      right: 16px;
+    }
+  }
+{%- endstyle -%}
+<div class="subscription-outer">
+  <div class="subs-page-bg">
+    <div class="subs-page">
+      <a class="focus-visible-outline addresses__return" href="/account" aria-label="Return to account details">
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M9.57 5.92969L3.5 11.9997L9.57 18.0697" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M20.4999 12H3.66992" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>Return to account details</span>
+      </a>
+
+      {% if customer %}
+        {% assign coverage_countries = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
+        {% assign subscriptions = customer.metafields.membership.subscription_orders.value %}
+        {% assign parsed_subscriptions = subscriptions %}
+        {% assign molecule_count = 0 %}
+        {% assign active_molecule_count = 0 %}
+        {% for item in parsed_subscriptions %}
+          {% assign item_status_check = item.status | downcase %}
+          {% unless item_status_check == 'cancel' %}
+            {% assign molecule_count = molecule_count | plus: 1 %}
+          {% endunless %}
+          {% if item_status_check == 'active' %}
+            {% assign active_molecule_count = active_molecule_count | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+
+        <div class="subs-page__top">
+          <h1 class="subs-page__heading">Subscribe &amp; Save</h1>
+          <span class="subs-molecule-count">Subscribed Molecules: {{ active_molecule_count }}</span>
+        </div>
+        <div class="subs-page__top subs-page__top--sub">
+          <p class="subs-page__subheading">Manage your subscriptions</p>
+          <div class="subs-page__top-right">
+            <a href="#hiw-section" class="subs-link-btn" data-smooth-scroll>How it works?</a>
+            <a href="#custom-main-wrapper-faqs" class="subs-link-btn" data-smooth-scroll>FAQs</a>
+          </div>
+        </div>
+
+        <div class="subs-filters">
+          <select id="subsFilterCombined">
+            <option value="" selected hidden>Sort By Status</option>
+            <optgroup label="Sort By Status">
+              <option value="sort:sort_by">Next Drop</option>
+              <option value="sort:az">A-Z</option>
+              <option value="sort:za">Z-A</option>
+              <option value="status:active">Active</option>
+              <option value="status:pause">Paused</option>
+              <option value="status:cancel">Cancelled</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="subs-active-filters" id="subsActiveFilters"></div>
+
+        {% if molecule_count == 0 %}
+          <p class="subs-empty">You don't have any subscriptions yet.</p>
+        {% endif %}
+
+        <table id="subsCardList">
+          <tbody id="subsCardListBody">
+            {% for item in parsed_subscriptions %}
+              {% assign parts = item.title | split: '-' %}
+              {% assign order_id = parts[1] %}
+              {% assign variant_id = parts[2] %}
+              {% assign line_item_id = parts[3] %}
+              {% assign status_class = item.status | downcase %}
+
+              {% if status_class == 'active' %}
+                {% assign badge_class = 'active' %}
+                {% assign badge_label = 'Active' %}
+              {% elsif status_class == 'pause' %}
+                {% assign badge_class = 'pause' %}
+                {% assign badge_label = 'Paused' %}
+              {% else %}
+                {% assign badge_class = 'cancel' %}
+                {% assign badge_label = 'Cancelled' %}
+              {% endif %}
+
+              {% comment %}
+                ----------------------------------------
+                WHOLESALER BRAND
+                ----------------------------------------
+              {% endcomment %}
+
+              {% assign brand_label = '' %}
+
+              {% case item.wholesaler_account_slot %}
+                {% when 1 %}
+                  {% assign brand_label = 'API' %}
+                {% when 2 %}
+                  {% assign brand_label = 'Sigma' %}
+                {% when 3 %}
+                  {% assign brand_label = 'Symbion' %}
+                {% when 4 %}
+                  {% assign brand_label = 'CH2' %}
+              {% endcase %}
+
+              {% comment %}
+                ----------------------------------------
+                CYCLE CALCULATION
+                ----------------------------------------
+              {% endcomment %}
+
+              {% assign cycle_pos = item.count | modulo: 6 %}
+
+              {% if cycle_pos == 0 %}
+                {% assign cycle_pos = 6 %}
+              {% endif %}
+
+              {% comment %}
+                ----------------------------------------
+                FREE MONTH CALCULATION
+                ----------------------------------------
+              {% endcomment %}
+
+              {% assign count_mod = item.count | modulo: 6 %}
+
+              {% if count_mod == 0 %}
+                {% assign months_to_free = 0 %}
+              {% else %}
+                {% assign months_to_free = 6 | minus: count_mod %}
+              {% endif %}
+
+              {% assign nb_date_only = item.next_billing | split: 'T' | first %}
+              {% assign nb_date_parts = nb_date_only | split: '-' %}
+
+              {% assign nb_year = nb_date_parts[0] | plus: 0 %}
+              {% assign nb_month = nb_date_parts[1] | plus: 0 %}
+              {% assign nb_day = nb_date_parts[2] %}
+
+              {% assign total_month = nb_month | plus: months_to_free %}
+
+              {% assign free_year_offset = total_month | minus: 1 | divided_by: 12 %}
+
+              {% assign free_month = total_month | minus: 1 | modulo: 12 | plus: 1 %}
+
+              {% assign free_year = nb_year | plus: free_year_offset %}
+
+              {% if free_month < 10 %}
+                {% assign free_month_str = '0' | append: free_month %}
+              {% else %}
+                {% assign free_month_str = free_month %}
+              {% endif %}
+
+              {% assign next_free_date_str = free_year
+                | append: '-'
+                | append: free_month_str
+                | append: '-'
+                | append: nb_day
+              %}
+
+              {% assign next_free_date_display = next_free_date_str | date: "%-d %b '%y" %}
+
+              {% comment %}
+                ----------------------------------------
+                AMOUNT PER DROP CALCULATION
+                ----------------------------------------
+              {% endcomment %}
+
+              {% assign drop_quantity = item.quantity | default: 1 %}
+              {% if count_mod == 0 %}
+                {% assign is_free_cycle = true %}
+              {% else %}
+                {% assign is_free_cycle = false %}
+              {% endif %}
+
+              {% if item.unit_price %}
+                {% assign drop_line_total = item.unit_price | times: drop_quantity %}
+
+                {% if item.discount_type == 'percentage' and item.discount_value %}
+                  {% assign discount_fraction = item.discount_value | times: 1.0 | divided_by: 100 %}
+                  {% assign drop_discount = drop_line_total | times: discount_fraction %}
+                  {% assign drop_amount = drop_line_total | minus: drop_discount %}
+                {% elsif item.discount_type == 'fixed' and item.discount_value %}
+                  {% assign drop_amount = drop_line_total | minus: item.discount_value %}
+                  {% if drop_amount < 0 %}
+                    {% assign drop_amount = 0 %}
+                  {% endif %}
+                {% else %}
+                  {% assign drop_amount = drop_line_total %}
+                {% endif %}
+
+                {% assign drop_amount_display = drop_amount | times: 1.0 | round: 2 %}
+              {% endif %}
+
+              {% comment %}
+                ==================================================
+                FIND MATCHING ORDER
+                ==================================================
+              {% endcomment %}
+
+              {% assign matched_order = null %}
+
+              {% paginate customer.orders by 50 %}
+                {% for customer_order in customer.orders %}
+                  {% assign customer_order_id = customer_order.id | append: '' %}
+
+                  {% if customer_order_id == order_id %}
+                    {% assign matched_order = customer_order %}
+                  {% endif %}
+                {% endfor %}
+              {% endpaginate %}
+
+              {% comment %}
+                ==================================================
+                RESET WHOLESALER VALUES
+                ==================================================
+              {% endcomment %}
+
+              {% assign wholesaler_account_1 = '' %}
+              {% assign wholesaler_account_2 = '' %}
+              {% assign wholesaler_account_3 = '' %}
+              {% assign wholesaler_account_4 = '' %}
+
+              {% assign matched_wholesaler_account = '' %}
+              {% assign matched_wholesaler_slot = '' %}
+
+              {% comment %}
+                ==================================================
+                FIND MATCHING LINE ITEM
+                ==================================================
+              {% endcomment %}
+
+              {% if matched_order %}
+                {% for line_item in matched_order.line_items %}
+                  {% assign current_line_item_id = line_item.id | append: '' %}
+
+                  {% if current_line_item_id == line_item_id %}
+                    {% comment %}
+                      Loop through line item properties
+                    {% endcomment %}
+
+                    {% for property in line_item.properties %}
+                      {% assign property_name = property.first %}
+                      {% assign property_value = property.last %}
+
+                      {% if property_name == 'Wholesaler Account No.1' %}
+                        {% assign wholesaler_account_1 = property_value %}
+
+                        {% if property_value != blank %}
+                          {% assign matched_wholesaler_account = property_value %}
+                          {% assign matched_wholesaler_slot = 1 %}
+                        {% endif %}
+
+                      {% elsif property_name == 'Wholesaler Account No.2' %}
+                        {% assign wholesaler_account_2 = property_value %}
+
+                        {% if property_value != blank %}
+                          {% assign matched_wholesaler_account = property_value %}
+                          {% assign matched_wholesaler_slot = 2 %}
+                        {% endif %}
+
+                      {% elsif property_name == 'Wholesaler Account No.3' %}
+                        {% assign wholesaler_account_3 = property_value %}
+
+                        {% if property_value != blank %}
+                          {% assign matched_wholesaler_account = property_value %}
+                          {% assign matched_wholesaler_slot = 3 %}
+                        {% endif %}
+
+                      {% elsif property_name == 'Wholesaler Account No.4' %}
+                        {% assign wholesaler_account_4 = property_value %}
+
+                        {% if property_value != blank %}
+                          {% assign matched_wholesaler_account = property_value %}
+                          {% assign matched_wholesaler_slot = 4 %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
+              {% comment %}
+                ==================================================
+                FINAL WHOLESALER VALUES
+                ==================================================
+
+                Priority:
+
+                1. Subscription API data
+                2. Order line item properties as fallback
+              {% endcomment %}
+
+              {% assign final_wholesaler_account = item.wholesaler_account %}
+              {% assign final_wholesaler_slot = item.wholesaler_account_slot %}
+
+              {% if final_wholesaler_account == blank %}
+                {% if matched_wholesaler_account != blank %}
+                  {% assign final_wholesaler_account = matched_wholesaler_account %}
+                {% endif %}
+              {% endif %}
+
+              {% if final_wholesaler_slot == blank %}
+                {% if matched_wholesaler_slot != blank %}
+                  {% assign final_wholesaler_slot = matched_wholesaler_slot %}
+                {% endif %}
+              {% endif %}
+
+              {% comment %}
+                ==================================================
+                BRAND FALLBACK
+                ==================================================
+
+                If the subscription slot is blank but we got
+                the slot from the order, use that slot for
+                the brand as well.
+              {% endcomment %}
+
+              {% if brand_label == blank and final_wholesaler_slot != blank %}
+                {% case final_wholesaler_slot %}
+                  {% when 1 %}
+                    {% assign brand_label = 'API' %}
+                  {% when 2 %}
+                    {% assign brand_label = 'Sigma' %}
+                  {% when 3 %}
+                    {% assign brand_label = 'Symbion' %}
+                  {% when 4 %}
+                    {% assign brand_label = 'CH2' %}
+                {% endcase %}
+              {% endif %}
+
+              {% comment %}
+                ==================================================
+                SUBSCRIPTION ROW
+                ==================================================
+              {% endcomment %}
+
+              <tr
+                class="sub-card {% if status_class == 'cancel' %}is-cancelled{% endif %}"
+
+                data-order-id="{{ order_id }}"
+                data-variant-id="{{ variant_id }}"
+                data-line-item-id="{{ line_item_id }}"
+
+                data-status="{{ status_class }}"
+
+                data-quantity="{{ item.quantity | default: 1 }}"
+
+                data-next-billing="{{ item.next_billing }}"
+
+                data-signup-day="{{ item.signup_day }}"
+                data-billing-anchor-day="{{ item.billing_anchor_day }}"
+
+                data-wholesaler-account="{{ final_wholesaler_account }}"
+                data-wholesaler-slot="{{ final_wholesaler_slot }}"
+
+                data-count="{{ item.count }}"
+
+                data-search="{{ item.product_title | downcase | escape }}"
+
+                data-title="{{ item.product_title | escape }}{% if item.variant_title != blank %} — {{ item.variant_title | escape }}{% endif %}"
+
+                data-product-title="{{ item.product_title | default: 'Subscription item' | escape }}"
+
+                data-variant-title="{{ item.variant_title | escape }}"
+
+                data-variant-line="{% if brand_label != '' %}{{ brand_label }}{% if item.variant_title != blank %} / {% endif %}{% endif %}{{ item.variant_title | escape }}"
+              >
+                <td>
+                  <p class="sub-card__title">
+                    {{ item.product_title | default: 'Subscription item' }}
+
+                    {% if brand_label != blank %}
+                      – {{ brand_label }}
+                    {% endif %}
+                  </p>
+
+                  {% comment %}
+                    ==========================================
+                    AMOUNT PER DROP DISPLAY
+                    ==========================================
+                  {% endcomment %}
+
+                  <p class="sub-card__meta sub-card__meta--amount">
+                    Qty: {{ drop_quantity }}
+                    ·
+                    {% if is_free_cycle %}
+                      Free
+                    {% elsif drop_amount_display %}
+                      ${{ drop_amount_display }}
+                    {% else %}
+                      —
+                    {% endif %}
+                  </p>
+
+                  {% comment %}
+                    ==========================================
+                    WHOLESALER DISPLAY
+                    ==========================================
+                  {% endcomment %}
+
+                  {% if final_wholesaler_account != blank %}
+                    <p class="sub-card__meta sub-card__meta--wholesaler">
+                      Wholesale Number
+                      {{ final_wholesaler_slot }}
+                      :
+                      {{ final_wholesaler_account }}
+                    </p>
+                  {% endif %}
+
+                  {% comment %}
+                    ==========================================
+                    DATES
+                    ==========================================
+                  {% endcomment %}
+
+                  {% if status_class == 'active' %}
+                    <p class="sub-card__meta">
+                      Start Date:
+                      {{ item.current_date | date: '%d/%m/%Y' }}
+                    </p>
+
+                    <p class="sub-card__meta">
+                      Next Drop:
+                      <span class="sub-next-drop-date">{{ item.next_billing | date: '%d/%m/%Y' }}</span>
+                    </p>
+
+                  {% elsif status_class == 'pause' %}
+                    <p class="sub-card__meta">
+                      Last Drop:
+                      {{ item.next_billing | date: '%d/%m/%Y' }}
+                    </p>
+
+                  {% else %}
+                    <p class="sub-card__meta">
+                      Cancelled
+                      {{ item.next_billing | date: '%d/%m/%Y' }}
+                    </p>
+                  {% endif %}
+                </td>
+
+                <td class="sub-card__cycle">
+                  {% if status_class == 'active' %}
+                    <p class="sub-card__cycle-heading">
+                      Next Free Month –
+                      {{ next_free_date_display }}
+                    </p>
+
+                  {% elsif status_class == 'pause' %}
+                    <p class="sub-card__cycle-heading">Reactivate to Continue Your Subscription</p>
+                  {% endif %}
+
+                  {% if status_class != 'cancel' %}
+                    <div class="sub-cycle-dots">
+                      {% for i in (1..6) %}
+                        <span
+                          class="sub-cycle-dot {% if i <= cycle_pos %}is-current{% endif %}"
+                        ></span>
+                      {% endfor %}
+
+                      <span
+                        class="sub-cycle-dot is-free{% if count_mod == 0 %} is-next{% endif %}"
+                      >
+                        FREE
+                      </span>
+                    </div>
+                  {% endif %}
+
+                  <p class="sub-card__tagline">Subscribe &amp; Save. Get your 7<sup>th</sup> month FREE</p>
+                </td>
+
+                <td>
+                  <div class="sub-card__right">
+                    <span class="sub-badge sub-badge--{{ badge_class }}">
+                      {{ badge_label }}
+                    </span>
+
+                    {% if status_class != 'cancel' %}
+                      <button
+                        type="button"
+                        class="sub-btn"
+                        data-action="open-edit"
+                      >
+                        Edit
+                      </button>
+                    {% endif %}
+
+                    {% if status_class == 'active' %}
+                      <button
+                        type="button"
+                        class="sub-btn"
+                        data-action="open-drop"
+                      >
+                        Drop Now
+                      </button>
+
+                      <button
+                        type="button"
+                        class="sub-btn"
+                        data-action="open-skip"
+                      >
+                        Skip Cycle
+                      </button>
+
+                    {% elsif status_class == 'pause' %}
+                      <button
+                        type="button"
+                        class="sub-btn"
+                        data-action="reactivate"
+                      >
+                        Reactivate
+                      </button>
+                    {% endif %}
+
+                    {% comment %}
+                      {% if status_class != 'cancel' %}
+
+                        <button
+                          type="button"
+                          class="sub-btn"
+                          data-action="open-cancel"
+                        >
+                          Cancel
+                        </button>
+
+                      {% endif %}
+                    {% endcomment %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        {% if molecule_count > 0 %}
+          <div class="subs-pagination">
+            <p id="subsPaginationLabel">You are viewing {{ molecule_count }} out of {{ molecule_count }} Molecules</p>
+            <div class="subs-pagination__pages" id="subsPaginationPages"></div>
+          </div>
+        {% endif %}
+      {% elsif request.path != '/account/login' %}
+        <script>
+          window.location.href = '/account/login?return_url={{ request.path }}';
+        </script>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% comment %} ---------- Popup A: simple date-only edit ---------- {% endcomment %}
+<div class="sub-modal-overlay" id="subModalA">
+  <div class="sub-modal">
+    <button type="button" class="sub-modal__close" data-close>&times;</button>
+    <h3>Edit order</h3>
+    <div class="sub-modal__field">
+      <label>New date</label>
+      <input type="date" id="subA-date">
+    </div>
+    <p class="sub-modal__desc">Should this new date apply going forward, or just this once?</p>
+    <div class="sub-toggle-row" id="subA-toggle">
+      <button type="button" class="is-active" data-value="every_month">Every month</button>
+      <button type="button" data-value="just_once">Just this once</button>
+    </div>
+    <button type="button" class="sub-btn sub-btn--primary sub-modal__btn-full" id="subA-confirm">Confirm</button>
+  </div>
+</div>
+
+{% comment %} ---------- Popup B: combined edit (date + qty + wholesaler + pause + cancel) ---------- {% endcomment %}
+<div class="sub-modal-overlay" id="subModalB">
+  <div class="sub-modal sub-modal--wide">
+    <button type="button" class="sub-modal__close" data-close>&times;</button>
+    <h3>Edit this order</h3>
+
+    <div class="sub-modal__field">
+      <label>Change Date</label>
+      <input type="date" id="subB-date">
+    </div>
+
+    <button type="button" class="sub-btn sub-modal__btn-full" id="subB-skip">Skip next drop</button>
+    <button type="button" class="sub-btn sub-btn--primary sub-modal__btn-full" id="subB-keep">Keep next drop</button>
+
+    <div class="sub-modal__note">
+      Apply this date going forward, or just this once?
+      <div class="sub-toggle-row" id="subB-toggle">
+        <button type="button" class="is-active" data-value="every_month">Every month</button>
+        <button type="button" data-value="just_once">Just this once</button>
+      </div>
+    </div>
+
+    <div class="sub-modal__field">
+      <label>Change Quantity</label>
+      <div class="sub-qty-row">
+        <button type="button" class="sub-qty-btn" id="subB-qty-dec">−</button>
+        <input type="number" class="sub-qty-input" id="subB-qty" min="1" readonly>
+        <button type="button" class="sub-qty-btn" id="subB-qty-inc">+</button>
+        <span id="subB-qty-label"></span>
+      </div>
+    </div>
+
+    {% if coverage_countries.size > 0 %}
+      <div class="sub-modal__field">
+        <label>Change Wholesaler</label>
+        <select id="subB-wholesaler">
+          <option value="">No change</option>
+          {% for entry in coverage_countries %}
+            {% assign entry_down = entry | downcase %}
+            {% if entry_down contains 'api' %}
+              {% assign slot = 1 -%}
+              {%- assign brand_label2 = 'API' %}
+            {% elsif entry_down contains 'sigma' %}
+              {% assign slot = 2 -%}
+              {%- assign brand_label2 = 'Sigma' %}
+            {% elsif entry_down contains 'symbion' %}
+              {% assign slot = 3 -%}
+              {%- assign brand_label2 = 'Symbion' %}
+            {% elsif entry_down contains 'ch2' %}
+              {% assign slot = 4 -%}
+              {%- assign brand_label2 = 'CH2' %}
+            {% else %}
+              {% assign slot = 0 %}
+            {% endif %}
+            {% if slot != 0 %}
+              {% assign account_number = entry
+                | remove_first: 'API'
+                | remove_first: 'Api'
+                | remove_first: 'api'
+                | remove_first: 'Sigma'
+                | remove_first: 'SIGMA'
+                | remove_first: 'sigma'
+                | remove_first: 'Symbion'
+                | remove_first: 'SYMBION'
+                | remove_first: 'symbion'
+                | remove_first: 'CH2'
+                | remove_first: 'Ch2'
+                | remove_first: 'ch2'
+                | strip
+              %}
+              <option value="{{ account_number }}" data-slot="{{ slot }}">
+                {{ brand_label2 }} — {{ account_number }}
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+
+    <button type="button" class="sub-btn sub-btn--primary sub-modal__btn-full" id="subB-save">Save changes</button>
+    <div class="sub-modal__btn-row">
+      <button type="button" class="sub-btn" id="subB-pause">Pause subscription</button>
+      <button type="button" class="sub-btn" id="subB-cancel">Cancel subscription</button>
+    </div>
+  </div>
+</div>
+
+{% comment %} ---------- Drop Now popup ---------- {% endcomment %}
+<div class="sub-modal-overlay" id="subModalDrop">
+  <div class="sub-modal">
+    <button type="button" class="sub-modal__close" data-close>&times;</button>
+    <h3>Drop this order now?</h3>
+    <p class="sub-modal__desc" id="subDrop-desc"></p>
+    <div class="sub-modal__note" id="subDrop-note"></div>
+    <button type="button" class="sub-btn sub-modal__btn-full" id="subDrop-skip">Skip next drop</button>
+    <button type="button" class="sub-btn sub-btn--primary sub-modal__btn-full" id="subDrop-keep">Keep next drop</button>
+  </div>
+</div>
+
+{% comment %} ---------- Skip Cycle popup ---------- {% endcomment %}
+<div class="sub-modal-overlay" id="subModalSkip">
+  <div class="sub-modal">
+    <button type="button" class="sub-modal__close" data-close>&times;</button>
+    <h3>Skip your next cycle?</h3>
+    <p class="sub-modal__desc" id="subSkip-desc"></p>
+    <button type="button" class="sub-btn sub-modal__btn-full" id="subSkip-nevermind">Never mind</button>
+    <button type="button" class="sub-btn sub-btn--primary sub-modal__btn-full" id="subSkip-confirm">
+      Skip this drop
+    </button>
+  </div>
+</div>
+
+{% comment %} ---------- Cancel Subscription popup ---------- {% endcomment %}
+{% comment %}
+  <div class="sub-modal-overlay" id="subModalCancel">
+    <div class="sub-modal">
+      <button type="button" class="sub-modal__close" data-close>&times;</button>
+      <h3>Cancel this subscription?</h3>
+      <p class="sub-modal__desc" id="subCancel-desc"></p>
+      <button type="button" class="sub-btn sub-modal__btn-full" id="subCancel-nevermind">Never mind</button>
+      <button type="button" class="sub-btn sub-modal__btn-full" id="subCancel-confirm">Cancel subscription</button>
+    </div>
+  </div>
+{% endcomment %}
+
+<script>
+  (function () {
+    const API_BASE = 'https://custom-subscription-zs2fg.ondigitalocean.app/api/update_subscription';
+    const DROP_NOW_API_BASE = 'https://custom-subscription-zs2fg.ondigitalocean.app/api/drop_now';
+    const customerId = '{{ customer.id }}';
+
+    // Set to false to use the real API.
+    const DRY_RUN = false;
+
+    /* -------------------------------------------------------
+     DATE HELPERS
+  ------------------------------------------------------- */
+
+    function pad2(n) {
+      return String(n).padStart(2, '0');
+    }
+
+    function firstOfNextMonth(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      const next = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+      return `${next.getFullYear()}-${pad2(next.getMonth() + 1)}-01`;
+    }
+
+    function withDayOfMonth(dateStr, day) {
+      const d = new Date(dateStr + 'T00:00:00');
+      const lastDayOfMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+      d.setDate(Math.min(day, lastDayOfMonth));
+      return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+    }
+
+    function advanceMonthAnchored(dateStr, anchorDay) {
+      return withDayOfMonth(firstOfNextMonth(dateStr), anchorDay);
+    }
+
+    function anchorDayFor(card) {
+      const billingAnchorDay = parseInt(card.dataset.billingAnchorDay, 10);
+
+      if (!isNaN(billingAnchorDay) && billingAnchorDay >= 1 && billingAnchorDay <= 31) {
+        return billingAnchorDay;
+      }
+
+      const signupDay = parseInt(card.dataset.signupDay, 10);
+
+      if (!isNaN(signupDay) && signupDay >= 1 && signupDay <= 31) {
+        return signupDay;
+      }
+
+      return Number((card.dataset.nextBilling || '').split('-')[2]);
+    }
+
+    function nextCount(card) {
+      const current = parseInt(card.dataset.count, 10);
+      return (isNaN(current) ? 0 : current) + 1;
+    }
+
+    function formatDisplay(dateStr) {
+      if (!dateStr) return '';
+
+      const d = new Date(dateStr + 'T00:00:00');
+
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+
+      return `${dd}/${mm}/${d.getFullYear()}`;
+    }
+
+    const CYCLE_LENGTH = 6;
+    const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    function formatFreeDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+
+      const yy = String(d.getFullYear()).slice(-2);
+
+      return `${d.getDate()} ${MONTH_ABBR[d.getMonth()]} '${yy}`;
+    }
+
+    function updateCycleDisplay(card, count, nextBillingStr) {
+      const countMod = ((parseInt(count, 10) || 0) % CYCLE_LENGTH + CYCLE_LENGTH) % CYCLE_LENGTH;
+
+      const cyclePos = countMod === 0 ? CYCLE_LENGTH : countMod;
+
+      const monthsToFree = countMod === 0 ? 0 : CYCLE_LENGTH - countMod;
+
+      const freeDate = new Date(nextBillingStr + 'T00:00:00');
+
+      freeDate.setMonth(freeDate.getMonth() + monthsToFree);
+
+      const dots = card.querySelectorAll('.sub-cycle-dot:not(.is-free)');
+
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('is-current', idx + 1 <= cyclePos);
+      });
+
+      const freeDot = card.querySelector('.sub-cycle-dot.is-free');
+
+      if (freeDot) {
+        freeDot.classList.toggle('is-next', countMod === 0);
+      }
+
+      const heading = card.querySelector('.sub-card__cycle-heading');
+
+      if (heading) {
+        heading.textContent = `Next Free Month – ${formatFreeDate(freeDate.toISOString().split('T')[0])}`;
+      }
+
+      const dateEl = card.querySelector('.sub-next-drop-date');
+
+      if (dateEl) {
+        dateEl.textContent = formatDisplay(nextBillingStr);
+      }
+    }
+
+    /* -------------------------------------------------------
+     TOAST NOTIFICATION
+  ------------------------------------------------------- */
+
+    function showATCNotification(message, type) {
+      const existing = document.querySelector('.atc-toast-notification');
+
+      if (existing) {
+        existing.remove();
+      }
+
+      const toast = document.createElement('div');
+
+      toast.className = 'atc-toast-notification';
+
+      toast.textContent = message;
+
+      toast.style.cssText =
+        'position:fixed;' +
+        'top:90px;' +
+        'right:20px;' +
+        'background:' +
+        (type === 'success' ? '#30623D' : '#c0392b') +
+        ';' +
+        'color:#fff;' +
+        'padding:14px 24px;' +
+        'border-radius:8px;' +
+        'font-size:14px;' +
+        'font-weight:600;' +
+        'z-index:999999;' +
+        'opacity:0;' +
+        'transform:translateY(-10px);' +
+        'transition:all 0.3s ease;';
+
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+      }, 10);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+
+        setTimeout(() => {
+          toast.remove();
+        }, 200);
+      }, 2000);
+    }
+
+    /* -------------------------------------------------------
+     UPDATE SUBSCRIPTION API
+  ------------------------------------------------------- */
+
+    async function callUpdate(params) {
+      const cleanParams = Object.fromEntries(
+        Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== '')
+      );
+
+      if (DRY_RUN) {
+        showATCNotification('Subscription updated', 'success');
+
+        return {
+          success: true,
+          dryRun: true,
+        };
+      }
+
+      try {
+        const query = new URLSearchParams(cleanParams);
+
+        const requestUrl = `${API_BASE}?${query.toString()}`;
+
+        const res = await fetch(requestUrl, {
+          method: 'GET',
+        });
+
+        const rawText = await res.text();
+
+        let data;
+
+        try {
+          data = rawText ? JSON.parse(rawText) : {};
+        } catch (parseErr) {
+          console.warn('update_subscription returned non-JSON body:', rawText);
+
+          data = {
+            raw: rawText,
+          };
+        }
+
+        if (!res.ok) {
+          console.error('update_subscription failed:', res.status, data);
+
+          throw new Error(`Request failed with status ${res.status}: ${rawText}`);
+        }
+
+        showATCNotification('Subscription updated', 'success');
+
+        return data;
+      } catch (err) {
+        console.error('callUpdate error:', err);
+
+        showATCNotification('Could not update subscription. Please try again.', 'error');
+
+        throw err;
+      }
+    }
+
+    /* -------------------------------------------------------
+     DROP NOW API
+  ------------------------------------------------------- */
+
+    async function callDropNow(card, keepNextBilling = false) {
+      /* ---------------------------------------------
+       PARAMETERS BEING SENT TO DROP NOW API
+    --------------------------------------------- */
+
+      const params = {
+        customerId,
+        subscriptionId: card.dataset.orderId,
+        variantId: card.dataset.variantId,
+        line_item_id: card.dataset.lineItemId,
+        keep_next_billing: keepNextBilling ? 'true' : 'false',
+      };
+
+      /* ---------------------------------------------
+       CLEAN PARAMETERS
+    --------------------------------------------- */
+
+      const cleanParams = Object.fromEntries(
+        Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== '')
+      );
+
+      /* ---------------------------------------------
+       DRY RUN
+    --------------------------------------------- */
+
+      if (DRY_RUN) {
+        console.log('[DRY RUN] Would call drop_now with:');
+
+        showATCNotification('Your changes will reflect soon', 'success');
+
+        return {
+          success: true,
+          dryRun: true,
+        };
+      }
+
+      /* ---------------------------------------------
+       BUILD API URL
+    --------------------------------------------- */
+
+      try {
+        const query = new URLSearchParams(cleanParams);
+
+        const requestUrl = `${DROP_NOW_API_BASE}?${query.toString()}`;
+
+        /* ---------------------------------------------
+         SEND REQUEST
+      --------------------------------------------- */
+
+        const res = await fetch(requestUrl, {
+          method: 'GET',
+        });
+
+        /* ---------------------------------------------
+         READ RESPONSE
+      --------------------------------------------- */
+
+        const rawText = await res.text();
+
+        let data;
+
+        try {
+          data = rawText ? JSON.parse(rawText) : {};
+        } catch (parseErr) {
+          data = {
+            raw: rawText,
+          };
+        }
+
+        /* ---------------------------------------------
+         HANDLE ERROR
+      --------------------------------------------- */
+
+        if (!res.ok) {
+          throw new Error(`Request failed with status ${res.status}: ${rawText}`);
+        }
+
+        /* ---------------------------------------------
+         SUCCESS
+      --------------------------------------------- */
+
+        showATCNotification('Your changes will reflect soon', 'success');
+
+        return data;
+      } catch (err) {
+        showATCNotification('Could not drop order. Please try again.', 'error');
+
+        throw err;
+      }
+    }
+
+    /* -------------------------------------------------------
+     BUTTON LOADING
+  ------------------------------------------------------- */
+
+    function setLoading(btn, loading, loadingText) {
+      if (!btn) return;
+
+      btn.disabled = loading;
+
+      if (loading) {
+        btn.dataset.originalText = btn.dataset.originalText || btn.textContent;
+
+        const label = loadingText || btn.dataset.originalText;
+
+        btn.innerHTML = `${label} <span class="spinner"></span>`;
+      } else if (btn.dataset.originalText) {
+        btn.textContent = btn.dataset.originalText;
+      }
+    }
+
+    /* -------------------------------------------------------
+     CLOSE MODALS
+  ------------------------------------------------------- */
+
+    function closeAllModals() {
+      document.querySelectorAll('.sub-modal-overlay').forEach((el) => {
+        el.classList.remove('is-open');
+      });
+    }
+
+    /* -------------------------------------------------------
+     MODAL CLICK OUTSIDE / CLOSE
+  ------------------------------------------------------- */
+
+    document.querySelectorAll('.sub-modal-overlay').forEach((overlay) => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay || e.target.closest('[data-close]')) {
+          closeAllModals();
+        }
+      });
+    });
+
+    /* -------------------------------------------------------
+     SMOOTH SCROLL
+  ------------------------------------------------------- */
+
+    document.querySelectorAll('[data-smooth-scroll]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        const targetId = link.getAttribute('href');
+
+        if (!targetId || !targetId.startsWith('#')) {
+          return;
+        }
+
+        const target = document.querySelector(targetId);
+
+        if (!target) {
+          return;
+        }
+
+        e.preventDefault();
+
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      });
+    });
+
+    /* -------------------------------------------------------
+     ACTIVE CARD
+  ------------------------------------------------------- */
+
+    let activeCard = null;
+    let activeCardReactivating = false;
+
+    function openEditModal(card, { reactivating = false } = {}) {
+      activeCard = card;
+      activeCardReactivating = reactivating;
+
+      const dateInput = document.getElementById('subB-date');
+      const today = new Date();
+      dateInput.min = `${today.getFullYear()}-${pad2(today.getMonth() + 1)}-${pad2(today.getDate())}`;
+      dateInput.value = card.dataset.nextBilling;
+
+      document.getElementById('subB-qty').value = card.dataset.quantity;
+
+      const qtyLabel = document.getElementById('subB-qty-label');
+
+      qtyLabel.innerHTML =
+        `<span class="sub-qty-label__title">${card.dataset.productTitle}</span>` +
+        `<span class="sub-qty-label__variant"></span>`;
+
+      document
+        .getElementById('subB-toggle')
+        .querySelectorAll('button')
+        .forEach((b) => {
+          b.classList.toggle('is-active', b.dataset.value === 'every_month');
+        });
+
+      const wSel = document.getElementById('subB-wholesaler');
+
+      if (wSel) {
+        wSel.value = '';
+      }
+
+      updateQtyLabelVariant();
+
+      const pauseBtn = document.getElementById('subB-pause');
+
+      if (pauseBtn) {
+        pauseBtn.style.display = card.dataset.status === 'active' ? '' : 'none';
+      }
+
+      document.getElementById('subModalB').classList.add('is-open');
+    }
+
+    /* -------------------------------------------------------
+     BASE PARAMETERS
+  ------------------------------------------------------- */
+
+    function baseParams(card) {
+      const params = {
+        customerId,
+        subscriptionId: card.dataset.orderId,
+        variantId: card.dataset.variantId,
+        line_item_id: card.dataset.lineItemId,
+        newStatus: card.dataset.status,
+        quantity: card.dataset.quantity,
+        next_billing: card.dataset.nextBilling,
+      };
+
+      console.log('Base subscription parameters:', params);
+
+      return params;
+    }
+
+    /* -------------------------------------------------------
+     CARD EVENTS
+  ------------------------------------------------------- */
+
+    document.querySelectorAll('.sub-card').forEach((card) => {
+      /* ---------------------------------------------
+         REACTIVATE
+      --------------------------------------------- */
+
+      card.querySelector('[data-action="reactivate"]')?.addEventListener('click', () => {
+        console.log('Reactivate clicked:', card);
+
+        openEditModal(card, { reactivating: true });
+      });
+
+      /* ---------------------------------------------
+         OPEN EDIT
+      --------------------------------------------- */
+
+      card.querySelector('[data-action="open-edit"]')?.addEventListener('click', () => {
+        console.log('Edit clicked:', card);
+
+        openEditModal(card, { reactivating: false });
+      });
+
+      /* ---------------------------------------------
+         DROP NOW BUTTON
+      --------------------------------------------- */
+
+      card.querySelector('[data-action="open-drop"]')?.addEventListener('click', () => {
+        activeCard = card;
+
+        const nextDate = formatDisplay(card.dataset.nextBilling);
+
+        const daysOut = Math.round(
+          (new Date(card.dataset.nextBilling + 'T00:00:00') - new Date(new Date().toDateString())) / 86400000
+        );
+
+        const daysPhrase = daysOut === 0 ? 'today' : daysOut === 1 ? 'in 1 day' : `in ${daysOut} days`;
+
+        console.log('Next billing:', card.dataset.nextBilling);
+
+        console.log('Formatted next billing:', nextDate);
+
+        console.log('Days until next billing:', daysOut);
+
+        console.log('Days phrase:', daysPhrase);
+
+        document.getElementById(
+          'subDrop-desc'
+        ).textContent = `Your next order is scheduled for ${nextDate} — that's ${daysPhrase}.`;
+
+        document.getElementById(
+          'subDrop-note'
+        ).textContent = `Do you still want your next drop ${daysPhrase}, or should we skip it since we're dropping one today?`;
+
+        document.getElementById('subModalDrop').classList.add('is-open');
+      });
+
+      /* ---------------------------------------------
+         SKIP CYCLE BUTTON
+      --------------------------------------------- */
+
+      card.querySelector('[data-action="open-skip"]')?.addEventListener('click', () => {
+        activeCard = card;
+
+        const nextDate = formatDisplay(card.dataset.nextBilling);
+
+        const skippedDate = formatDisplay(advanceMonthAnchored(card.dataset.nextBilling, anchorDayFor(card)));
+
+        document.getElementById(
+          'subSkip-desc'
+        ).textContent = `Your next order is scheduled for ${nextDate}. Skipping this cycle will push your next drop to ${skippedDate} instead.`;
+
+        document.getElementById('subModalSkip').classList.add('is-open');
+      });
+
+      /* ---------------------------------------------
+         CANCEL BUTTON
+      --------------------------------------------- */
+
+      card.querySelector('[data-action="open-cancel"]')?.addEventListener('click', () => {
+        activeCard = card;
+
+        const cancelDesc = document.getElementById('subCancel-desc');
+
+        if (cancelDesc) {
+          cancelDesc.textContent = `Are you sure you want to cancel your subscription to ${card.dataset.productTitle}? This can't be undone from this page.`;
+        }
+
+        const cancelModal = document.getElementById('subModalCancel');
+
+        if (cancelModal) {
+          cancelModal.classList.add('is-open');
+        }
+      });
+    });
+
+    /* -------------------------------------------------------
+     POPUP A TOGGLE
+  ------------------------------------------------------- */
+
+    document
+      .getElementById('subA-toggle')
+      .querySelectorAll('button')
+      .forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document
+            .getElementById('subA-toggle')
+            .querySelectorAll('button')
+            .forEach((b) => {
+              b.classList.remove('is-active');
+            });
+
+          btn.classList.add('is-active');
+        });
+      });
+
+    /* -------------------------------------------------------
+     POPUP A CONFIRM
+  ------------------------------------------------------- */
+
+    document.getElementById('subA-confirm').addEventListener('click', async (e) => {
+      if (!activeCard) return;
+
+      const applyOnce =
+        document.getElementById('subA-toggle').querySelector('.is-active').dataset.value === 'just_once';
+
+      const newDate = document.getElementById('subA-date').value || advanceMonthAnchored(activeCard.dataset.nextBilling, anchorDayFor(activeCard));
+
+      setLoading(e.currentTarget, true, 'Saving...');
+
+      await callUpdate({
+        ...baseParams(activeCard),
+
+        next_billing: newDate,
+
+        apply_once: applyOnce ? 'true' : undefined,
+      });
+
+      finishAction(e.currentTarget);
+    });
+
+    /* -------------------------------------------------------
+     POPUP B TOGGLE
+  ------------------------------------------------------- */
+
+    document
+      .getElementById('subB-toggle')
+      .querySelectorAll('button')
+      .forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document
+            .getElementById('subB-toggle')
+            .querySelectorAll('button')
+            .forEach((b) => {
+              b.classList.remove('is-active');
+            });
+
+          btn.classList.add('is-active');
+        });
+      });
+
+    /* -------------------------------------------------------
+     QUANTITY DECREASE
+  ------------------------------------------------------- */
+
+    document.getElementById('subB-qty-dec').addEventListener('click', () => {
+      const inp = document.getElementById('subB-qty');
+
+      inp.value = Math.max(1, (parseInt(inp.value, 10) || 1) - 1);
+    });
+
+    /* -------------------------------------------------------
+     QUANTITY INCREASE
+  ------------------------------------------------------- */
+
+    document.getElementById('subB-qty-inc').addEventListener('click', () => {
+      const inp = document.getElementById('subB-qty');
+
+      inp.value = (parseInt(inp.value, 10) || 1) + 1;
+    });
+
+    /* -------------------------------------------------------
+     WHOLESALER LABEL SYNC
+  ------------------------------------------------------- */
+
+    const WHOLESALER_BRAND_BY_SLOT = { 1: 'API', 2: 'Sigma', 3: 'Symbion', 4: 'CH2' };
+
+    // reflects whatever the "Change Wholesaler" select is currently set to —
+    // the newly picked brand while a change is staged, or the subscription's
+    // existing brand/variant when it's back on "No change"
+    function updateQtyLabelVariant() {
+      if (!activeCard) return;
+
+      const qtyLabel = document.getElementById('subB-qty-label');
+      const variantSpan = qtyLabel && qtyLabel.querySelector('.sub-qty-label__variant');
+
+      if (!variantSpan) return;
+
+      const wSel = document.getElementById('subB-wholesaler');
+      const selectedOption = wSel && wSel.selectedOptions[0];
+      const selectedSlot = wSel && wSel.value ? selectedOption?.dataset.slot : '';
+      const variantTitle = activeCard.dataset.variantTitle || '';
+
+      let line;
+
+      if (selectedSlot) {
+        const newBrand = WHOLESALER_BRAND_BY_SLOT[selectedSlot] || '';
+
+        line = newBrand && variantTitle ? `${newBrand} / ${variantTitle}` : newBrand || variantTitle;
+      } else {
+        line = activeCard.dataset.variantLine || variantTitle;
+      }
+
+      variantSpan.textContent = line;
+    }
+
+    document.getElementById('subB-wholesaler')?.addEventListener('change', updateQtyLabelVariant);
+
+    /* -------------------------------------------------------
+     POPUP B SKIP
+  ------------------------------------------------------- */
+
+    document.getElementById('subB-skip').addEventListener('click', async (e) => {
+      if (!activeCard) return;
+
+      console.log('Popup B - Skip next drop clicked');
+
+      setLoading(e.currentTarget, true, 'Dropping...');
+
+      try {
+        console.log('STEP 1: Calling Drop Now API...');
+
+        const result = await callDropNow(activeCard);
+
+        const nextBilling = result.synced
+          ? result.next_billing
+          : advanceMonthAnchored(activeCard.dataset.nextBilling, anchorDayFor(activeCard));
+
+        const count = result.synced ? result.count : nextCount(activeCard);
+
+        activeCard.dataset.nextBilling = nextBilling;
+        activeCard.dataset.count = count;
+        updateCycleDisplay(activeCard, count, nextBilling);
+
+        console.log('STEP 1 COMPLETE', { synced: result.synced });
+      } catch (err) {
+        console.error('POPUP B SKIP FLOW FAILED:', err);
+
+        setLoading(e.currentTarget, false);
+
+        return;
+      }
+
+      finishAction(e.currentTarget, 'Order placed — updating shortly');
+    });
+
+    /* -------------------------------------------------------
+     POPUP B KEEP
+  ------------------------------------------------------- */
+
+    document.getElementById('subB-keep').addEventListener('click', async (e) => {
+      if (!activeCard) return;
+
+      console.log('Popup B - Keep next drop clicked');
+
+      setLoading(e.currentTarget, true, 'Dropping...');
+
+      try {
+        const result = await callDropNow(activeCard, true);
+
+        const count = result.synced ? result.count : nextCount(activeCard);
+
+        activeCard.dataset.count = count;
+        updateCycleDisplay(activeCard, count, activeCard.dataset.nextBilling);
+      } catch (err) {
+        console.error('POPUP B KEEP FLOW FAILED:', err);
+
+        setLoading(e.currentTarget, false);
+
+        return;
+      }
+
+      finishAction(e.currentTarget, 'Order placed — updating shortly');
+    });
+
+    /* -------------------------------------------------------
+     SAVE EDIT
+  ------------------------------------------------------- */
+
+    document.getElementById('subB-save').addEventListener('click', async (e) => {
+      if (!activeCard) return;
+
+      const newDate = document.getElementById('subB-date').value;
+
+      const newQty = document.getElementById('subB-qty').value;
+
+      const applyOnce =
+        document.getElementById('subB-toggle').querySelector('.is-active').dataset.value === 'just_once';
+
+      const wSel = document.getElementById('subB-wholesaler');
+
+      const wholesalerValue = wSel ? wSel.value : '';
+
+      const wholesalerSlot = wSel && wSel.selectedOptions[0] ? wSel.selectedOptions[0].dataset.slot : '';
+
+      const params = {
+        ...baseParams(activeCard),
+        quantity: newQty,
+      };
+
+      if (newDate && newDate !== activeCard.dataset.nextBilling) {
+        params.next_billing = newDate;
+
+        if (applyOnce && !activeCardReactivating) {
+          params.apply_once = 'true';
+        }
+      }
+
+      if (wholesalerValue) {
+        params.wholesaler_account = wholesalerValue;
+        params.wholesaler_account_slot = wholesalerSlot;
+      }
+
+      if (activeCardReactivating) {
+        params.newStatus = 'ACTIVE';
+      }
+
+      console.log('Saving subscription changes:', params);
+
+      setLoading(e.currentTarget, true, 'Saving...');
+
+      await callUpdate(params);
+
+      activeCardReactivating = false;
+
+      finishAction(e.currentTarget);
+    });
+
+    /* -------------------------------------------------------
+     PAUSE SUBSCRIPTION
+  ------------------------------------------------------- */
+
+    document.getElementById('subB-pause').addEventListener('click', async (e) => {
+      if (!activeCard) return;
+
+      console.log('Pause subscription clicked');
+
+      setLoading(e.currentTarget, true, 'Pausing...');
+
+      await callUpdate({
+        ...baseParams(activeCard),
+
+        newStatus: 'PAUSE',
+      });
+
+      finishAction(e.currentTarget);
+    });
+
+    /* -------------------------------------------------------
+     CANCEL SUBSCRIPTION
+  ------------------------------------------------------- */
+
+    document.getElementById('subB-cancel').addEventListener('click', async (e) => {
+      if (!activeCard) return;
+
+      const confirmed = window.confirm(
+        `Are you sure you want to cancel your subscription to ${activeCard.dataset.productTitle}? This can't be undone from this page.`
+      );
+
+      if (!confirmed) return;
+
+      console.log('Cancel subscription confirmed');
+
+      setLoading(e.currentTarget, true, 'Cancelling...');
+
+      await callUpdate({
+        ...baseParams(activeCard),
+
+        newStatus: 'cancel',
+      });
+
+      finishAction(e.currentTarget);
+    });
+
+    /* -------------------------------------------------------
+     DROP NOW - SKIP NEXT DROP
+  ------------------------------------------------------- */
+
+    document.getElementById('subDrop-skip').addEventListener('click', async (e) => {
+      if (!activeCard) {
+        console.error('DROP NOW ERROR: No active card found.');
+
+        return;
+      }
+
+      setLoading(e.currentTarget, true, 'Dropping...');
+
+      try {
+        console.log('STEP 1: Calling Drop Now API...');
+
+        const result = await callDropNow(activeCard);
+
+        const nextBilling = result.synced
+          ? result.next_billing
+          : advanceMonthAnchored(activeCard.dataset.nextBilling, anchorDayFor(activeCard));
+
+        const count = result.synced ? result.count : nextCount(activeCard);
+
+        activeCard.dataset.nextBilling = nextBilling;
+        activeCard.dataset.count = count;
+        updateCycleDisplay(activeCard, count, nextBilling);
+
+        console.log('STEP 1 COMPLETE', { synced: result.synced });
+      } catch (err) {
+        console.error('DROP NOW SKIP FLOW FAILED:', err);
+
+        setLoading(e.currentTarget, false);
+
+        return;
+      }
+
+      console.log('DROP NOW -> SKIP NEXT DROP COMPLETED');
+
+      finishAction(e.currentTarget, 'Order placed — updating shortly');
+    });
+
+    /* -------------------------------------------------------
+     DROP NOW - KEEP NEXT DROP
+  ------------------------------------------------------- */
+
+    document.getElementById('subDrop-keep').addEventListener('click', async (e) => {
+      if (!activeCard) {
+        console.error('DROP NOW ERROR: No active card found.');
+
+        return;
+      }
+
+      setLoading(e.currentTarget, true, 'Dropping...');
+
+      try {
+        const result = await callDropNow(activeCard, true);
+
+        const count = result.synced ? result.count : nextCount(activeCard);
+
+        activeCard.dataset.count = count;
+        updateCycleDisplay(activeCard, count, activeCard.dataset.nextBilling);
+      } catch (err) {
+        console.error('DROP NOW KEEP FLOW FAILED:', err);
+
+        setLoading(e.currentTarget, false);
+
+        return;
+      }
+
+      finishAction(e.currentTarget, 'Order placed — updating shortly');
+    });
+
+    /* -------------------------------------------------------
+     SKIP CYCLE
+  ------------------------------------------------------- */
+
+    document.getElementById('subSkip-nevermind').addEventListener('click', () => {
+      console.log('Skip cycle cancelled');
+
+      closeAllModals();
+    });
+
+    document.getElementById('subSkip-confirm').addEventListener('click', async (e) => {
+      if (!activeCard) return;
+
+      console.log('Skip cycle confirmed');
+
+      setLoading(e.currentTarget, true, 'Skipping...');
+
+      const params = {
+        ...baseParams(activeCard),
+
+        skip_cycle: 'true',
+      };
+
+      delete params.next_billing;
+      delete params.count;
+
+      await callUpdate(params);
+
+      finishAction(e.currentTarget);
+    });
+
+    /* -------------------------------------------------------
+     CANCEL MODAL
+  ------------------------------------------------------- */
+
+    document.getElementById('subCancel-nevermind')?.addEventListener('click', () => {
+      closeAllModals();
+    });
+
+    document.getElementById('subCancel-confirm')?.addEventListener('click', async (e) => {
+      if (!activeCard) return;
+
+      setLoading(e.currentTarget, true, 'Cancelling...');
+
+      await callUpdate({
+        ...baseParams(activeCard),
+
+        newStatus: 'cancel',
+      });
+
+      finishAction(e.currentTarget);
+    });
+
+    /* -------------------------------------------------------
+     FINISH ACTION
+  ------------------------------------------------------- */
+
+    function finishAction(btn, message) {
+      console.log('Finishing subscription action...');
+
+      if (DRY_RUN) {
+        setLoading(btn, false);
+
+        closeAllModals();
+      } else if (message) {
+        showATCNotification(message, 'success');
+
+        setTimeout(() => location.reload(), 1200);
+      } else {
+        location.reload();
+      }
+    }
+
+    /* -------------------------------------------------------
+     FILTERS
+  ------------------------------------------------------- */
+
+    const list = document.getElementById('subsCardListBody');
+
+    const combinedSelect = document.getElementById('subsFilterCombined');
+
+    const activeFiltersEl = document.getElementById('subsActiveFilters');
+
+    /* combinedSelect's value is "sort:xxx" or "status:xxx" — a native
+       <select> only ever holds one selection, so picking a sort option and
+       picking a status option are mutually exclusive by construction. */
+    function parseCombinedValue() {
+      const raw = combinedSelect ? combinedSelect.value : '';
+
+      const [type, value] = raw ? raw.split(':') : ['', ''];
+
+      return { type: type || '', value: value || '' };
+    }
+
+    function renderActiveFilters() {
+      if (!activeFiltersEl) return;
+
+      activeFiltersEl.innerHTML = '';
+
+      if (!combinedSelect || !combinedSelect.value) return;
+
+      const selectedOption = combinedSelect.options[combinedSelect.selectedIndex];
+
+      const groupLabel =
+        selectedOption && selectedOption.parentElement && selectedOption.parentElement.tagName === 'OPTGROUP'
+          ? selectedOption.parentElement.label
+          : '';
+
+      const optionText = selectedOption ? selectedOption.text : combinedSelect.value;
+
+      const label = groupLabel ? `${groupLabel}: ${optionText}` : optionText;
+
+      const chip = document.createElement('span');
+
+      chip.className = 'subs-filter-chip';
+
+      const labelSpan = document.createElement('span');
+
+      labelSpan.textContent = label;
+
+      chip.appendChild(labelSpan);
+
+      const removeBtn = document.createElement('button');
+
+      removeBtn.type = 'button';
+
+      removeBtn.className = 'subs-filter-chip__remove';
+
+      removeBtn.setAttribute('aria-label', `Remove ${label} filter`);
+
+      removeBtn.textContent = '\u00d7';
+
+      removeBtn.addEventListener('click', () => {
+        combinedSelect.value = '';
+
+        currentPage = 1;
+
+        applyFilters();
+      });
+
+      chip.appendChild(removeBtn);
+
+      activeFiltersEl.appendChild(chip);
+    }
+
+    const originalCardOrder = list ? Array.from(list.querySelectorAll('.sub-card')) : [];
+
+    const originalIndexOf = new Map(originalCardOrder.map((card, i) => [card, i]));
+
+    function nextDropTime(card) {
+      const val = (card.dataset.nextBilling || '').trim();
+
+      if (!val) {
+        return Infinity;
+      }
+
+      const t = new Date(val + 'T00:00:00').getTime();
+
+      return isNaN(t) ? Infinity : t;
+    }
+
+    function applyFilters() {
+      if (!list) return;
+
+      renderActiveFilters();
+
+      const { type: filterType, value: filterValue } = parseCombinedValue();
+
+      const status = filterType === 'status' ? filterValue.trim().toLowerCase() : '';
+
+      const dropMode = filterType === 'sort' && filterValue === 'sort_by' ? 'sort_by' : '';
+
+      const cards = Array.from(list.querySelectorAll('.sub-card'));
+
+      cards.forEach((card) => {
+        const cardStatus = (card.dataset.status || '').trim().toLowerCase();
+
+        const statusMatches = !status || cardStatus === status;
+
+        const hideForNextDrop = dropMode === 'sort_by' && (cardStatus === 'cancel' || cardStatus === 'pause');
+
+        card.style.display = statusMatches && !hideForNextDrop ? '' : 'none';
+      });
+
+      const azSort = filterType === 'sort' ? filterValue : '';
+
+      const visible = cards.filter((c) => c.style.display !== 'none');
+
+      visible.sort((a, b) => {
+        if (azSort === 'az') {
+          return a.dataset.search.localeCompare(b.dataset.search);
+        }
+
+        if (azSort === 'za') {
+          return b.dataset.search.localeCompare(a.dataset.search);
+        }
+
+        if (dropMode === 'sort_by') {
+          const diff = nextDropTime(a) - nextDropTime(b);
+
+          if (diff !== 0) {
+            return diff;
+          }
+
+          return originalIndexOf.get(a) - originalIndexOf.get(b);
+        }
+
+        return originalIndexOf.get(a) - originalIndexOf.get(b);
+      });
+
+      visible.forEach((c) => list.appendChild(c));
+
+      renderPagination(cards, visible);
+    }
+
+    /* -------------------------------------------------------
+     PAGINATION
+  ------------------------------------------------------- */
+
+    const PAGE_SIZE = 10;
+
+    let currentPage = 1;
+
+    function renderPagination(allCards, visibleCards) {
+      const label = document.getElementById('subsPaginationLabel');
+
+      const pagesEl = document.getElementById('subsPaginationPages');
+
+      if (!label || !pagesEl) {
+        return;
+      }
+
+      const totalPages = Math.max(1, Math.ceil(visibleCards.length / PAGE_SIZE));
+
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      const start = (currentPage - 1) * PAGE_SIZE;
+
+      const end = start + PAGE_SIZE;
+
+      visibleCards.forEach((card, i) => {
+        card.style.display = i >= start && i < end ? '' : 'none';
+      });
+
+      label.textContent = `You are viewing ${Math.min(visibleCards.length, PAGE_SIZE)} out of ${
+        visibleCards.length
+      } Molecules`;
+
+      pagesEl.innerHTML = '';
+
+      for (let p = 1; p <= totalPages; p++) {
+        const span = document.createElement('span');
+
+        span.textContent = p;
+
+        if (p === currentPage) {
+          span.classList.add('is-active');
+        }
+
+        span.addEventListener('click', () => {
+          currentPage = p;
+
+          applyFilters();
+        });
+
+        pagesEl.appendChild(span);
+      }
+    }
+
+    /* -------------------------------------------------------
+     FILTER EVENTS
+  ------------------------------------------------------- */
+
+    combinedSelect?.addEventListener('change', () => {
+      currentPage = 1;
+
+      applyFilters();
+    });
+
+    /* -------------------------------------------------------
+     INITIAL FILTER
+  ------------------------------------------------------- */
+
+    applyFilters();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Subscriptions template",
+  "presets": [
+    {
+      "name": "Subscriptions template"
+    }
+  ]
+}
+{% endschema %}

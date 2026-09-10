@@ -1,0 +1,638 @@
+{% comment %}
+  Pharmacor Member-Only Benefits Section
+  Shopify Liquid Section
+{% endcomment %}
+
+<section class="pharma-benefits" id="pharma-benefits-{{ section.id }}">
+  <div class="pharma-benefits__inner">
+
+    <!-- Header -->
+    <div class="pharma-benefits__header">
+      <h2 class="pharma-benefits__title">{{ section.settings.title }}</h2>
+      <p class="pharma-benefits__description">{{ section.settings.description }}</p>
+    </div>
+
+    <!-- Benefits Table -->
+    <div class="pharma-benefits__table">
+
+      <!-- Column Headers -->
+      <div class="pharma-benefits__row pharma-benefits__row--header">
+        <div class="pharma-benefits__col pharma-benefits__col--label"></div>
+
+        <div class="pharma-benefits__col pharma-benefits__col--silver">
+          <span class="col-header__name">{{ section.settings.tier_1_name }}</span>
+          <span class="col-header__range">{{ section.settings.tier_1_range }}</span>
+        </div>
+
+        <div class="pharma-benefits__col pharma-benefits__col--gold">
+          <span class="col-header__name">{{ section.settings.tier_2_name }}</span>
+          <span class="col-header__range">{{ section.settings.tier_2_range }}</span>
+        </div>
+
+        <div class="pharma-benefits__col pharma-benefits__col--platinum">
+          <span class="col-header__name">{{ section.settings.tier_3_name }}</span>
+          <span class="col-header__range">{{ section.settings.tier_3_range }}</span>
+        </div>
+      </div>
+
+      <!-- Row: Points Per Dollar Spend -->
+      <div class="pharma-benefits__row">
+        <div class="pharma-benefits__col pharma-benefits__col--label">
+          <span>{{ section.settings.row_1_label }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_1_silver_img != blank %}
+            <img src="{{ section.settings.row_1_silver_img | img_url: 'master' }}" alt="Silver" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--silver"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_1_silver_value }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_1_gold_img != blank %}
+            <img src="{{ section.settings.row_1_gold_img | img_url: 'master' }}" alt="Gold" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--gold"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_1_gold_value }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_1_platinum_img != blank %}
+            <img src="{{ section.settings.row_1_platinum_img | img_url: 'master' }}" alt="Platinum" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--platinum"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_1_platinum_value }}</span>
+        </div>
+      </div>
+
+      <!-- Row: Upgrading Points -->
+      <div class="pharma-benefits__row">
+        <div class="pharma-benefits__col pharma-benefits__col--label">
+          <span>{{ section.settings.row_2_label }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_2_silver_img != blank %}
+            <img src="{{ section.settings.row_2_silver_img | img_url: 'master' }}" alt="Silver" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--silver"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_2_silver_value }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_2_gold_img != blank %}
+            <img src="{{ section.settings.row_2_gold_img | img_url: 'master' }}" alt="Gold" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--gold"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_2_gold_value }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_2_platinum_img != blank %}
+            <img src="{{ section.settings.row_2_platinum_img | img_url: 'master' }}" alt="Platinum" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--platinum"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_2_platinum_value }}</span>
+        </div>
+      </div>
+
+      <!-- Row: Offers -->
+      <div class="pharma-benefits__row">
+        <div class="pharma-benefits__col pharma-benefits__col--label">
+          <span>{{ section.settings.row_3_label }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          <!-- Silver: no benefit -->
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_3_gold_img != blank %}
+            <img src="{{ section.settings.row_3_gold_img | img_url: 'master' }}" alt="Gold" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--gold"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_3_gold_value }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_3_platinum_img != blank %}
+            <img src="{{ section.settings.row_3_platinum_img | img_url: 'master' }}" alt="Platinum" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--platinum"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_3_platinum_value }}</span>
+        </div>
+      </div>
+
+      <!-- Row: Stock -->
+      <div class="pharma-benefits__row pharma-benefits__row--last">
+        <div class="pharma-benefits__col pharma-benefits__col--label">
+          <span>{{ section.settings.row_4_label }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          <!-- Silver: no benefit -->
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_4_gold_img != blank %}
+            <img src="{{ section.settings.row_4_gold_img | img_url: 'master' }}" alt="Gold" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--gold"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_4_gold_value }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_4_platinum_img != blank %}
+            <img src="{{ section.settings.row_4_platinum_img | img_url: 'master' }}" alt="Platinum" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--platinum"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_4_platinum_value }}</span>
+        </div>
+      </div>
+
+      <div class="pharma-benefits__row">
+        <div class="pharma-benefits__col pharma-benefits__col--label">
+          <span>{{ section.settings.row_5_label }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+                <!-- Silver: no benefit -->
+              </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_5_gold_img != blank %}
+            <img src="{{ section.settings.row_5_gold_img | img_url: 'master' }}" alt="Gold" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--gold"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_5_gold_value }}</span>
+        </div>
+
+        <div class="pharma-benefits__col">
+          {% if section.settings.row_5_platinum_img != blank %}
+            <img src="{{ section.settings.row_5_platinum_img | img_url: 'master' }}" alt="Platinum" class="benefit__pill-img">
+          {% else %}
+            <div class="benefit__pill benefit__pill--platinum"></div>
+          {% endif %}
+          <span class="benefit__value">{{ section.settings.row_5_platinum_value }}</span>
+        </div>
+      </div>
+
+
+    </div>
+    <!-- /table -->
+
+  </div>
+</section>
+
+<style>
+  {% comment %} body.template-page {
+  background: #f3f8f8 !important;
+} {% endcomment %}
+.welcome-box.loyalty-section {
+    background: #f3f8f8;
+}
+.welcome-box.loyalty-section .wrapper_welcome {
+    background: transparent;
+}
+
+  #pharma-benefits-{{ section.id }} {
+    font-family: 'Neutrif Studio', sans-serif;
+    background-color: #f3f8f8;
+    padding: 40px 20px 20px;
+    box-sizing: border-box;
+    color: #444;
+  }
+
+  .pharma-benefits__inner {
+    max-width: 1170px;
+    margin: 0 auto;
+    padding:30px;
+    border-radius:39px;
+    background:#fff;
+  }
+
+  /* Header */
+  .pharma-benefits__header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .pharma-benefits__title {
+    font-family: 'Neutrif Studio', sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 1.15;
+    letter-spacing: 0;
+    color: #30623D;
+    margin: 0 0 10px;
+  }
+ 
+  .pharma-benefits__description {
+    font-family: 'Neutrif Studio', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #444;
+    margin: 0;
+    line-height: 1.6;
+    position: relative;
+    padding-right: 20px;
+  }
+
+  /* Table */
+  .pharma-benefits__table {
+    width: 100%;
+  }
+
+  .pharma-benefits__row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    align-items: center;
+    border-top: 1px solid #e0e0e0;
+    padding: 12px 0;
+    gap: 10px;
+  }
+
+  .pharma-benefits__row--header {
+    border-top: none;
+    padding-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .pharma-benefits__row--last {
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  /* Columns */
+  .pharma-benefits__col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .pharma-benefits__col--label {
+    align-items: flex-start;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 600;
+    color: #30623D;
+    line-height: 1.4;
+  }
+
+  /* Column headers */
+  .col-header__name {
+    font-family: 'Neutrif Studio', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .col-header__range {
+    font-size: 15px;
+    font-weight: 400;
+    color: #888;
+    display: block;
+  }
+  
+
+  /* Pill images */
+  .benefit__pill-img {
+    width: 64px;
+    height: auto;
+    display: block;
+  }
+
+  /* CSS fallback pills */
+  .benefit__pill {
+    width: 64px;
+    height: 28px;
+    border-radius: 100px;
+  }
+
+  .benefit__pill--silver {
+    background: linear-gradient(90deg, #b0b0b0, #e0e0e0, #c0c0c0);
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), inset 0 -2px 4px rgba(0,0,0,0.15);
+  }
+
+  .benefit__pill--gold {
+    background: linear-gradient(90deg, #c8960c, #f0c040, #b07d10);
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.2);
+  }
+
+  .benefit__pill--platinum {
+    background: linear-gradient(90deg, #1a1a1a, #3d3d3d, #111);
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.1), inset 0 -2px 4px rgba(0,0,0,0.4);
+  }
+
+  /* Value text */
+  .benefit__value {
+    font-size: 14px;
+    font-weight: 400;
+    color: #444;
+    line-height: 1.3;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .pharma-benefits__title {
+      font-size: 30px;
+    }
+    .pharma-benefits__inner {
+    padding: 15px;
+}
+    .pharma-benefits__description {
+      font-size: 13px;
+    }
+  #pharma-benefits-{{ section.id }} {
+    padding:40px 10px;
+  }
+    .pharma-benefits__row {
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 6px;
+      padding: 20px 0;
+    }
+
+    .col-header__name {
+      font-size: 14px;
+    }
+
+    .col-header__range {
+      font-size: 11px;
+    }
+
+    .pharma-benefits__col--label {
+      font-size: 13px;
+    }
+
+    .benefit__pill-img,
+    .benefit__pill {
+      width: 46px;
+    }
+
+    .benefit__value {
+      font-size: 12px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Pharmacor Benefits",
+  "tag": "section",
+  "class": "section-pharma-benefits",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "MEMBER-ONLY BENEFITS"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Each time you level up, so will your benefits! Here's what you can expect each year, according to your tier."
+    },
+    {
+      "type": "header",
+      "content": "Tier Column Labels"
+    },
+    {
+      "type": "text",
+      "id": "tier_1_name",
+      "label": "Tier 1 Name",
+      "default": "Silver"
+    },
+    {
+      "type": "text",
+      "id": "tier_1_range",
+      "label": "Tier 1 Range",
+      "default": "$0 - $4,999"
+    },
+    {
+      "type": "text",
+      "id": "tier_2_name",
+      "label": "Tier 2 Name",
+      "default": "Gold"
+    },
+    {
+      "type": "text",
+      "id": "tier_2_range",
+      "label": "Tier 2 Range",
+      "default": "$5000 - $14,999"
+    },
+    {
+      "type": "text",
+      "id": "tier_3_name",
+      "label": "Tier 3 Name",
+      "default": "Platinum"
+    },
+    {
+      "type": "text",
+      "id": "tier_3_range",
+      "label": "Tier 3 Range",
+      "default": "$15000 or more"
+    },
+    {
+      "type": "header",
+      "content": "Row 1 — Points Per Dollar Spend"
+    },
+    {
+      "type": "text",
+      "id": "row_1_label",
+      "label": "Row Label",
+      "default": "Points Per Dollar Spend"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_1_silver_img",
+      "label": "Silver Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_1_silver_value",
+      "label": "Silver Value",
+      "default": "1"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_1_gold_img",
+      "label": "Gold Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_1_gold_value",
+      "label": "Gold Value",
+      "default": "2"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_1_platinum_img",
+      "label": "Platinum Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_1_platinum_value",
+      "label": "Platinum Value",
+      "default": "5"
+    },
+    {
+      "type": "header",
+      "content": "Row 2 — Upgrading Points"
+    },
+    {
+      "type": "text",
+      "id": "row_2_label",
+      "label": "Row Label",
+      "default": "Upgrading Points"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_2_silver_img",
+      "label": "Silver Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_2_silver_value",
+      "label": "Silver Value",
+      "default": "500"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_2_gold_img",
+      "label": "Gold Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_2_gold_value",
+      "label": "Gold Value",
+      "default": "1000"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_2_platinum_img",
+      "label": "Platinum Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_2_platinum_value",
+      "label": "Platinum Value",
+      "default": "2000"
+    },
+    {
+      "type": "header",
+      "content": "Row 3 — Offers"
+    },
+    {
+      "type": "text",
+      "id": "row_3_label",
+      "label": "Row Label",
+      "default": "Offers"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_3_gold_img",
+      "label": "Gold Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_3_gold_value",
+      "label": "Gold Value",
+      "default": "Exclusive Offers"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_3_platinum_img",
+      "label": "Platinum Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_3_platinum_value",
+      "label": "Platinum Value",
+      "default": "Exclusive Offers"
+    },
+    {
+      "type": "header",
+      "content": "Row 4 — Stock"
+    },
+    {
+      "type": "text",
+      "id": "row_4_label",
+      "label": "Row Label",
+      "default": "Stock"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_4_gold_img",
+      "label": "Gold Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_4_gold_value",
+      "label": "Gold Value",
+      "default": "Stock Boost"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_4_platinum_img",
+      "label": "Platinum Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_4_platinum_value",
+      "label": "Platinum Value",
+      "default": "Stock Boost"
+    },
+    {
+      "type": "header",
+      "content": "Row 5"
+    },
+    {
+      "type": "text",
+      "id": "row_5_label",
+      "label": "Row Label",
+      "default": "Row 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_5_gold_img",
+      "label": "Gold Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_5_gold_value",
+      "label": "Gold Value"
+    },
+    {
+      "type": "image_picker",
+      "id": "row_5_platinum_img",
+      "label": "Platinum Pill Image"
+    },
+    {
+      "type": "text",
+      "id": "row_5_platinum_value",
+      "label": "Platinum Value"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pharmacor Benefits"
+    }
+  ]
+}
+{% endschema %}

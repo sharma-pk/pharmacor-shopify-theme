@@ -1,0 +1,70 @@
+{% comment %}
+  ------------------------------------------------------------------------------
+  Snippet: PDP drawer
+  ------------------------------
+  Require:
+   - content
+   - title
+   - toggle_id
+  Optional:
+   - footer_content
+   - class_container
+   - class_header
+   - class_body
+   - class_footer
+   - class_close
+  ------------------------------
+  Example:
+	{% render 'product-form-drawer',
+		title: page.title,
+		content: page.content,
+		toggle_id: 'pageDrawer'
+	%}
+  ------------------------------------------------------------------------------
+{% endcomment %}
+<style>
+  .drawer__body.rte-product-drawer.ccc p{display: flex;padding-bottom: 8px;gap: 20px; border-bottom: 2px solid #000; justify-content: space-between;margin-top: 8px;}
+  .drawer__body.rte-product-drawer.ccc h4{color: #000; margin-bottom: 10px;}
+  .drawer__body.rte-product-drawer.ccc h5{margin: 10px 0px;}
+  .drawer__body.rte-product-drawer.ccc p strong {
+  min-width: 170px;
+}
+  .drawer__body.rte-product-drawer.ccc p:empty {display: none;}
+</style>
+{% if title != blank and content != blank and toggle_id != blank %}
+	{% assign a11y_title = title | camelcase | append: 'Drawer' %}
+
+	<div
+		id="{{- toggle_id -}}"
+		class="drawer product-form-drawer {{ class_container }}"
+		role="dialog"
+		aria-labelledby="{{- a11y_title -}}"
+	>
+		<div class="drawer__header {{ class_header }}">
+			<h2 class="drawer__title" id="{{- a11y_title -}}">
+				{{- title -}}
+			</h2>
+
+			<button
+				class="drawer__close {{ class_close }}"
+				data-target="{{- toggle_id -}}"
+				data-js-toggle="{{- toggle_id -}}"
+				aria-label="{{ 'general.accessibility.close' | t | escape }}"
+			>
+				{%- render 'icons', icon: 'menu-close' -%}
+			</button>
+		</div>
+
+ 
+      <div class="drawer__body rte {{ class_body }} ccc">
+			{{ block.settings.data }}
+		</div>
+
+
+		{% if footer_content != blank %}
+			<div class="drawer__footer {{ class_footer }}">
+				{{- footer_content -}}
+			</div>
+		{% endif %}
+	</div>
+{% endif %}

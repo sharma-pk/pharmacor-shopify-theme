@@ -1,0 +1,372 @@
+
+<style>
+.more-info-section {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  margin-top: 40px;
+  font-family: sans-serif;
+}
+.myinfohidden{display: none;}
+.myinfohidden.myvariant-info{display: block;}
+.infor_wrapper {
+  background: #F3F8F8;
+  padding: 80px 200px;
+  margin: 0 auto;
+  border-radius: 20px;
+}
+
+.more-info-section h2 {
+  margin-bottom: 30px;
+  border-bottom: 2px solid #30623D;
+  padding-bottom: 40px;
+  font-family: "Neutrif Studio", sans-serif;
+  font-weight: 500;
+  font-size: 50px;
+  line-height: normal;
+  letter-spacing: 0;
+  text-align: center;
+  color: #30623D;
+}
+.custom-variants-title-info{ font-size: 36px;}
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.info-card {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.info-card h3 {
+  font-family: "Neutrif Studio", sans-serif;
+  font-weight: 600;
+  font-size: 25px;
+  line-height: normal;
+  letter-spacing: 0;
+  color: #30623D;
+}
+
+.info_content,
+.meta-info li {
+  font-family: "Neutrif Studio", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: normal;
+  letter-spacing: 0;
+  text-align: justify;
+  text-transform: capitalize;
+  color: #7D7777;
+}
+
+.meta-info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  list-style: none;
+  padding-left: 0;
+  font-size: 14px;
+}
+
+.meta-info li {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 4px;
+}
+
+.meta-info li strong {
+  font-family: "Neutrif Studio", sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: normal;
+  letter-spacing: 0;
+  color: #30623D;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.free-from-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: nowrap;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.free-from-card span {
+  font-family: "Neutrif Studio", sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: normal;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: capitalize;
+  color: #7D7777;
+}
+
+.free-icon {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+@media only screen and (max-width: 767px) {
+  .custom-variants-title-info{ font-size: 24px;}
+  .infor_wrapper {
+    padding: 40px 20px;
+  }
+
+  .info-card {
+    grid-template-columns: 100%;
+  }
+
+  .meta-info {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .free-from-card {
+    flex-wrap: wrap;
+  }
+  .more-info-section {
+    padding: 0px 20px 50px;
+  }
+  .more-info-section h2{
+        font-size: 35px;
+  }
+}
+                                                                                                                                                                                                                                                }
+</style>
+{% for variant in product.variants %}
+    <section class="more-info-section custom-variants-inform myinfohidden custom-{{ variant.id }}">
+        <div class="infor_wrapper">
+        <h2 class="custom-variants-title-info">More Information ({{ variant.title }})</h2>
+            <div class="info-grid">
+                {% for block in section.blocks %}
+                {% case block.type %}
+                    {% when "active_ingredients" %}
+                    <div class="info-card">
+                        <h3>Active Ingredients </h3>
+                        <div class="info_content">{{ variant.metafields.custom.active_ingredients | newline_to_br }}</div>
+                    </div>
+                    {% when "free_from_block" %}
+                        <div class="free-from-wrapper info-card">
+                            <h3>Free-From</h3>
+                            <div class="free-from-card">
+                                    {% if variant.metafields.custom.allergen contains 'Gluten free' %}
+                                        <div class="icon_with_text">
+                                        <img src="{{ section.settings.imageallergen1 | img_url: 'master' }}" style="width: 80px;" alt="Gluten free">
+                                        <span>Gluten free</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if variant.metafields.custom.allergen contains 'gluten free' %}
+                                        <div class="icon_with_text">
+                                        <img src="{{ section.settings.imageallergen1 | img_url: 'master' }}" style="width: 80px;" alt="Gluten free">
+                                        <span>Gluten free</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if variant.metafields.custom.allergen contains 'Gelatin free' %}
+                                        <div class="icon_with_text">
+                                        <img src="{{ section.settings.imageallergen2 | img_url: 'master' }}" style="width: 80px;" alt="Gelatin free">
+                                        <span>Gelatin free</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if variant.metafields.custom.allergen contains 'gelatin free' %} 
+                                        <div class="icon_with_text">
+                                        <img src="{{ section.settings.imageallergen2 | img_url: 'master' }}" style="width: 80px;" alt="Gelatin free">
+                                        <span>Gelatin free</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if variant.metafields.custom.allergen contains 'Lactose free' %}
+                                        <div class="icon_with_text">
+                                        <img src="{{ section.settings.imageallergen3 | img_url: 'master' }}" style="width: 80px;" alt="Lactose free">
+                                        <span>Lactose free</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if variant.metafields.custom.allergen contains 'lactose free' %}
+                                        <div class="icon_with_text">
+                                        <img src="{{ section.settings.imageallergen3 | img_url: 'master' }}" style="width: 80px;" alt="Lactose free">
+                                        <span>Lactose free</span>
+                                        </div>
+                                    {% endif %}
+                            </div>
+                        </div>
+                    {% when "indicators" %}
+                    <div class="info-card full">
+                        <h3>Indicators</h3>
+                        <div class="info_content">{{ variant.metafields.custom.indication | newline_to_br }}</div>
+                    </div>
+
+                    {% when "tablet_description" %}
+                    <div class="info-card">
+                        <h3>Tablet Description</h3>
+                        <div class="info_content">{{ variant.metafields.custom.tablet_description }}</div>
+                    </div>
+
+                    {% when "storage" %}
+                    <div class="info-card">
+                        <h3>Storage Conditions</h3>
+                        <div class="info_content">{{ variant.metafields.custom.storage_conditions }}</div>
+                    </div>
+
+                    {% when "warnings" %}
+                    <div class="info-card warning">
+                        <h3>Warnings</h3>
+                        <div class="info_content">{{ variant.metafields.custom.warnings }}</div>
+                    </div>
+
+                    {% when "additional_info" %}
+                    <div class="info-card">
+                        <h3>Additional Information</h3>
+                        <ul class="meta-info">
+                        <li><strong>Generic Name:</strong> {{ variant.metafields.custom.generic_name }}</li><li>
+                        <strong>PBS Listed:</strong> {% if variant.metafields.custom.pbs_listed  %}✔{% else %}✘{% endif %}</li>
+                        <li><strong>RPBS:</strong> {% if variant.metafields.custom.rpbs %}✔{% else %}✘{% endif %}</li>
+                        <li><strong>Strength:</strong> {{ variant.metafields.custom.strength }}</li>
+                        <li><strong>Dosage:</strong> {{ variant.metafields.custom.dosage }}</li>
+                        <li><strong>Pack Size:</strong> {{ variant.metafields.custom.pack_size }}</li>
+                        <li><strong>Schedule:</strong> {{ variant.metafields.custom.schedule }}</li>
+                        <li><strong>Shelf Life:</strong> {{ variant.metafields.custom.shelf_life | default: "24 Month" }}</li>
+                        <li><strong>Innovator:</strong> {{ variant.metafields.custom.innovator }}</li>
+                        </ul>
+                    </div>
+
+                {% endcase %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endfor %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  function updateVariantClass() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const variant = urlParams.get('variant');
+    if (!variant) return;
+    const targetClass = 'custom-' + variant;
+    $('.more-info-section.custom-variants-inform').each(function() {
+      const $el = $(this);
+      if ($el.hasClass(targetClass)) {
+        $el.addClass('myvariant-info');
+      } else {
+        $el.removeClass('myvariant-info'); 
+      }
+    });
+  }
+  setTimeout(updateVariantClass, 100);
+  window.addEventListener('popstate', updateVariantClass);
+  const pushStateOrig = history.pushState;
+  history.pushState = function() {
+    pushStateOrig.apply(this, arguments);
+    updateVariantClass();
+  };
+  $(document).on('click', '.radio-option, .custom-option', function() {
+    setTimeout(updateVariantClass, 250); 
+  });
+});
+</script>
+
+
+
+
+
+
+{% schema %}
+{
+  "name": "Variant Info",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "imageallergen1",
+      "label": "Gluten free Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "imageallergen2",
+      "label": "Gelatin free Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "imageallergen3",
+      "label": "Lactose free Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "active_ingredients",
+      "name": "Active Ingredients",
+      "settings": [
+        
+      ]
+    },
+    {
+  "type": "free_from_block",
+  "name": "Free From Block",
+  "settings": [
+   
+  ]
+},
+    {
+      "type": "indicators",
+      "name": "Indicators",
+      "settings": [
+       
+      ]
+    },
+    {
+      "type": "tablet_description",
+      "name": "Tablet Description",
+      "settings": [
+      
+      ]
+    },
+    {
+      "type": "storage",
+      "name": "Storage Conditions",
+      "settings": [
+        
+      ]
+    },
+    {
+      "type": "warnings",
+      "name": "Warnings",
+      "settings": [
+      
+      ]
+    },
+    {
+      "type": "additional_info",
+      "name": "Additional Info",
+      "settings": [
+        
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Variant Info",
+      "blocks": [
+        { "type": "active_ingredients" },
+        { "type": "free_from_block" },
+        { "type": "indicators" },
+        { "type": "tablet_description" },
+        { "type": "storage" },
+        { "type": "additional_info" },
+        { "type": "warnings" }
+      ]
+    }
+  ]
+}
+{% endschema %}

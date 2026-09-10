@@ -1,0 +1,96 @@
+{% comment %}
+  	------------------------------------------------------------------------------
+  	Snippet: Sort
+  	- product_list: Collection or Search object (required)
+
+  	Usage:
+
+  	{%- render 'sort', product_list: collection -%}
+  	or
+  	{%- render 'sort', product_list: search -%}
+  	------------------------------------------------------------------------------
+
+
+  {%- render 'adastra' with '/src/styles/sort.scss' -%}
+
+  {%- assign sort_by = product_list.sort_by | default: product_list.default_sort_by -%}
+
+  <div class="sort">
+  	<label class="visually-hidden" for="Sort">
+  		{{- 'collections.sorting.title' | t -}}
+  	</label>
+
+  	<select
+  		class="focus-visible-outline sort__select"
+  		id="Sort"
+  		name="sort_by"
+  		aria-label="{{- 'collections.sorting.title' | t | escape -}}"
+  	>
+  		{%- for option in product_list.sort_options -%}
+  			<option
+  				class="sort__option"
+  				value="{{- option.value | escape -}}"
+  				{%- if option.value == sort_by -%}
+  					selected
+  				{%- endif -%}
+  			>
+  				{{- option.name | escape -}}
+  			</option>
+  		{%- endfor -%}
+  	</select>
+  	{%if template.suffix == 'shop' %}
+  	<div class="grid-lists-iconss">
+  		<div
+  								class="grd_btn grid-view-btn active iocns"
+  							>
+  <svg width="29" height="30" viewBox="0 0 29 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect y="0.480835" width="7.65067" height="7.65067" fill="#30623D"/>
+  <rect y="11.1516" width="7.65067" height="7.65067" fill="#30623D"/>
+  <rect y="21.8223" width="7.65067" height="7.65067" fill="#30623D"/>
+  <rect x="10.6707" y="0.480835" width="7.65067" height="7.65067" fill="#30623D"/>
+  <rect x="10.6708" y="11.1516" width="7.65067" height="7.65067" fill="#30623D"/>
+  <rect x="10.6708" y="21.8223" width="7.65067" height="7.65067" fill="#30623D"/>
+  <rect x="21.3414" y="0.480835" width="7.65067" height="7.65067" fill="#30623D"/>
+  <rect x="21.3413" y="11.1516" width="7.65067" height="7.65067" fill="#30623D"/>
+  <rect x="21.3413" y="21.8223" width="7.65067" height="7.65067" fill="#30623D"/>
+  </svg>
+
+  							</div>
+                            <div
+  								class="list-view-btn iocns"
+  							>
+                                <span>
+
+  <svg width="37" height="29" viewBox="0 0 37 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="7.70667" y="0.480713" width="28.992" height="4.40385" fill="#30623D"/>
+  <circle cx="2.20193" cy="2.68264" r="2.20193" fill="#30623D"/>
+  <rect x="7.70667" y="12.2243" width="28.992" height="4.40385" fill="#30623D"/>
+  <circle cx="2.20193" cy="14.4263" r="2.20193" fill="#30623D"/>
+  <rect x="7.70667" y="23.9679" width="28.992" height="4.40385" fill="#30623D"/>
+  <circle cx="2.20193" cy="26.1698" r="2.20193" fill="#30623D"/>
+  </svg>
+
+                                </span>
+  							</div>
+
+  	</div>
+  	{%endif %}
+  </div>
+{% endcomment %}
+<style>
+  #custom-sort {
+    width: auto;margin-top: 14px;
+  }
+</style>
+<div class="custom-sorting">
+  <label for="custom-sort">Sort by:</label>
+  <select id="custom-sort">
+    <option value="manual">Featured</option>
+    <option value="title-asc">Alphabetically, A-Z</option>
+    <option value="title-desc">Alphabetically, Z-A</option>
+    <option value="price-asc">Price, low to high</option>
+    <option value="price-desc">Price, high to low</option>
+    <option value="created-desc">Newest</option>
+    <option value="created-asc">Oldest</option>
+  </select>
+</div>

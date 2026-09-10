@@ -1,0 +1,41 @@
+{% comment %}
+------------------------------------------------------------------------------
+  Snippet: Share buttons
+  ----------------------
+  Used on PDP
+------------------------------------------------------------------------------
+{% endcomment %}
+<style>
+  .mycustom-sahrea::after{content: inherit!important;}
+  .mycontent-area{width: fit-content !important; padding: 0px 12px!important;border-radius: 8px;}
+
+  @media only screen and (max-width: 767px){
+    .mycustom-sahrea .icon{width: 16px; height: 16px;}
+    .my-share-media{
+  top: 62px;
+  right: 10px; z-index: 1;}
+  }
+</style>
+
+
+
+	<input id="share-input-{{ section_id }}" class="is-hidden" type="text" value="{{ shop.url | append: product.url }}">
+
+ <button class="toggle-button mycustom-sahrea" style="background-color: #fff; border-radius: 50%; padding: 12px 14px 10px 11px;width: fit-content !important;">
+		{% render 'icons-social', icon: "share" %}
+
+</button>
+  <div class="content-area mycontent-area">
+    <div>
+		{% render 'share-button', social: "facebook", product: product %}
+    </div>
+<div>
+
+		{% render 'share-button', social: "twitter", product: product %}
+</div>
+<div>
+
+		{% render 'share-button', social: "pinterest", product: product %}
+</div>
+  </div>
+

@@ -1,0 +1,28 @@
+
+<div class="man-class-cont {{ product.id }}">
+  
+{% for variant in product.variants %} 
+  <input type="hidden" class="custom-checking-datas custom{{ variant.id | handleize }} custom-a{{ forloop.index }}" varienrprice="{{ variant.price | money }}" varientquentity="{{ variant.inventory_quantity }}" myvarientid="{{ variant.id }}" varienrcompprice="{{ variant.compare_at_price | money }}">
+{% endfor %}
+</div>
+<style>
+  .custom-quantity img{width: 18px;}
+</style>
+<div class="custom-quantity" style="margin-bottom: 12px;margin-top: 12px;">
+<p class="product-stock-less10" style="display: flex; align-items: center; gap: 8px;"><img class="product-inventory-status__icon" src="//shop.pharmacor.com.au/cdn/shop/files/circle-xxl.png" alt="">Low stock<span class="my-custom-stock"></span></p>
+
+<p class="product-stock-grater10"style="display: flex; align-items: center; gap: 8px;"><img class="product-inventory-status__icon" src="//shop.pharmacor.com.au/cdn/shop/files/ready-to-ship.png" alt="">In stock, ready to ship<span class="my-custom-stock"></span></p>
+{% comment %}
+  <p class="product-sold-out">
+		<span style="display: flex; align-items: center; gap: 8px;"style="display: flex; align-items: center; gap: 8px;">
+			<img class="product-inventory-status__icon" src="//shop.pharmacor.com.au/cdn/shop/files/out_of_stock.png" alt="">Product Sold Out <span class="my-custom-stock"></span>
+        </span>
+	</p>
+ {% endcomment %}
+ <p class="product-sold-out">
+		<span style="display: flex; align-items: center; gap: 8px;"style="display: flex; align-items: center; gap: 8px;">
+			<img class="product-inventory-status__icon" src="//shop.pharmacor.com.au/cdn/shop/files/ready-to-ship.png" alt="">In stock
+        </span>
+	</p>
+</div>
+

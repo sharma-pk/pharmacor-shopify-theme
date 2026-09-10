@@ -1,0 +1,502 @@
+{% comment %}
+  ------------------------------------------------------------------------------
+    Snippet: Product Form
+    ---------------------------
+    Use blocks:
+    	- "Vendor and SKU"
+  	- "Title"
+  	- "Options"
+  	- "Quantity"
+  	- "Price"
+  	- "Add to cart"
+  	- "Pickup availability"
+  	- "Sales point"
+  	- "Notify me"
+  	- "Custom liquid"
+  ------------------------------------------------------------------------------
+{% endcomment %}
+
+
+  {% assign hidden_value = '' %}
+  {% assign customer_tier = customer.metafields.pharmacor_discounts.pricing_tier.value | strip %}
+
+  {% for variant in product.variants %}
+    {% assign raw_prices = variant.metafields.pharmacor_discounts.custom_wholesale_price.value %}
+    {% assign wholesale_prices = raw_prices | parse_json %}
+    {% assign tier_price = blank %}
+    {% if customer_tier and wholesale_prices %}
+      {% assign tier_price = wholesale_prices[customer_tier] %}
+    {% endif %}
+
+    {% assign volume_raw = variant.metafields.pharmacor_discounts.volume_discount_tiers.value %}
+    {% assign volume_tiers = volume_raw | parse_json %}
+
+    {% if tier_price or volume_tiers.size > 0 %}
+      {% for tier in volume_tiers %}
+        {% assign base_price = variant.price | money_without_currency %}
+        {% assign discount_amount = base_price | times: tier.discountPercent | divided_by: 100 %}
+        {% assign volume_discount_price_raw = base_price | minus: discount_amount %}
+        {% assign volume_discount_price_cents = volume_discount_price_raw | times: 100 | floor %}
+        {% assign volume_discount_price = volume_discount_price_cents | divided_by: 100.0 %}
+
+        <input
+          type="hidden"
+          class="procustom{{ variant.id | handleize }} {{ variant.title | handleize }}"
+          compareprice="{{ variant.compare_at_price | money }}"
+          varienrprice="{{ variant.price | money }}"
+          varientquentity="{{ variant.inventory_quantity }}"
+          myvarientid="{{ variant.id }}"
+          varienrcompprice="{{ variant.compare_at_price | money }}"
+          customwholesaleprice="{{ tier_price }}"
+          variantprofit="
+            {% if variant.compare_at_price > variant.price %}
+              {% assign price_difference = variant.compare_at_price | minus: variant.price %}
+              {% assign profit_percentage = price_difference | times: 100.0 | divided_by: variant.compare_at_price %}
+              {{ profit_percentage | round: 2 }}%
+            {% endif %}
+          "
+          volumeqty="{{ tier.quantityThreshold }}"
+          volumediscount="{{ tier.discountPercent }}"
+          volumediscountprice="{{ volume_discount_price }}"
+        >
+      {% endfor %}
+    {% else %}
+      <input
+        type="hidden"
+        class="procustom{{ variant.id | handleize }} {{ variant.title | handleize }}"
+        compareprice="{{ variant.compare_at_price | money }}"
+        varienrprice="{{ variant.price | money }}"
+        varientquentity="{{ variant.inventory_quantity }}"
+        myvarientid="{{ variant.id }}"
+        varienrcompprice="{{ variant.compare_at_price | money }}"
+        customwholesaleprice="{{ variant.price | money }}"
+        variantprofit="
+          {% if variant.compare_at_price > variant.price %}
+            {% assign price_difference = variant.compare_at_price | minus: variant.price %}
+            {% assign profit_percentage = price_difference | times: 100.0 | divided_by: variant.compare_at_price %}
+            {{ profit_percentage | round: 2 }}%
+          {% endif %}
+        "
+        volumeqty=""
+        volumediscount=""
+        volumediscountprice=""
+      >
+    {% endif %}
+  {% endfor %}
+  {% for variant in product.variants %}
+    <input
+      type="hidden"
+      class="procustom{{ variant.id | handleize }} {{ variant.title | handleize }}"
+      compareprice="{{ variant.compare_at_price | money }}"
+      varienrprice="{{ variant.price | money }}"
+      varientquentity="{{ variant.inventory_quantity }}"
+      myvarientid="{{ variant.id }}"
+      varienrcompprice="{{ variant.compare_at_price | money }}"
+      customwholesaleprice="{{ variant.price | money }}"
+      variantprofit="
+        {% if variant.compare_at_price > variant.price %}
+          {% assign price_difference = variant.compare_at_price | minus: variant.price %}
+          {% assign profit_percentage = price_difference | times: 100.0 | divided_by: variant.compare_at_price %}
+          {{ profit_percentage | round: 2 }}%
+        {% endif %}
+      "
+      volumeqty=""
+      volumediscount=""
+      volumediscountprice=""
+    >
+  {% endfor %}
+{% assign is_preset = false %}
+
+{% if product == blank %}
+  {% assign is_preset = true %}
+{% endif %}
+
+{%- assign show_sticky_add_to_cart = section.settings.show_sticky_add_to_cart -%}
+
+{% assign use_variant = false %}
+
+{% if product.variants.size > 1 %}
+  {% assign use_variant = true %}
+{% endif %}
+
+{% if blocks.size > 0 %}
+  <div
+    class="shopify-product-form product-form js-product-sticky-container"
+    {% if product_template %}
+      data-template="{{ product_template }}"
+    {% endif %}
+  >
+    {% for block in blocks %}
+      {% case block.type %}
+        {% when 'last-order' %}
+         {% for order in customer.orders %}
+          {% if forloop.index == 1 %}
+            <ul class="custom-customer-order">
+              <li>Last order: {{ order.created_at | date: "%B %d, %Y" }}</li>
+            </ul>
+          {% endif %}
+        {% endfor %}
+        {% when 'badges' %}
+          {% render 'product-badges', block: block, product: product, is_preset: is_preset %}
+        {%- when 'badge_images' -%}
+          {%- render 'product-badge-image', block: block, product: product -%}
+        {% when 'vendor' %}
+          {% render 'product-vendor-sku', block: block, product: product, is_preset: is_preset %}
+        {% when 'title' %}
+          {% render 'product-title', block: block, product: product, is_preset: is_preset %}
+        {% when 'description' %}
+          {% render 'product-description', block: block, product: product, is_preset: is_preset %}
+        {% when 'options' %}
+          {% render 'product-options', section: section, block: block, product: product %}
+        {% when 'quantity' %}
+          {% render 'product-quantity', block: block, product: product, show_label: true %}
+        {% when 'price' %}
+          {% if settings['product-price-show'] %}
+            {% if block.settings['price-type'] == 'default' %}
+              {%- render 'product-price-data',
+                product: product,
+                use_variant: use_variant,
+                show_unit_price: settings.is_show_unit_price,
+                currency_code_enabled: settings.is_currency_code_enabled,
+                price_class: 'product-price h3',
+                hide_from_price: true,
+                show_taxes_included: section.settings.show_taxes_included,
+                show_pay_installments: section.settings.show_pay_installments,
+                form: form,
+                block: block,
+                show_volume_pricing_info: true
+              -%}
+            {% elsif block.settings['price-type'] == 'custom' %}
+              {% if customer %}
+                {%- render 'custom-product-price',
+                  product: product,
+                  use_variant: use_variant,
+                  show_unit_price: settings.is_show_unit_price,
+                  currency_code_enabled: settings.is_currency_code_enabled,
+                  price_class: 'product-price h3',
+                  hide_from_price: true,
+                  show_taxes_included: section.settings.show_taxes_included,
+                  show_pay_installments: section.settings.show_pay_installments,
+                  form: form,
+                  block: block,
+                  show_volume_pricing_info: true
+                -%}
+              {% endif %}
+            {% else %}
+
+            {% endif %}
+          {% endif %}
+        {% when 'add_to_cart' %}
+          
+        
+
+            {% render 'product-add-to-cart',
+              form: form,
+              section: section,
+              blocks: blocks,
+              block: block,
+              use_variant: use_variant,
+              show_sticky_add_to_cart: show_sticky_add_to_cart,
+              product: product,
+              enable_history_state: enable_history_state
+            %}
+              {% if customer %}
+            {%if template.name == "product" %}
+            {% comment %} <label class="Subscription_buttons_main">Subscribe and save</label>
+            <div class="Subscription_buttons" bis_skin_checked="1">
+              <button class="one_time active"><span class="sls-custom-radio"></span>One-time purchase</button>
+              <button class="Subscription_button">
+                <span class="sls-custom-radio"></span>
+
+                <div class="desciption_row" bis_skin_checked="1">
+                  <div class="seal-colsss" bis_skin_checked="1">Subscribe and save</div>
+                  <div class="sls-discount-description-containersssl" bis_skin_checked="1">
+                    Subscribe for 6 months, and we’ll gift you the 7th—FREE.
+                  </div>
+                  <!-- <div class="sls-description-contentss" bis_skin_checked="1">
+                    You will receive a payment link and won't be charged automatically.
+                  </div> -->
+                </div>
+              </button>
+            </div> {% endcomment %}
+{%endif %}
+          {% else %}
+
+          {% endif %}
+        {% when 'pickup_availability' %}
+          {% render 'product-pickup-availability', product: product, block: block, section_id: section.id %}
+        {% when 'drawers' %}
+          {% render 'product-drawers', product: product, block: block, section: section %}
+          <div class="threeimagescustom three-icons-mobile" style="flex-direction: inherit;justify-content: center;">
+            {% if product.metafields.custom.allergen contains 'Gluten free' %}
+              <img
+                src="{{ section.settings.imageallergen1 | img_url: 'master' }}"
+                style="width: 80px;"
+                alt="Gluten free"
+              >
+            {% endif %}
+            {% if product.metafields.custom.allergen contains 'gluten free' %}
+              <img
+                src="{{ section.settings.imageallergen1 | img_url: 'master' }}"
+                style="width: 80px;"
+                alt="Gluten free"
+              >
+            {% endif %}
+            {% if product.metafields.custom.allergen contains 'Gelatin free' %}
+              <img
+                src="{{ section.settings.imageallergen2 | img_url: 'master' }}"
+                style="width: 80px;"
+                alt="Gelatin free"
+              >
+            {% endif %}
+            {% if product.metafields.custom.allergen contains 'gelatin free' %}
+              <img
+                src="{{ section.settings.imageallergen2 | img_url: 'master' }}"
+                style="width: 80px;"
+                alt="Gelatin free"
+              >
+            {% endif %}
+            {% if product.metafields.custom.allergen contains 'Lactose free' %}
+              <img
+                src="{{ section.settings.imageallergen3 | img_url: 'master' }}"
+                style="width: 80px;"
+                alt="Lactose free"
+              >
+            {% endif %}
+            {% if product.metafields.custom.allergen contains 'lactose free' %}
+              <img
+                src="{{ section.settings.imageallergen3 | img_url: 'master' }}"
+                style="width: 80px;"
+                alt="Lactose free"
+              >
+            {% endif %}
+          </div>
+        {% when 'complementary' %}
+          {% render 'product-complementary', product: product, block: block, section: section %}
+        {% when 'sales_point' %}
+          {% render 'product-sales-point', block: block %}
+        {% when 'inventory_status' %}
+          {% render 'product-inventory-status', block: block, product: product %}
+            <div class="custom-quantity-itemss"
+     data-product-id="{{ product.id }}"
+     data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+  Loading...
+</div>
+        {% when 'custom_liquid' %}
+          {% render 'product-custom-liquid', block: block %}
+        {% when 'notify_me' %}
+          {% render 'product-notify-me-button', block: block, section_id: section.id %}
+        {% when 'ask_question' %}
+          {% render 'product-ask-question-button', block: block, section_id: section.id %}
+        {% when 'gift_wrap_product' %}
+          {% render 'product-gift-box', product: product, block: block %}
+        {% when 'countdown_timer' %}
+          {%- assign text = block.settings.text -%}
+          {%- assign icon = block.settings.icon -%}
+          {%- assign text_color = block.settings.text_color | default: '#000000' -%}
+          {%- assign timer_text_color = block.settings.timer_text_color | default: '#ffffff' -%}
+          {%- assign timer_background_color = block.settings.timer_background_color | default: '#000000' -%}
+          {%- assign offset_top_desktop = block.settings.offset_top_desktop -%}
+          {%- assign offset_bottom_desktop = block.settings.offset_bottom_desktop -%}
+          {%- assign offset_top_mobile = block.settings.offset_top_mobile -%}
+          {%- assign offset_bottom_mobile = block.settings.offset_bottom_mobile -%}
+
+          {% render 'product-countdown-timer',
+            product: product,
+            text: text,
+            icon: icon,
+            text_color: text_color,
+            timer_text_color: timer_text_color,
+            timer_background_color: timer_background_color,
+            offset_top_desktop: offset_top_desktop,
+            offset_bottom_desktop: offset_bottom_desktop,
+            offset_top_mobile: offset_top_mobile,
+            offset_bottom_mobile: offset_bottom_mobile
+          %}
+        {% when 'custom_field' %}
+          {% render 'product-custom-field', block: block %}
+        {% when 'socials' %}
+          {% render 'product-share-buttons', block: block, product: product, section_id: section.id %}
+        {% when 'benefits' %}
+          {% render 'product-benefits', block: block %}
+        {% when 'custom-tabs' %}
+          {% render 'custom-tabs', block: block %}
+        {% else %}
+          {% render block %}
+      {% endcase %}
+    {% endfor %}
+    <div class="custom-info-bottom-data-main">
+      {% render 'desktop-media-bottom-data', block: block %}
+    </div>
+  </div>
+{% endif %}
+<script>
+
+/* ==============================
+   GLOBALS
+============================== */
+window.CUSTOMER_ID = "{{ customer.id | default: '' }}";
+
+window.INVENTORY_MAP = window.INVENTORY_MAP || {};
+window.FETCHING_PRODUCTS = window.FETCHING_PRODUCTS || {};
+
+/* ==============================
+   BUILD INVENTORY MAP
+============================== */
+function buildInventoryMap(apiData) {
+
+  if (!apiData || !apiData.products) return;
+
+  apiData.products.forEach(product => {
+
+    product.variants.forEach(variant => {
+
+      let variantId = variant.variantId;
+
+      // Extract numeric ID if returned as gid://
+      const match = variantId.toString().match(/(\d+)$/);
+      if (match) {
+        variantId = match[1];
+      }
+
+      INVENTORY_MAP[variantId] = {
+        locations: {}
+      };
+
+      variant.locations.forEach(loc => {
+        INVENTORY_MAP[variantId].locations[loc.locationName] = loc.stock;
+      });
+
+    });
+
+  });
+
+  console.log("Inventory Loaded:", INVENTORY_MAP);
+
+  document.dispatchEvent(new Event("inventoryApiReady"));
+}
+
+/* ==============================
+   FETCH INVENTORY
+============================== */
+function fetchInventoryForProduct(productId) {
+
+  if (!productId) return;
+  if (FETCHING_PRODUCTS[productId]) return;
+
+  FETCHING_PRODUCTS[productId] = true;
+
+  const apiUrl =
+    `https://offer.pharmacor.com.au/api/proxy/inventory-by-location` +
+    `?shop=${Shopify.shop}` +
+    `&customerId=${window.CUSTOMER_ID || ''}` +
+    `&productIds=${productId}`;
+
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(data => buildInventoryMap(data))
+    .catch(error => {
+      console.error("Inventory API Error:", error);
+      FETCHING_PRODUCTS[productId] = false;
+    });
+}
+
+/* ==============================
+   GET CURRENT VARIANT ID
+============================== */
+function getCurrentVariantId() {
+
+  // Shopify hidden select
+  const select = document.querySelector('select[name="id"]');
+
+  if (select && select.value) {
+    return select.value;
+  }
+
+  // Fallback to checked radio
+  const radio = document.querySelector(".radio-input:checked");
+
+  if (radio) {
+    return radio.getAttribute("data-variant-id");
+  }
+
+  return null;
+}
+
+/* ==============================
+   UPDATE STOCK
+============================== */
+function updateStockSingleProduct() {
+
+  const stockBox = document.querySelector(".custom-quantity-itemss");
+  if (!stockBox) return;
+
+  const productId = stockBox.getAttribute("data-product-id");
+  const variantId = getCurrentVariantId();
+
+  console.log("Selected Variant:", variantId);
+
+  if (!variantId) {
+    stockBox.innerHTML = "Out of stock";
+    return;
+  }
+
+  if (!INVENTORY_MAP[variantId]) {
+    stockBox.innerHTML = "Loading...";
+    fetchInventoryForProduct(productId);
+    return;
+  }
+
+  const variantData = INVENTORY_MAP[variantId];
+
+  if (!variantData || !variantData.locations) {
+    stockBox.innerHTML = "Out of stock";
+    return;
+  }
+
+  let totalStock = 0;
+
+  Object.keys(variantData.locations).forEach(loc => {
+    totalStock += variantData.locations[loc];
+  });
+
+  if (totalStock <= 0) {
+    stockBox.innerHTML = "Out of stock";
+    stockBox.style.color = "red";
+  } else {
+    stockBox.innerHTML = "Stock: " + totalStock;
+    stockBox.style.color = "green";
+  }
+}
+
+/* ==============================
+   INIT
+============================== */
+document.addEventListener("DOMContentLoaded", function () {
+
+  updateStockSingleProduct();
+
+  /* When Shopify variant select changes */
+  document.addEventListener("change", function(e) {
+
+    if (e.target.matches('select[name="id"]')) {
+      updateStockSingleProduct();
+    }
+
+    if (e.target.classList.contains("radio-input")) {
+
+      // wait for Shopify to sync select
+      setTimeout(function(){
+        updateStockSingleProduct();
+      }, 200);
+    }
+
+  });
+
+  /* When API ready */
+  document.addEventListener("inventoryApiReady", function () {
+    updateStockSingleProduct();
+  });
+
+});
+</script>

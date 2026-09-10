@@ -1,0 +1,158 @@
+<style>
+.custom-data-app-container {
+  padding-bottom: 0;
+  border: unset;overflow-x: auto;
+  overflow-y: hidden; display: flex;display: flex;
+  white-space: nowrap;border-bottom: 2px solid #000;margin-top: 20px;border-radius: 10px;
+  flex-wrap: unset;}
+.custom-data-app-btn {background-color: #404445;text-transform: uppercase; 
+  font-size: 17px;
+  line-height: 1.2;
+  color: #fff;
+  position: relative;
+  transition: all .5s;
+padding: 12px 16px;
+  ransition: 0.3s;
+  border: 1px solid #000;}
+.custom-data-app-btn:hover {
+  color: #fff;
+}
+  /* .custom-data-app-btn.active-custom-data-app::after{
+    position: absolute;
+  bottom: 0px;
+  left: 0;
+  content: "";
+  height: 4px;
+  background: #000;
+  width: 100%;
+  } */
+.custom-data-app-btn.active-custom-data-app {
+color: #fff;
+  background: #000;
+}
+.custom-data-app-section {
+  display: none;
+  
+  border: 2px solid #000;
+  border-top: none;border-radius: 0px 0px 10px 10px;
+}
+</style>
+
+<div class="custom-data-app-container">
+  {% if block.settings.title-1 != blank %}
+    {% if block.settings.data-1 != blank %}
+      <button class="custom-data-app-btn active-custom-data-app" onclick="showCustomDataAppSection(event, 'data1')">{{ block.settings.title-1 }}</button>
+    {% endif %}
+  {% endif %}
+  {% if block.settings.title-2 != blank %}
+      <button class="custom-data-app-btn {% if block.settings.data-1 != blank %}{% else %}active-custom-data-app{% endif %}" onclick="showCustomDataAppSection(event, 'data2')">{{ block.settings.title-2 }}</button>
+  {% endif %}
+  {% if block.settings.title-3 != blank %}
+      <button class="custom-data-app-btn" onclick="showCustomDataAppSection(event, 'data3')">{{ block.settings.title-3 }}</button>
+  {% endif %}
+  {% if block.settings.title-4 != blank %}
+      <button class="custom-data-app-btn" onclick="showCustomDataAppSection(event, 'data4')">{{ block.settings.title-4 }}</button>
+  {% endif %}
+   {% if block.settings.title-5 != blank %}
+      <button class="custom-data-app-btn" onclick="showCustomDataAppSection(event, 'data5')">{{ block.settings.title-5 }}</button>
+  {% endif %}
+   {% if block.settings.title-6 != blank %}
+      <button class="custom-data-app-btn" onclick="showCustomDataAppSection(event, 'data6')">{{ block.settings.title-6 }}</button>
+  {% endif %}
+   {% if block.settings.title-7 != blank %}
+      <button class="custom-data-app-btn" onclick="showCustomDataAppSection(event, 'data7')">{{ block.settings.title-7 }}</button>
+  {% endif %}
+   {% if block.settings.title-8 != blank %}
+      <button class="custom-data-app-btn" onclick="showCustomDataAppSection(event, 'data8')">{{ block.settings.title-8 }}</button>
+  {% endif %}
+   {% if block.settings.title-9 != blank %}
+      <button class="custom-data-app-btn" onclick="showCustomDataAppSection(event, 'data9')">{{ block.settings.title-9 }}</button>
+  {% endif %}
+   {% if block.settings.title-10 != blank %}
+      <button class="custom-data-app-btn" onclick="showCustomDataAppSection(event, 'data10')">{{ block.settings.title-10 }}</button>
+  {% endif %}
+   {% if block.settings.title-11 != blank %}
+      <button class="custom-data-app-btn" onclick="showCustomDataAppSection(event, 'data11')">{{ block.settings.title-11 }}</button>
+  {% endif %}
+   {% if block.settings.title-12 != blank %}
+      <button class="custom-data-app-btn" onclick="showCustomDataAppSection(event, 'data12')">{{ block.settings.title-12 }}</button>
+  {% endif %}
+</div>
+{% if block.settings.data-1 != blank %}
+ {% if block.settings.title-1 != blank %}
+      <div id="data1" class="custom-data-app-section" style="display: block; padding: 10px 12px;">
+          {{ block.settings.data-1 }}
+      </div>
+ {% endif %}
+  {% endif %}
+ {% if block.settings.title-2 != blank %}
+    <div id="data2" class="custom-data-app-section" style="padding: 10px 12px;{% if block.settings.data-1 != blank %}{% else %}display: block; padding: 10px 12px;{% endif %}">
+        {{ block.settings.data-2 }}
+    </div>
+  {% endif %}
+  {% if block.settings.title-3 != blank %}
+    <div id="data3" class="custom-data-app-section" style="padding: 10px 12px;">
+        {{ block.settings.data-3 }}
+    </div>
+  {% endif %}
+  {% if block.settings.title-4 != blank %}
+    <div id="data4" class="custom-data-app-section" style="padding: 10px 12px;">
+        {{ block.settings.data-4 }}
+    </div>
+  {% endif %}
+    {% if block.settings.title-5 != blank %}
+    <div id="data5" class="custom-data-app-section" style="padding: 10px 12px;">
+        {{ block.settings.data-5 }}
+    </div>
+  {% endif %}
+    {% if block.settings.title-6 != blank %}
+    <div id="data6" class="custom-data-app-section" style="padding: 10px 12px;">
+        {{ block.settings.data-6 }}
+    </div>
+  {% endif %}
+    {% if block.settings.title-7 != blank %}
+    <div id="data7" class="custom-data-app-section" style="padding: 10px 12px;">
+        {{ block.settings.data-7 }}
+    </div>
+  {% endif %}
+    {% if block.settings.title-8 != blank %}
+    <div id="data8" class="custom-data-app-section" style="padding: 10px 12px;">
+        {{ block.settings.data-8 }}
+    </div>
+  {% endif %}
+    {% if block.settings.title-9 != blank %}
+    <div id="data9" class="custom-data-app-section" style="padding: 10px 12px;">
+        {{ block.settings.data-9 }}
+    </div>
+  {% endif %}
+    {% if block.settings.title-10 != blank %}
+    <div id="data10" class="custom-data-app-section" style="padding: 10px 12px;">
+        {{ block.settings.data-10 }}
+    </div>
+  {% endif %}
+    {% if block.settings.title-11 != blank %}
+    <div id="data11" class="custom-data-app-section" style="padding: 10px 12px;">
+        {{ block.settings.data-11 }}
+    </div>
+  {% endif %}
+    {% if block.settings.title-12 != blank %}
+    <div id="data12" class="custom-data-app-section" style="padding: 10px 12px;">
+        {{ block.settings.data-12 }}
+    </div>
+  {% endif %}
+
+<script>
+function showCustomDataAppSection(event, sectionId) {
+  var i, customDataAppSections, customDataAppButtons;
+  customDataAppSections = document.getElementsByClassName("custom-data-app-section");
+  for (i = 0; i < customDataAppSections.length; i++) {
+    customDataAppSections[i].style.display = "none";
+  }
+  customDataAppButtons = document.getElementsByClassName("custom-data-app-btn");
+  for (i = 0; i < customDataAppButtons.length; i++) {
+    customDataAppButtons[i].className = customDataAppButtons[i].className.replace(" active-custom-data-app", "");
+  }
+  document.getElementById(sectionId).style.display = "block";
+  event.currentTarget.className += " active-custom-data-app";
+}
+</script>

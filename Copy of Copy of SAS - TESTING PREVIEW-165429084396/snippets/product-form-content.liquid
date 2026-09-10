@@ -1,0 +1,805 @@
+{% if template.name == 'product' %}
+  <style>
+#inventoryLocationInformation {
+  display: none;
+}
+.custom-btn-boxes.proo.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary{
+margin: 0px;
+padding: 16px !important;
+}
+    .product-section .product-quantity__wrapper form {
+    	margin: 0;
+    	width: 100%;
+    	display: flex;
+    	flex-direction: column-reverse;
+    	height: fit-content;
+    }
+    .product-section .product-quantity .product-quantity__wrapper {
+    	display: flex;
+    	align-items: baseline!important;
+    	gap: 32px;
+    	flex-direction: column;
+    }
+
+    .product-options {
+    	position: relative;
+    	z-index: 9999999;
+    }
+
+    .add_to_cart_qunatitty {
+        display: grid;
+        align-items: center;
+        grid-template-columns: 30% 66%;
+        gap: 20px;
+    }
+    .product-section .product-add-to-cart__button.add-to-cart{
+    width:100%;}
+    span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary:before,
+    span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary:after{
+    display:none
+    }
+
+    span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary {
+      width:100% !important;
+        border: 2px solid #30623D !important;
+        position: relative;
+        z-index: 1;
+        display: inline-block;
+        overflow: hidden;
+        padding: 16px 32px;
+        border: none;
+        border-radius: 32px;
+        text-decoration: none;
+        text-transform: none;
+        transition-property: opacity, color, border, background-color;
+        transition-duration: var(--timing-base);
+        cursor: pointer;
+        font-family: Neutrif Studio;
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 100%;
+        letter-spacing: .8px;
+        text-align: center;
+        background: transparent;
+        color:#30623D;
+        min-height: 56px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+    span.custom-btn-boxes.product-add-to-cart__button.add-to-cart.button.button--block.button--secondary:hover{
+    background:#30623D;
+    color:#fff;
+    }
+    @media only screen and (min-width: 567px){
+    .product-section .product-quantity .product-quantity__wrapper {
+    	gap: 32px;
+    	{% comment %} margin-top: -60px; {% endcomment %}
+    }
+
+    .product-section .product-quantity__container{
+    	position: relative;
+    	{% comment %} top: 70px; {% endcomment %}
+    }
+    .product-section .product-add-to-cart__button.add-to-cart {
+    	width: 100%;
+    	margin: auto;
+    	margin-right: 0;
+    }
+
+    }
+
+
+
+    .product-section .delivery-date.showproductpage{display:flex;margin:20px 0px;flex-direction: column;gap: 10px;}
+
+    .sub-setup-overlay {
+      position: fixed; inset: 0; background: rgba(20,30,24,.5); display: none;
+      align-items: center; justify-content: center; z-index: 99999; padding: 16px;
+    }
+    .sub-setup-overlay.is-open { display: flex; }
+    .sub-setup-modal {
+      background: #1f4a2c; border-radius: 16px; padding: 28px; max-width: 400px; width: 100%;
+    }
+    .sub-setup-modal h3 { font-size: 26px; font-weight: 800; margin: 0 0 8px; color: #ecf7ee; }
+    .sub-setup-modal__desc { color: #b7d3bd; font-size: 16px; font-weight: 600; margin: 0 0 16px; }
+    .sub-setup-radio {
+      display: flex; align-items: center; gap: 12px; padding: 14px 16px; font-size: 16px; font-weight: 700;
+      color: #fff; border-radius: 10px; cursor: pointer; margin-bottom: 6px;
+    }
+    .sub-setup-radio.is-selected,
+    .sub-setup-radio:has(input:checked) { background: #14301d; }
+    .sub-setup-radio input[type="radio"] {
+      appearance: none; -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid #fff; background: transparent; flex: 0 0 auto; margin: 0; cursor: pointer;
+    }
+    .sub-setup-radio input[type="radio"]:checked {
+      border-color: #f44e9b; background: #f44e9b; box-shadow: inset 0 0 0 3px #14301d;
+    }
+    .sub-setup-modal__custom-date { margin: 0 16px 12px; }
+    .sub-setup-modal__custom-date input[type="date"] {
+      width: 100%; padding: 10px 12px; border: 1px solid #fff; border-radius: 8px; font-size: 14px;
+      {% comment %} background: transparent;  {% endcomment %}
+       background-image: url( https://cdn.shopify.com/s/files/1/0726/4249/4700/files/calendar_1.png?v=1786617913);
+       background-repeat: no-repeat;
+      color: #fff; color-scheme: dark;
+    }
+    .sub-setup-modal__custom-date input[type="date"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+    }
+    .sub-setup-modal__note {
+      background: #fff; border-radius: 12px; padding: 16px; font-size: 14px; color: #222;
+      margin-top: 16px;
+    }
+    .sub-setup-modal__note .sub-toggle-row { display: flex; gap: 8px; margin-top: 12px; }
+    .sub-setup-modal__note .sub-toggle-row button {
+      flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #d7ded8; background: #fff;
+      font-size: 13px; font-weight: 600; cursor: pointer; color: #222;
+    }
+    .sub-setup-modal__note .sub-toggle-row button.is-active { background: #1f4a2c; color: #fff; border-color: #1f4a2c; }
+    .sub-setup-modal__confirm {
+      width: 100%; margin-top: 20px; padding: 14px; border-radius: 10px; font-size: 15px;
+      font-weight: 700; background: #fff; color: #1f4a2c; border: none; cursor: pointer;
+    }
+  </style>
+
+  {% comment %}
+    ------------------------------------------------------------------------------
+      Snippet: Product form content
+    ------------------------------------------------------------------------------
+  {% endcomment %}
+  <!-- Add the delivery date picker -->
+    {% comment %}
+ <div id="variant-volume-discount" class="volume-discount-container" style="display:none;">
+  <p class="volume-discount-title">BUY MORE, SAVE MORE</p>
+  <div id="volume-discount-tiers"></div>
+  </div>
+{% endcomment %}
+
+  {% assign selected_seller_handle = '' %}
+  {% assign seller_account_number = '' %}
+  {% assign coverage_countries = customer.current_company.metafields.custom.wholesale_account_numbers.value %}
+
+  {% comment %} does this product have a Wholesaler option, and which brands does it actually offer? {% endcomment %}
+  {% assign has_wholesaler_option = false %}
+  {% assign wholesaler_has_visible_value = false %}
+  {% assign product_offers_api = false %}
+  {% assign product_offers_sigma = false %}
+  {% assign product_offers_symbion = false %}
+  {% assign product_offers_ch2 = false %}
+  {% for pfc_option in product.options_with_values %}
+    {% if pfc_option.name contains 'Wholesaler' %}
+      {% assign has_wholesaler_option = true %}
+      {% for pfc_value in pfc_option.values %}
+        {% assign pfc_value_down = pfc_value | downcase %}
+        {% if pfc_value_down contains 'api' %}{% assign product_offers_api = true %}{% endif %}
+        {% if pfc_value_down contains 'sigma' %}{% assign product_offers_sigma = true %}{% endif %}
+        {% if pfc_value_down contains 'symbion' %}{% assign product_offers_symbion = true %}{% endif %}
+        {% if pfc_value_down contains 'ch2' %}{% assign product_offers_ch2 = true %}{% endif %}
+        {% for pfc_item in coverage_countries %}
+          {% assign pfc_item_down = pfc_item | downcase %}
+          {% if pfc_item_down contains pfc_value_down %}
+            {% assign wholesaler_has_visible_value = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  {% assign hide_purchase_controls = false %}
+  {% if has_wholesaler_option and wholesaler_has_visible_value == false %}
+    {% assign hide_purchase_controls = true %}
+  {% endif %}
+
+  {% if customer %}
+    {% for item in coverage_countries %}
+      {% assign clean_item = item | strip %}
+      {% assign clean_item_down = clean_item | downcase %}
+
+      {% comment %}
+        When this product has its own Wholesaler option, only default to a
+        brand it actually offers — otherwise this just falls back to whichever
+        brand happens to be listed first in the customer's overall coverage,
+        which could put a completely unrelated (and unused) brand's real
+        account number into a hidden field the product never even exposes.
+        Built from separate single-condition ifs (not "and"/"or" chained on
+        one line) since Liquid's boolean operators don't follow normal
+        precedence rules and can evaluate in surprising ways when mixed.
+      {% endcomment %}
+      {% assign api_eligible = false %}
+      {% assign sigma_eligible = false %}
+      {% assign symbion_eligible = false %}
+      {% assign ch2_eligible = false %}
+      {% if clean_item_down contains 'api' %}
+        {% if has_wholesaler_option == false %}{% assign api_eligible = true %}{% endif %}
+        {% if product_offers_api %}{% assign api_eligible = true %}{% endif %}
+      {% elsif clean_item_down contains 'sigma' %}
+        {% if has_wholesaler_option == false %}{% assign sigma_eligible = true %}{% endif %}
+        {% if product_offers_sigma %}{% assign sigma_eligible = true %}{% endif %}
+      {% elsif clean_item_down contains 'symbion' %}
+        {% if has_wholesaler_option == false %}{% assign symbion_eligible = true %}{% endif %}
+        {% if product_offers_symbion %}{% assign symbion_eligible = true %}{% endif %}
+      {% elsif clean_item_down contains 'ch2' %}
+        {% if has_wholesaler_option == false %}{% assign ch2_eligible = true %}{% endif %}
+        {% if product_offers_ch2 %}{% assign ch2_eligible = true %}{% endif %}
+      {% endif %}
+
+      {% if api_eligible %}
+        {% assign selected_seller_handle = 'api' %}
+        {% assign seller_account_number = clean_item | remove_first: 'Api' | remove_first: 'API' | remove_first: 'api' | strip %}
+        {% break %}
+      {% elsif sigma_eligible %}
+        {% assign selected_seller_handle = 'sigma' %}
+        {% assign seller_account_number = clean_item | remove_first: 'Sigma' | remove_first: 'SIGMA' | remove_first: 'sigma' | strip %}
+        {% break %}
+      {% elsif symbion_eligible %}
+        {% assign selected_seller_handle = 'symbion' %}
+        {% assign seller_account_number = clean_item | remove_first: 'Symbion' | remove_first: 'SYMBION' | remove_first: 'symbion' | strip %}
+        {% break %}
+      {% elsif ch2_eligible %}
+        {% assign selected_seller_handle = 'ch2' %}
+        {% assign seller_account_number = clean_item | remove_first: 'Ch2' | remove_first: 'CH2' | remove_first: 'ch2' | strip %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+
+  {% liquid
+    assign section_contains_quantity_block = false
+    assign gift_card_recipient_feature_active = false
+
+    if product.gift_card? and block.settings.show_gift_card_recipient
+      assign gift_card_recipient_feature_active = true
+    endif
+
+    assign button_type = block.settings.button_type
+  %}
+
+  {% if gift_card_recipient_feature_active %}
+    {%- assign gift_card_recipient_control_flag = 'properties[__shopify_send_gift_card_to_recipient]' -%}
+
+    <div class="recipient-form">
+      <div class="recipient-form__checkbox-field">
+        <input
+          id="Recipient-checkbox-{{ section.id }}"
+          class="checkbox recipient-form__checkbox js-recipient-form-checkbox"
+          type="checkbox"
+          name="{{ gift_card_recipient_control_flag }}"
+          disabled
+        >
+
+        <label for="Recipient-checkbox-{{ section.id }}" class="checkbox-label">
+          <span class="checkbox-label__box "></span>
+          {{ 'products.product.recipient.form.checkbox' | t }}
+        </label>
+      </div>
+
+      <div class="recipient-form__fields is-hidden js-recipient-form-fields">
+        <div class="recipient-form__field">
+          <label class="label-input" for="Recipient-email-{{ section.id }}">
+            <span class="recipient-form__label-normal">{{ 'products.product.recipient.form.email_label' | t }}</span>
+            <span class="recipient-form__label-no-js">
+              {{- 'products.product.recipient.form.email_label_optional_for_no_js_behavior' | t -}}
+            </span>
+          </label>
+
+          <input
+            class="input js-recipient-form-field"
+            id="Recipient-email-{{ section.id }}"
+            type="email"
+            placeholder="Recipient email"
+            name="properties[Recipient email]"
+            value="{{ form.email }}"
+            {% if form.errors contains 'email' %}
+              aria-invalid="true"
+              aria-describedby="RecipientForm-email-error-{{ section.id }}"
+            {% endif %}
+          >
+
+          <div
+            id="RecipientForm-email-error-{{ section.id }}"
+            class="error js-form-error{% unless form.errors contains 'email' %} is-hidden{% endunless %}"
+          >
+            {%- if form.errors contains 'email' -%}
+              {{ form.errors.messages.email }}.
+            {%- endif -%}
+          </div>
+        </div>
+
+        <div class="recipient-form__field">
+          <label class="label-input" for="Recipient-name-{{ section.id }}">
+            {{- 'products.product.recipient.form.name_label' | t -}}
+          </label>
+
+          <input
+            class="input js-recipient-form-field"
+            autocomplete="name"
+            type="text"
+            id="Recipient-name-{{ section.id }}"
+            name="properties[Recipient name]"
+            placeholder="{{ 'products.product.recipient.form.name' | t }}"
+            value="{{ form.name }}"
+            {% if form.errors contains 'name' %}
+              aria-invalid="true"
+              aria-describedby="RecipientForm-name-error-{{ section.id }}"
+            {% endif %}
+          >
+
+          <div
+            id="RecipientForm-name-error-{{ section.id }}"
+            class="error js-form-error {% unless form.errors contains 'name' %} is-hidden{% endunless %}"
+          >
+            {%- if form.errors contains 'name' -%}
+              {{ form.errors.messages.name }}.
+            {%- endif -%}
+          </div>
+        </div>
+
+        <div class="recipient-form__field">
+          {%- assign max_chars_message = 200 -%}
+          {%- assign max_chars_message_rendered = 'products.product.recipient.form.max_characters'
+            | t: max_chars: max_chars_message
+          -%}
+          {%- assign message_label_rendered = 'products.product.recipient.form.message_label' | t -%}
+
+          <label class="label-input" for="Recipient-message-{{ section.id }}">
+            {{ message_label_rendered }}
+          </label>
+
+          <textarea
+            rows="10"
+            id="Recipient-message-{{ section.id }}"
+            class="recipient-form__textarea input js-recipient-form-field"
+            name="properties[Message]"
+            maxlength="{{ max_chars_message }}"
+            placeholder="{{ 'products.product.recipient.form.message' | t }}"
+            aria-label="Max characters 200"
+            {% if form.errors contains 'message' %}
+              aria-invalid="true"
+              aria-describedby="RecipientForm-message-error-{{ section.id }}"
+            {% endif %}
+          >{{- form.message -}}</textarea>
+
+          <div class="recipient-form__input-info">{{ max_chars_message_rendered }}</div>
+
+          <div
+            id="RecipientForm-message-error-{{ section.id }}"
+            class="error js-form-error{% unless form.errors contains 'message' %} is-hidden{% endunless %}"
+          >
+            {%- if form.errors contains 'message' -%}
+              {{ form.errors.messages.message }}.
+            {%- endif -%}
+          </div>
+        </div>
+
+        <div class="recipient-form__field">
+          <label class="label-input" for="Recipient-send_on-{{ section.id }}">
+            {{ 'products.product.recipient.form.send_on_label' | t }}
+          </label>
+
+          <input
+            class="input js-recipient-form-field"
+            autocomplete="off"
+            type="date"
+            id="Recipient-send_on-{{ section.id }}"
+            name="properties[Send on]"
+            pattern="\d{4}-\d{2}-\d{2}"
+            value="{{ form.send_on }}"
+            {% if form.errors contains 'send_on' %}
+              aria-invalid="true"
+              aria-describedby="RecipientForm-send_on-error-{{ section.id }}"
+            {% endif %}
+          >
+
+          <div
+            id="RecipientForm-send_on-error-{{ section.id }}"
+            class="error js-form-error {% unless form.errors contains 'send_on' %} is-hidden{% endunless %}"
+          >
+            {%- if form.errors contains 'send_on' -%}
+              {{ form.errors.messages.send_on }}.
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+
+      <input
+        type="hidden"
+        name="{{ gift_card_recipient_control_flag }}"
+        value="if_present"
+        id="Recipient-control-{{ section.id }}"
+        class="js-recipient-form-no-js-control"
+      >
+
+      <input
+        type="hidden"
+        name="properties[__shopify_offset]"
+        value=""
+        id="Recipient-timezone-offset-{{ section.id }}"
+        class="js-recipient-form-timezone-offset"
+      >
+    </div>
+  {% endif %}
+  {% comment %}
+     {% if product.template_suffix == 'pre-order' %}
+    	<input type="hidden" name="properties[_Pre-order]" value="true">
+    {% endif %}
+  {% endcomment %}
+
+  <input type="hidden" class="cusotm-cart-id" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+ <input class="custom-class-quantity" type="hidden" name="quantity" value="1" min="1">
+ <input
+    id="custom-inline-property"
+    type="hidden"
+    name="properties[Saving Per Item]"
+    value=""
+  >
+  <input
+  class="API"
+  type="hidden"
+  name="properties[Wholesaler Account No.1]"
+  value="{% if selected_seller_handle contains 'api' %}{{ seller_account_number }}{% endif %}"
+>
+<input class="Sigma" type="hidden" name="properties[Wholesaler Account No.2]" value="{% if selected_seller_handle contains 'sigma' %}{{ seller_account_number }}{% endif %}">
+<input class="Symbion" type="hidden" name="properties[Wholesaler Account No.3]" value="{% if selected_seller_handle contains 'symbion' %}{{ seller_account_number }}{% endif %}">
+<input class="Ch2" type="hidden" name="properties[Wholesaler Account No.4]" value="{% if selected_seller_handle contains 'ch2' %}{{ seller_account_number }}{% endif %}">
+  <input id="" type="hidden" name="properties[Wholesaler Account No.]" value="">
+
+  <div>
+   {% if template.name == 'product' %}
+  {% assign subscription_enabled = product.metafields.custom.subscription_option %}
+  {% if subscription_enabled == true or subscription_enabled == 'true' %}
+    {% if customer %}
+      <label class="Subscription_buttons_main">Subscribe and save</label>
+      <div class="Subscription_buttons" bis_skin_checked="1">
+        <button class="one_time active">
+          <span class="sls-custom-radio"></span>One-time purchase
+        </button>
+        <button class="Subscription_button">
+          <span class="sls-custom-radio"></span>
+          <div class="desciption_row" bis_skin_checked="1">
+            <div class="seal-colsss" bis_skin_checked="1">Subscribe and save</div>
+            <div class="sls-discount-description-containersssl" bis_skin_checked="1">
+              Subscribe for 6 months, and we’ll gift you the 7th—FREE.
+            </div>
+            <!--
+              <div class="sls-description-contentss" bis_skin_checked="1">
+                You will receive a payment link and won't be charged automatically.
+              </div>
+            -->
+          </div>
+        </button>
+      </div>
+
+      <div class="sub-setup-overlay" id="subSetupModal">
+        <div class="sub-setup-modal">
+          <h3>Set up your subscription</h3>
+          <p class="sub-setup-modal__desc">When should it start?</p>
+
+          <label class="sub-setup-radio">
+            <input type="radio" name="subSetupStart" value="today" checked>
+            Start today
+          </label>
+          <label class="sub-setup-radio">
+            <input type="radio" name="subSetupStart" value="first_next_month">
+            1st of next month
+          </label>
+          <label class="sub-setup-radio">
+            <input type="radio" name="subSetupStart" value="custom">
+            Select your own date
+          </label>
+
+          <div class="sub-setup-modal__custom-date" id="subSetupCustomDateWrap" style="display:none;">
+            <input type="date" id="subSetupCustomDate" min="{{ 'now' | date: '%Y-%m-%d' }}" value="{{ 'now' | date: '%Y-%m-%d' }}">
+          </div>
+
+          <div class="sub-setup-modal__note" id="subSetupAnchorNote" style="display:none;">
+            Since you picked a custom date, should future orders repeat on this date, or reset to the 1st after the first order?
+            <div class="sub-toggle-row">
+              <button type="button" data-value="repeat">Repeat on this date</button>
+              <button type="button" class="is-active" data-value="reset_to_1st">Reset to 1st</button>
+            </div>
+          </div>
+
+          <button type="button" class="sub-setup-modal__confirm" id="subSetupConfirm">Continue</button>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endif %}
+    <div class="delivery_with_inventory">
+      <div class="delivery-date showproductpage">
+        <label for="delivery_date">Select Processed Date:</label>
+        <input
+          type="date"
+          id="delivery_date"
+          name="properties[Processed Date]"
+          min="{{ 'now' | date: '%Y-%m-%d' }}"
+        >
+      </div>
+      <div id="inventoryLocationInformation"><span class="inventoryLocationLoading"></span></div>
+    </div>
+  </div>
+    {% comment %}
+<div id="volume-discount-progress" style="display:none;">
+  <div class="progress-text"></div>
+  <div class="progress-bar" style="height:10px; background:#e5e5e5; border-radius:6px; overflow:hidden;">
+    <div class="progress-bar-fill" style="height:100%; width:0%; background:#22c55e;"></div>
+  </div>
+</div>
+  {% endcomment %}
+      {% if customer %}
+  <div class="add_to_cart_qunatitty">
+    <div class="product-quantity__wrapper cusotm-wrapper-qiantity custom-wraperr">
+      <div class="product-quantity__container text">
+        <button
+          class="product-quantity__button descrease-c"
+          type="button"
+          data-quantity-decrease
+          aria-label="{{ 'products.quantity.decrease' | t: product: product.title | escape }}"
+        >
+          {% render 'icons', icon: 'minus' %}
+        </button>
+        {% assign form_id = 'product_form_' | append: product.id | append: '_section_' | append: section.id %}
+
+        <input
+          style="text-align:center"
+          form="{{- form_id -}}"
+          type="number"
+          {% unless additional %}
+            name="quantity"
+          {% endunless %}
+          id="Product_{{- product.id -}}-Quantity{%- if additional -%}-additional{%- endif -%}"
+          class="product-quantity__input"
+          value="1"
+          min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+          max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+          step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+          data-quantity-input
+          {% if additional %}
+            data-quantity-input-additional
+          {%- endif -%}
+        >
+
+        <button
+          class="product-quantity__button increase-c"
+          type="button"
+          data-quantity-increase
+          aria-label="{{ 'products.quantity.increase' | t: product: product.title | escape }}"
+        >
+          {% render 'icons', icon: 'plus' %}
+        </button>
+      </div>
+    </div>
+    <div class="add_to_cart" style="{% if hide_purchase_controls %}display:none;{% endif %}">
+      <button
+type="submit"
+  class="
+    custom-btn-boxes proo product-add-to-cart__button add-to-cart button button--block button--{{- button_type -}}
+  "
+
+  {% if product.template_suffix == 'pre-order' %}
+    data-preorder
+  {% endif %}
+>
+  {%- render 'icons', icon: 'cart' -%}
+
+  <span class="js-product-add-to-cart-button-text">
+    {% if product.first_available_variant.available %}
+      {% if product.template_suffix == 'pre-order' %}
+        {{- 'products.product.pre_order' | t -}}
+      {% else %}
+        {{- 'products.product.add_to_cart' | t -}}
+      {% endif %}
+    {% else %}
+      {{- 'products.product.sold_out' | t -}}
+    {% endif %}
+
+      </span>
+        </button>
+    </div>
+  </div>
+
+  {% comment %}
+    <button
+    	type="submit"
+    	class="custom-btn-boxes product-add-to-cart__button add-to-cart button button--block button--{{- button_type -}}
+    			{% unless product.first_available_variant.available %}
+    				disabled
+    			{% endunless %}
+    		"
+    	{% unless product.first_available_variant.available %}
+    		disabled
+    	{% endunless %}
+    	{% if product.template_suffix == 'pre-order' %}
+    		data-preorder
+    	{% endif %}
+    >
+    	{%- render 'icons', icon: 'cart' -%}
+
+    	<span class="js-product-add-to-cart-button-text">
+    		{% if product.first_available_variant.available %}
+    			{% if product.template_suffix == 'pre-order' %}
+    				{{- 'products.product.pre_order' | t -}}
+    			{% else %}
+    				{{- 'products.product.add_to_cart' | t -}}
+    			{% endif %}
+    		{% else %}
+    			{{- 'products.product.sold_out' | t -}}
+    		{% endif %}
+    	</span>
+    </button>
+  {% endcomment %}
+  {% comment %}
+    {% render 'custom-product-quantity', block: block, product: product, show_label: true %}
+  {% endcomment %}
+
+  {% if block.settings.show_additional_buttons and hide_purchase_controls == false %}
+    <div class="product-add-to-cart__additional-buttons">
+      {{- form | payment_button -}}
+    </div>
+  {% endif %}
+{% endif %}
+  {% if customer %}
+    {% for address in customer.addresses %}
+      <!-- <p style="" class="custom-address-1">{{ customer.tags | join: ', ' }}</p> -->
+      <div class="my-cusotm-tag-main">
+        {% for tag in customer.tags %}
+          <span class="customer-tag custom-address-1" style="position: absolute; opacity: 0;">
+            {{- tag | handleize -}}
+          </span>
+        {% endfor %}
+      </div>
+    {% endfor %}
+    <style>
+      {% if template.name == 'product' %}
+      /* .product-inventory-status{display: none;} */
+        {% endif %}
+    </style>
+  {% endif %}
+{% endif %}
+
+{% if template.name == 'product' %}
+<script>
+(function () {
+  const modal = document.getElementById('subSetupModal');
+  const confirmBtn = document.getElementById('subSetupConfirm');
+  const anchorNote = document.getElementById('subSetupAnchorNote');
+  if (!modal || !confirmBtn || !anchorNote) return;
+
+  const deliveryDateInput = document.getElementById('delivery_date');
+  const customDateWrap = document.getElementById('subSetupCustomDateWrap');
+  const customDateInput = document.getElementById('subSetupCustomDate');
+  const anchorToggle = anchorNote.querySelector('.sub-toggle-row');
+  if (!anchorToggle) return;
+
+  function formatDate(d) {
+    return d.toISOString().split('T')[0];
+  }
+  function firstOfNextMonth() {
+    const d = new Date();
+    return formatDate(new Date(d.getFullYear(), d.getMonth() + 1, 1));
+  }
+
+  window.openSubSetupModal = function () {
+    modal.classList.add('is-open');
+  };
+
+  // tracks whether Continue was ever actually clicked — the delivery date
+  // field is shared with plain one-time purchases, so it must only be reset
+  // if this modal itself is the thing that wrote to it in the first place
+  let subscriptionConfigured = false;
+
+  // resets this modal's own UI back to defaults, and — only if Continue was
+  // actually clicked at some point — also clears the delivery date / Renewal
+  // Anchor it wrote. Opening and cancelling without ever confirming must leave
+  // a delivery date the customer picked before touching this modal untouched.
+  window.resetSubSetupState = function () {
+    startRadios.forEach((r) => { r.checked = r.value === 'today'; });
+    refreshSelectedRow();
+    customDateWrap.style.display = 'none';
+    anchorNote.style.display = 'none';
+    if (customDateInput) customDateInput.value = formatDate(new Date());
+    anchorToggle.querySelectorAll('button').forEach((b) => {
+      b.classList.toggle('is-active', b.dataset.value === 'reset_to_1st');
+    });
+
+    if (subscriptionConfigured) {
+      if (deliveryDateInput) deliveryDateInput.value = '';
+      const form = modal.closest('form');
+      const anchorInput = form ? form.querySelector('[name="properties[Renewal Anchor]"]') : null;
+      if (anchorInput) anchorInput.remove();
+    }
+    subscriptionConfigured = false;
+  };
+
+  window.closeSubSetupModal = function (revert) {
+    modal.classList.remove('is-open');
+    if (revert) {
+      window.resetSubSetupState();
+      if (typeof window.revertToOneTimePurchase === 'function') {
+        window.revertToOneTimePurchase();
+      }
+    }
+  };
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) window.closeSubSetupModal(true);
+  });
+
+  const startRadios = modal.querySelectorAll('input[name="subSetupStart"]');
+  function refreshSelectedRow() {
+    startRadios.forEach((r) => r.closest('.sub-setup-radio').classList.toggle('is-selected', r.checked));
+  }
+  startRadios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+      const isCustom = radio.value === 'custom' && radio.checked;
+      customDateWrap.style.display = isCustom ? '' : 'none';
+      anchorNote.style.display = isCustom ? '' : 'none';
+      refreshSelectedRow();
+    });
+  });
+  refreshSelectedRow();
+
+  anchorToggle.querySelectorAll('button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      anchorToggle.querySelectorAll('button').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    subscriptionConfigured = true;
+    const choice = modal.querySelector('input[name="subSetupStart"]:checked').value;
+    let chosenDate;
+    let anchorMode = null;
+
+    if (choice === 'today') {
+      chosenDate = formatDate(new Date());
+    } else if (choice === 'first_next_month') {
+      chosenDate = firstOfNextMonth();
+    } else {
+      chosenDate = customDateInput.value || formatDate(new Date());
+      anchorMode = anchorToggle.querySelector('.is-active').dataset.value;
+    }
+
+    if (deliveryDateInput) deliveryDateInput.value = chosenDate;
+
+    // scoped to this modal's own enclosing form, not a page-wide class search —
+    // a page-wide selector can grab a different product's form/button (e.g. a
+    // related/cross-sell product card rendered earlier in the DOM), which would
+    // both silently append Renewal Anchor to a form that's never submitted, and
+    // strip the active state off the button the customer actually clicked
+    // without correctly restoring it (since it'd add .active to the wrong one)
+    const form = modal.closest('form');
+    if (form) {
+      form.querySelectorAll('.Subscription_buttons button').forEach((btn) => btn.classList.remove('active'));
+      form.querySelector('.Subscription_buttons button.Subscription_button')?.classList.add('active');
+
+      let anchorInput = form.querySelector('[name="properties[Renewal Anchor]"]');
+      if (anchorMode === 'reset_to_1st') {
+        if (!anchorInput) {
+          form.insertAdjacentHTML('beforeend', `<input type="hidden" name="properties[Renewal Anchor]" value="reset_to_1st">`);
+        } else {
+          anchorInput.value = 'reset_to_1st';
+        }
+      } else if (anchorInput) {
+        anchorInput.remove();
+      }
+
+      if (!form.querySelector('[name="properties[subscription]"]')) {
+        form.insertAdjacentHTML('beforeend', `<input type="hidden" name="properties[subscription]" value="6 month + 1 month free">`);
+      }
+
+    }
+
+    window.closeSubSetupModal(false);
+  });
+})();
+</script>
+{% endif %}
+
+
+
+
+

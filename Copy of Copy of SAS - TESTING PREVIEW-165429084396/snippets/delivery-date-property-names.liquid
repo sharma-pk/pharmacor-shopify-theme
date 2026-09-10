@@ -1,0 +1,34 @@
+{%- comment -%}
+	Single source of truth for the accepted line-item/note-attribute property
+	names for the customer's chosen date, current name first (the first entry
+	is what NEW orders get written under; the rest are old aliases kept only
+	so past orders still resolve).
+
+	Read by:
+	- layout/theme.liquid (renders this once in <head> into window.DELIVERY_DATE_PROPERTY_NAMES
+	  / window.DELIVERY_DATE_PROPERTY_KEY, which every write site — theme.liquid,
+	  product-template.liquid, header.liquid, wholesaler-shared.js — uses instead
+	  of a hardcoded string)
+	- snippets/account-order-row.liquid and sections/account-template.liquid
+	  (Liquid read sites, for old-order fallback)
+
+	Liquid usage:
+		{%- capture delivery_date_property_names_str -%}
+			{%- render 'delivery-date-property-names' -%}
+		{%- endcapture -%}
+		{%- assign delivery_date_property_names = delivery_date_property_names_str | strip | split: ',' -%}
+		{%- for name in delivery_date_property_names -%} ... {%- endfor -%}
+
+	Casing matters here: every read site compares EXACTLY (Liquid
+	'property.first == property_name'), and the first entry is written verbatim
+	as the cart property key, so these must match the customer-facing key
+	character for character. Keep them comma-separated with no spaces around
+	the commas and no trailing newline.
+
+	Note the reader repos that match case-insensitively (pharmacor-cronjob-app,
+	pharmacor-hubspot-project, pharmacor-checkout-extension) keep their own
+	lists LOWERCASED; custom-subscription's list matches this file's casing.
+
+	RENAME-DELIVERY-DATE-HERE: add the new name to the FRONT of the list below
+	(new,old,older,...) — nothing else anywhere in the theme needs to change.
+{%- endcomment -%}Processed Date,Delivery Date

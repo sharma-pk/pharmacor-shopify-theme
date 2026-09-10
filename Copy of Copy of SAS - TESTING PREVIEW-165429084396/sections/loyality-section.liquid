@@ -1,0 +1,938 @@
+{% comment %}
+  Section: Welcome Dashboard
+  Description: Personalized dashboard with collection tabs + A-Z filter within each tab
+{% endcomment %}
+<style>
+/* Pharmate Club Points Widget */
+.pcc-top-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.pcc-top-heading {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.pcc-top-row .pcc-widget {
+  flex: 1;
+  margin-bottom: 0;
+  min-width: 0;
+}
+@media only screen and (max-width: 767px) {
+  .pcc-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .pcc-top-heading { white-space: normal; }
+  .pcc-top-row .pcc-widget { width: 100%; }
+}
+
+.pcc-widget {
+  --pcc-widget-bg: {{ section.settings.pcc_widget_bg }};
+  --pcc-label-color: {{ section.settings.pcc_label_color }};
+  --pcc-badge-bg: {{ section.settings.pcc_badge_bg }};
+  --pcc-badge-text: {{ section.settings.pcc_badge_text_color }};
+  --pcc-badge-dot: {{ section.settings.pcc_badge_dot_color }};
+  --pcc-pts-color: {{ section.settings.pcc_points_color }};
+  --pcc-pts-label-color: {{ section.settings.pcc_points_label_color }};
+  --pcc-bar-track: {{ section.settings.pcc_bar_track_color }};
+  --pcc-bar-fill: {{ section.settings.pcc_bar_fill_color }};
+  --pcc-bar-dot: {{ section.settings.pcc_bar_dot_color }};
+  --pcc-footer-border: {{ section.settings.pcc_footer_border_color }};
+  --pcc-redeem-color: {{ section.settings.pcc_redeem_btn_color }};
+  --pcc-to-label: {{ section.settings.pcc_to_label_color }};
+  --pcc-to-pts: {{ section.settings.pcc_to_pts_color }};
+  --pcc-border-color: {{ section.settings.pcc_border_color }};
+  --pcc-border-width: {{ section.settings.pcc_border_width }}px;
+  background: var(--pcc-widget-bg);
+  border: var(--pcc-border-width) solid var(--pcc-border-color);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+.pcc-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.pcc-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--pcc-label-color);
+  margin-bottom: 4px;
+}
+.pcc-badge {
+  align-items: center;
+  gap: 6px;
+  background: var(--pcc-badge-bg);
+  color: var(--pcc-badge-text);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.pcc-dot-indicator {
+  width: 8px;
+  height: 8px;
+  background: var(--pcc-badge-dot);
+  border-radius: 50%;
+  display: inline-block;
+}
+.pcc-pts-row {
+  margin: 4px 0 18px;
+  line-height: 1;
+}
+.pcc-pts-row strong {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--pcc-pts-color);
+  margin-right: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.pcc-pts-label {
+  font-size: 16px;
+  color: var(--pcc-pts-label-color);
+}
+.pcc-bar-outer {
+  position: relative;
+  padding: 5px 0;
+}
+.pcc-bar-track {
+  position: relative;
+  height: 10px;
+  background: var(--pcc-bar-track);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.pcc-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--pcc-bar-fill);
+  border-radius: 10px;
+  transition: width 0.7s ease;
+  max-width: 100%;
+}
+.pcc-dot-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: var(--pcc-bar-dot);
+  border: none;
+  border-radius: 50%;
+  z-index: 1;
+  display: block;
+}
+.pcc-dot-marker--start {
+  left: 0;
+  transform: translateY(-50%);
+}
+.pcc-dot-marker.pcc-dot-marker--passed {
+  background: var(--pcc-bar-fill);
+  border: none;
+}
+.pcc-tier-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.pcc-tier-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 60px;
+}
+.pcc-tier-item--left  { align-items: flex-start; }
+.pcc-tier-item--center { align-items: center; }
+.pcc-tier-item--right { align-items: flex-end; }
+.pcc-tier-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pcc-label-color);
+}
+.pcc-tier-pts {
+  font-size: 11px;
+  color: #888;
+}
+.pcc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--pcc-footer-border);
+  gap: 12px;
+}
+.pcc-next-tier-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pcc-to-label {
+  font-size: 12px;
+  color: var(--pcc-to-label);
+  display: block;
+}
+.pcc-to-pts {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pcc-to-pts);
+  display: block;
+}
+.pcc-expiry-text {
+  font-size: 11px;
+  color: #888;
+  display: block;
+  margin-top: 3px;
+}
+.pcc-maintain-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pcc-to-pts);
+  display: block;
+  margin-top: 4px;
+}
+.pcc-redeem-btn {
+  display: inline-block;
+  border: 1.5px solid var(--pcc-redeem-color);
+  color: var(--pcc-redeem-color);
+  background: transparent;
+  border-radius: 8px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+.pcc-redeem-btn:hover {
+  background: var(--pcc-redeem-color);
+  color: var(--pcc-badge-text);
+}
+@media only screen and (max-width: 767px) {
+  .pcc-widget { padding: 18px 16px; }
+  .pcc-pts-row strong { font-size: 28px; }
+  .pcc-footer { flex-direction: column; align-items: flex-start; }
+}
+</style>
+
+<div class="welcome-box loyalty-section">
+  {% if customer %}
+    <div class="wrapper_welcome">
+
+            <div class="pcc-widget">
+                <div class="pcc-header">
+                    <div class="pcc-left">
+                        <span class="pcc-label">{{ section.settings.club_name }}</span>
+                    </div>
+                    <div id="pcc-badge" class="pcc-badge" style="display:none">
+                        <span class="pcc-dot-indicator"></span>
+                        <span id="pcc-badge-text"></span>
+                    </div>
+                </div>
+            
+
+                <p class="pcc-pts-row">
+                <strong id="pcc-pts-val">0</strong>
+                <span class="pcc-pts-label">{{ section.settings.points_label }}</span>
+                </p>
+
+                <div class="pcc-bar-wrap">
+                    <div class="pcc-bar-track">
+                        <div class="pcc-bar-fill" id="pcc-bar-fill" style="width:0%"></div>
+                        <span class="pcc-dot-marker pcc-dot-marker--start" id="pcc-dot-start" style="left:0"></span>
+                        <span class="pcc-dot-marker" id="pcc-dot-end" style="left:100%"></span>
+                    </div>
+                    <div class="pcc-tier-row">
+                        <div class="pcc-tier-item pcc-tier-item--left">
+                            <span class="pcc-tier-name" id="pcc-tier-start-name"></span>
+                            <span class="pcc-tier-pts" id="pcc-tier-start-pts"></span>
+                        </div>
+                        <div class="pcc-tier-item pcc-tier-item--right" id="pcc-tier-end-item">
+                            <span class="pcc-tier-name" id="pcc-tier-end-name"></span>
+                            <span class="pcc-tier-pts" id="pcc-tier-end-pts"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pcc-footer">
+                <div id="pcc-next-tier" class="pcc-next-tier-wrap"></div>
+                <a href="{{ section.settings.redeem_link }}" class="pcc-redeem-btn  {% if template == "pages.layalty-program" %}loyality-btn{%endif %}">{{ section.settings.redeem_text }}</a>
+                </div>
+           
+        </div>
+   </div>
+ {% endif %}
+
+</div>
+
+
+
+
+<script>
+(function () {
+  // Log all known Smile.io events
+  ['smile:setup','smile:ready','smile:loaded','smile:customer_loaded','smile:customer_status','smile:customer_data'].forEach(function(evt) {
+    document.addEventListener(evt, function(e) {
+      console.log('[Smile Debug] Event fired:', evt, e.detail);
+    });
+  });
+  // Log postMessages from Smile.io (in case they use an iframe)
+  window.addEventListener('message', function(e) {
+    if (e.data && JSON.stringify(e.data).indexOf('smile') > -1) {
+      console.log('[Smile Debug] postMessage:', e.origin, e.data);
+    }
+  });
+  // Check window objects after 2s
+  setTimeout(function() {
+    console.log('[Smile Debug] window.smile =', window.smile);
+    console.log('[Smile Debug] window.Smile =', window.Smile);
+    console.log('[Smile Debug] window.SmileUI =', window.SmileUI);
+    console.log('[Smile Debug] window.__pcc_pts =', window.__pcc_pts);
+  }, 2000);
+  // Log every fetch call
+  var _origFetch = window.fetch;
+  window.fetch = function(r, o) {
+    var url = typeof r === 'string' ? r : (r && r.url) || '';
+    if (url.indexOf('smile') > -1 || url.indexOf('yotpo') > -1) {
+      console.log('[Smile Debug] fetch call:', url);
+    }
+    return _origFetch.apply(this, arguments);
+  };
+})();
+</script>
+
+<!-- Intercepts Smile.io network calls — runs before their script loads -->
+<script>
+(function () {
+  function _pccSmileData(data) {
+    var c = (data && data.customers && data.customers[0]) || (data && data.customer);
+    if (c && typeof c.points_balance !== 'undefined') {
+      var tierName = c.vip_tier_name || (c.vip_tier && c.vip_tier.name) || null;
+      window.__pcc_pts  = c.points_balance;
+      window.__pcc_tier = tierName;
+      var expiry = c.vip_tier_expires_at || c.vip_tier_ends_at || null;
+      if (expiry) window.__pcc_expiry = expiry;
+      var smileSpent = c.vip_tier_earning_amount || c.amount_spent_in_period || c.ytd_amount_spent || null;
+      if (smileSpent != null) window.__pcc_spent = parseFloat(smileSpent) || 0;
+      var smileDelta = c.delta_to_next_vip_tier;
+      if (smileDelta != null) window.__pcc_delta = parseFloat(smileDelta);
+      document.dispatchEvent(new CustomEvent('pcc:data', {
+        detail: { pts: c.points_balance, tier: tierName }
+      }));
+    }
+    if (data && data.vip_tiers && data.vip_tiers.length) {
+      window.__pcc_vip_tiers = data.vip_tiers;
+      document.dispatchEvent(new CustomEvent('pcc:tiers', { detail: { tiers: data.vip_tiers } }));
+    }
+  }
+  // Intercept fetch
+  var _f = window.fetch;
+  window.fetch = function (resource, opts) {
+    var url = typeof resource === 'string' ? resource : (resource && resource.url) || '';
+    var p = _f.apply(this, arguments);
+    if (url.indexOf('smile.io') > -1 || url.indexOf('yotpo.com') > -1) {
+      p.then(function (res) {
+        res.clone().json().then(_pccSmileData).catch(function () {});
+      }).catch(function () {});
+    }
+    return p;
+  };
+  // Intercept XMLHttpRequest (older Smile.io versions)
+  var _open = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function (m, url) {
+    this._smUrl = String(url || '');
+    _open.apply(this, arguments);
+  };
+  var _send = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.send = function () {
+    if (this._smUrl && (this._smUrl.indexOf('smile.io') > -1 || this._smUrl.indexOf('yotpo.com') > -1)) {
+      var x = this;
+      x.addEventListener('load', function () {
+        try { _pccSmileData(JSON.parse(x.responseText)); } catch (e) {}
+      });
+    }
+    _send.apply(this, arguments);
+  };
+})();
+</script>
+
+<script>
+(function () {
+  var widget = document.querySelector('.pcc-widget');
+  if (!widget) return;
+
+  {% if customer %}
+  var CUSTOMER_ID = '{{ customer.id }}';
+  {% endif %}
+  var API_KEY    = '{{ section.settings.smile_public_key | escape }}';
+  var TIER1_PTS  = {{ section.settings.tier1_pts | default: 500 }};
+  var TIER2_PTS  = {{ section.settings.tier2_pts | default: 1000 }};
+  var TIER3_PTS  = {{ section.settings.tier3_pts | default: 10000 }};
+  var TIER1_NAME  = '{{ section.settings.tier1_name  | default: "Silver"   | escape }}';
+  var TIER2_NAME  = '{{ section.settings.tier2_name  | default: "Gold"     | escape }}';
+  var TIER3_NAME  = '{{ section.settings.tier3_name  | default: "Platinum" | escape }}';
+  var TIER1_COLOR = '{{ section.settings.tier1-color | default: "#9ca3af" }}';
+  var TIER2_COLOR = '{{ section.settings.tier2-color | default: "#d4af37" }}';
+  var TIER3_COLOR = '{{ section.settings.tier3-color | default: "#7c8080" }}';
+  var EXPIRY_LABEL = '{{ section.settings.expiry_label | escape }}';
+  var TIER2_SPEND = {{ section.settings.tier2_spend | default: 5000 }};
+  var TIER3_SPEND = {{ section.settings.tier3_spend | default: 15000 }};
+  var tiers = [
+    { name: TIER1_NAME, pts: TIER1_PTS },
+    { name: TIER2_NAME, pts: TIER2_PTS },
+    { name: TIER3_NAME, pts: TIER3_PTS }
+  ];
+
+  function fmt(n) { return parseInt(n, 10).toLocaleString(); }
+
+  function updateWidget(points, smileTierName) {
+    var pts = parseInt(points, 10) || 0;
+
+    var ptsEl = document.getElementById('pcc-pts-val');
+    if (ptsEl) ptsEl.textContent = fmt(pts);
+
+    // Determine which segment to show — segment is driven by actual points,
+    // NOT the Smile.io tier name, so that 0-point loading states show the
+    // correct "To reach <tier>" message. Badge still uses smileTierName.
+    var tierLower  = (smileTierName || '').toLowerCase();
+    var isPlatinum = tierLower === TIER3_NAME.toLowerCase() || pts >= TIER3_PTS;
+    var isGold     = !isPlatinum && (tierLower === TIER2_NAME.toLowerCase() || pts >= TIER2_PTS);
+    var isSilver   = !isPlatinum && !isGold && pts >= TIER1_PTS;
+    // pre-Silver: pts < TIER1_PTS (shows 0→Silver, footer "To reach Silver")
+
+    var rangeMin, rangeMax, startName, startPts, endName, endPts, showStart;
+     if (isPlatinum) {
+      // Maxed out: bar at 100%, platinum only — no Gold label shown
+      rangeMin = TIER2_PTS; rangeMax = TIER3_PTS;
+      startName = null; startPts = 0;
+      endName = TIER3_NAME;  endPts = TIER3_PTS;
+      showStart = false;
+      } else if (isGold) {
+      // Gold → Platinum segment
+      rangeMin = TIER2_PTS; rangeMax = TIER3_PTS;
+      startName = TIER2_NAME; startPts = TIER2_PTS;
+      endName = TIER3_NAME;  endPts = TIER3_PTS;
+      showStart = true;
+    } else if (isSilver) {
+      // Silver → Gold segment
+      rangeMin = TIER1_PTS; rangeMax = TIER2_PTS;
+      startName = TIER1_NAME; startPts = TIER1_PTS;
+      endName = TIER2_NAME;  endPts = TIER2_PTS;
+      showStart = true;
+    } else {
+      // Pre-Silver: 0 → Silver; LEFT hidden, RIGHT shows Silver
+      rangeMin = 0; rangeMax = TIER1_PTS;
+      startName = null; startPts = 0;
+      endName = TIER1_NAME; endPts = TIER1_PTS;
+      showStart = false;
+    }
+
+    // Bar fill
+    var fill = document.getElementById('pcc-bar-fill');
+    if (fill) {
+      var pct = isPlatinum
+        ? 100
+        : (rangeMax > rangeMin ? Math.max(0, Math.min(100, ((pts - rangeMin) / (rangeMax - rangeMin)) * 100)) : 0);
+      fill.style.width = pct.toFixed(2) + '%';
+      fill.classList.remove('silver-badge', 'gold-badge', 'platinum-badge');
+      fill.classList.add(isPlatinum ? 'platinum-badge' : isGold ? 'gold-badge' : 'silver-badge');
+    }
+
+    // Dots
+    var dotStart = document.getElementById('pcc-dot-start');
+    var dotEnd   = document.getElementById('pcc-dot-end');
+    var startTierClass = startName === TIER2_NAME ? 'gold-badge' : startName === TIER3_NAME ? 'platinum-badge' : 'silver-badge';
+    var endTierClass   = endName === TIER2_NAME ? 'gold-badge' : endName === TIER3_NAME ? 'platinum-badge' : 'silver-badge';
+    if (dotStart) {
+      dotStart.style.visibility = showStart ? '' : 'hidden';
+      dotStart.classList.toggle('pcc-dot-marker--passed', showStart && pts >= rangeMin);
+      dotStart.classList.remove('silver-badge', 'gold-badge', 'platinum-badge');
+      dotStart.classList.add(startTierClass);
+    }
+    if (dotEnd) {
+      dotEnd.classList.remove('silver-badge', 'gold-badge', 'platinum-badge');
+      dotEnd.classList.add(endTierClass);
+      dotEnd.style.visibility = '';
+      dotEnd.classList.toggle('pcc-dot-marker--passed', isPlatinum || pts >= rangeMax);
+    }
+
+    // Tier labels
+    var startItem   = document.querySelector('.pcc-tier-item--left');
+    var startNameEl = document.getElementById('pcc-tier-start-name');
+    var startPtsEl  = document.getElementById('pcc-tier-start-pts');
+    var endItem     = document.getElementById('pcc-tier-end-item');
+    var endNameEl   = document.getElementById('pcc-tier-end-name');
+    var endPtsEl    = document.getElementById('pcc-tier-end-pts');
+    if (startItem)   startItem.style.visibility = showStart ? '' : 'hidden';
+    if (startNameEl) startNameEl.textContent = startName || '';
+    if (startPtsEl)  startPtsEl.textContent  = startPts ? fmt(startPts) + ' pts' : '';
+    if (endItem)     endItem.style.display = '';
+    if (endNameEl)   endNameEl.textContent = endName || '';
+    if (endPtsEl)    endPtsEl.textContent  = endPts ? fmt(endPts) + ' pts' : '';
+
+    // Color each tier label by the tier it represents (not the member's current tier)
+    // start label = current tier's color, end label = target tier's color
+    var startLabelColor = isPlatinum ? TIER2_COLOR : isGold ? TIER2_COLOR : isSilver ? TIER1_COLOR : null;
+    var endLabelColor   = isPlatinum ? TIER3_COLOR : isGold ? TIER3_COLOR : isSilver ? TIER2_COLOR : TIER1_COLOR;
+    if (startNameEl) startNameEl.style.color = startLabelColor || '';
+    if (endNameEl)   endNameEl.style.color   = endLabelColor   || '';
+
+    // Apply tier color to badge background and progress bar fill
+    var tierColor = isPlatinum ? TIER3_COLOR : isGold ? TIER2_COLOR : isSilver ? TIER1_COLOR : null;
+    if (tierColor) {
+      widget.style.setProperty('--pcc-badge-bg', tierColor);
+      widget.style.setProperty('--pcc-bar-fill', tierColor);
+    }
+
+    // Member badge
+    var tierLabel = smileTierName
+      || (isPlatinum ? TIER3_NAME : isGold ? TIER2_NAME : isSilver ? TIER1_NAME : null);
+    if (tierLabel) {
+      var badge    = document.getElementById('pcc-badge');
+      var badgeTxt = document.getElementById('pcc-badge-text');
+      if (badge && badgeTxt) {
+        badgeTxt.textContent = tierLabel + ' member';
+        var badgeTierClass = isPlatinum ? 'platinum-badge' : isGold ? 'gold-badge' : 'silver-badge';
+        badge.classList.remove('silver-badge', 'gold-badge', 'platinum-badge');
+        badge.classList.add(badgeTierClass);
+        badgeTxt.classList.remove('silver-badge', 'gold-badge', 'platinum-badge');
+        badgeTxt.classList.add(badgeTierClass);
+        badge.style.display = 'flex';
+      }
+    }
+
+    // Footer next-tier message
+    var nextEl = document.getElementById('pcc-next-tier');
+    if (nextEl) {
+      if (isPlatinum) {
+        nextEl.innerHTML = '<span class="pcc-to-label">Congratulations!</span>' +
+          '<strong class="pcc-to-pts">You\'ve reached ' + TIER3_NAME + '!</strong>';
+      } else {
+        var rem = Math.max(0, endPts - pts);
+        nextEl.innerHTML =
+          '<span class="pcc-to-label">To reach ' + endName + '</span>' +
+          '<strong class="pcc-to-pts">Spend $' + fmt(rem) + ' to upgrade ' + endName + '</strong>';
+      }
+      // Expiry date notice
+      var expiryDate = window.__pcc_expiry || null;
+      var expiryDateStr = '';
+      if (expiryDate) {
+        try {
+          var expD = new Date(expiryDate);
+          // Smile.io returns exclusive end date (Jan 1 = valid through Dec 31 prior day)
+          expD.setDate(expD.getDate() - 1);
+          expiryDateStr = expD.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+        } catch (e) { expiryDateStr = expiryDate; }
+      }
+      // Maintain message — show for Gold/Platinum only, never for Silver
+      var maintainThreshold = isPlatinum ? TIER3_SPEND : isGold ? TIER2_SPEND : 0;
+      if (maintainThreshold > 0) {
+        var spentAmt = null;
+        var maintainGapOverride = null;
+        if (window.__pcc_spent != null) {
+          spentAmt = window.__pcc_spent;
+        } else if (window.__pcc_delta != null) {
+          if (isPlatinum) {
+            maintainGapOverride = Math.max(0, Math.round(window.__pcc_delta));
+          } else {
+            var nextTierThresh = TIER3_SPEND;
+            if (nextTierThresh > 0) spentAmt = Math.max(0, nextTierThresh - window.__pcc_delta);
+          }
+        }
+        var maintainGap = null;
+        if (spentAmt !== null) {
+          var scale = (maintainThreshold > 100000 || spentAmt > 100000) ? 100 : 1;
+          maintainGap = Math.max(0, Math.round((maintainThreshold - spentAmt) / scale));
+        } else if (maintainGapOverride !== null) {
+          maintainGap = maintainGapOverride;
+        } else if (isPlatinum) {
+          maintainGap = 0;
+        }
+        if (maintainGap !== null) {
+          var byDate = expiryDateStr || ('December 31, ' + (new Date().getFullYear() + 1));
+          var tierForMsg = isPlatinum ? TIER3_NAME : isGold ? TIER2_NAME : TIER1_NAME;
+          if (maintainGap > 0) {
+            nextEl.innerHTML += '<span class="pcc-maintain-text">Spend $' + fmt(maintainGap) + ' by ' + byDate + ' to maintain your current level</span>';
+          } else {
+            nextEl.innerHTML += '<span class="pcc-maintain-text">You\'re locked in! You\'ve secured your ' + tierForMsg + ' status until ' + byDate + '</span>';
+          }
+        }
+      }
+    }
+  }
+
+  // Initial render (no tier data yet)
+  updateWidget(0);
+
+  function updateTiers(smileTiers) {
+    if (!smileTiers || !smileTiers.length) return;
+    var sorted = smileTiers.slice()
+      .sort(function(a, b) { return (a.points_threshold || 0) - (b.points_threshold || 0); })
+      .filter(function(t) { return t.points_threshold > 0; });
+    if (!sorted.length) return;
+    var t1 = sorted[0] || null;
+    var t2 = sorted[1] || null;
+    var t3 = sorted[2] || sorted[sorted.length - 1] || null;
+    if (t1) { TIER1_PTS = t1.points_threshold; TIER1_NAME = t1.name || TIER1_NAME; }
+    if (t2) { TIER2_PTS = t2.points_threshold; TIER2_NAME = t2.name || TIER2_NAME; }
+    if (t3) { TIER3_PTS = t3.points_threshold; TIER3_NAME = t3.name || TIER3_NAME; }
+    tiers = [
+      { name: TIER1_NAME, pts: TIER1_PTS },
+      { name: TIER2_NAME, pts: TIER2_PTS },
+      { name: TIER3_NAME, pts: TIER3_PTS }
+    ];
+    updateWidget(window.__pcc_pts || 0, window.__pcc_tier || null);
+  }
+
+  document.addEventListener('pcc:tiers', function(e) {
+    if (e.detail && e.detail.tiers) updateTiers(e.detail.tiers);
+  });
+  if (window.__pcc_vip_tiers) updateTiers(window.__pcc_vip_tiers);
+
+  function roundNice(n) {
+    if (n < 1000)   return Math.floor(n / 100) * 100 || 100;
+    if (n < 10000)  return Math.floor(n / 1000) * 1000;
+    if (n < 100000) return Math.floor(n / 10000) * 10000;
+    return Math.floor(n / 50000) * 50000;
+  }
+
+  function adjustThresholdsForCustomer(pts, tierName) {
+    if (!pts || !tierName) return;
+    var rounded = roundNice(pts);
+    if (!rounded) return;
+    var tl = tierName.toLowerCase();
+    if (tl === TIER3_NAME.toLowerCase()) {
+      TIER3_PTS = rounded; tiers[2].pts = rounded;
+    } else if (tl === TIER2_NAME.toLowerCase()) {
+      TIER2_PTS = rounded; tiers[1].pts = rounded;
+      if (TIER3_PTS <= TIER2_PTS) { TIER3_PTS = TIER2_PTS * 2; tiers[2].pts = TIER3_PTS; }
+    } else if (tl === TIER1_NAME.toLowerCase()) {
+      TIER1_PTS = rounded; tiers[0].pts = rounded;
+      if (TIER2_PTS <= TIER1_PTS) { TIER2_PTS = TIER1_PTS * 2; tiers[1].pts = TIER2_PTS; }
+      if (TIER3_PTS <= TIER2_PTS) { TIER3_PTS = TIER2_PTS * 2; tiers[2].pts = TIER3_PTS; }
+    }
+  }
+
+  function onSmileData(pts, tierName) {
+    adjustThresholdsForCustomer(pts, tierName);
+    updateWidget(pts, tierName);
+  }
+
+  document.addEventListener('pcc:data', function (e) {
+    if (e.detail && typeof e.detail.pts !== 'undefined') onSmileData(e.detail.pts, e.detail.tier);
+  });
+  if (typeof window.__pcc_pts !== 'undefined') {
+    onSmileData(window.__pcc_pts, window.__pcc_tier);
+  }
+
+  function tryWindowSmile() {
+    var win = window.Smile || window.smile;
+    if (!win) return false;
+    var c = win.customer || win.customerData || win.current_customer;
+    if (c && c.points_balance !== undefined) {
+      onSmileData(c.points_balance);
+      return true;
+    }
+    return false;
+  }
+
+  [
+    'smile:setup', 'smile:ready', 'smile:loaded',
+    'smile:customer_loaded', 'smile:customer_status', 'smile:customer_data'
+  ].forEach(function (evt) {
+    document.addEventListener(evt, function (e) {
+      var detail = e.detail || {};
+      var c = detail.customer || detail.customerData || detail;
+      if (c && c.points_balance !== undefined) {
+        onSmileData(c.points_balance);
+      } else {
+        tryWindowSmile();
+      }
+    });
+  });
+
+  if (!tryWindowSmile()) {
+    var _attempts = 0;
+    var _poll = setInterval(function () {
+      _attempts++;
+      if (tryWindowSmile() || _attempts >= 12) clearInterval(_poll);
+    }, 500);
+  }
+
+  function trySmileTiers() {
+    var win = window.SmileUI || window.Smile || window.smile;
+    if (!win) return false;
+    var tierData = win.vip_tiers || win.tiers
+      || (win.program && win.program.vip_tiers)
+      || (win.config && win.config.vip_tiers)
+      || (win.settings && win.settings.vip_tiers)
+      || null;
+    if (tierData && tierData.length) { updateTiers(tierData); return true; }
+    return false;
+  }
+  if (!trySmileTiers()) {
+    var _ta = 0;
+    var _tp = setInterval(function () {
+      _ta++;
+      if (trySmileTiers() || _ta >= 20) clearInterval(_tp);
+    }, 500);
+  }
+
+  if (API_KEY && typeof CUSTOMER_ID !== 'undefined') {
+    setTimeout(function () {
+      if (window.__pcc_pts) return;
+      fetch('https://api.smile.io/v1/customers?customer_external_id=shopify-' + CUSTOMER_ID, {
+        headers: { 'Authorization': 'Bearer ' + API_KEY }
+      })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (data) {
+        if (data.customers && data.customers[0]) onSmileData(data.customers[0].points_balance || 0);
+      })
+      .catch(function () {});
+    }, 2000);
+  }
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Loyalty Reward",
+  "settings": [
+      {
+      "type": "header",
+      "content": "Pharmate Club Points Widget"
+    },
+    {
+      "type": "header",
+      "content": "Widget Colors"
+    },
+    {
+      "type": "color",
+      "id": "pcc_widget_bg",
+      "label": "Widget Background",
+      "default": "#eef6ee"
+    },
+    {
+      "type": "color",
+      "id": "pcc_label_color",
+      "label": "Label & Tier Name Color",
+      "default": "#30623d"
+    },
+    {
+      "type": "color",
+      "id": "pcc_badge_bg",
+      "label": "Member Badge Background",
+      "default": "#30623d"
+    },
+    {
+      "type": "color",
+      "id": "pcc_badge_text_color",
+      "label": "Member Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pcc_badge_dot_color",
+      "label": "Member Badge Dot Color",
+      "default": "#b2e78a"
+    },
+    {
+      "type": "color",
+      "id": "pcc_points_color",
+      "label": "Points Number Color",
+      "default": "#1a3d22"
+    },
+    {
+      "type": "color",
+      "id": "pcc_points_label_color",
+      "label": "Points Label Color",
+      "default": "#30623d"
+    },
+    {
+      "type": "color",
+      "id": "pcc_bar_track_color",
+      "label": "Progress Bar Track Color",
+      "default": "#daeeda"
+    },
+    {
+      "type": "color",
+      "id": "pcc_bar_fill_color",
+      "label": "Progress Bar Fill Color",
+      "default": "#30623d"
+    },
+    {
+      "type": "color",
+      "id": "pcc_bar_dot_color",
+      "label": "Progress Bar Milestone Dot Color",
+      "default": "#a8cba8"
+    },
+    {
+      "type": "color",
+      "id": "pcc_footer_border_color",
+      "label": "Footer Divider Color",
+      "default": "#d0e8d0"
+    },
+    {
+      "type": "color",
+      "id": "pcc_redeem_btn_color",
+      "label": "Redeem Button Color",
+      "default": "#1a3d22"
+    },
+    {
+      "type": "color",
+      "id": "pcc_to_label_color",
+      "label": "\"To reach...\" Label Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "pcc_to_pts_color",
+      "label": "Target Points Text Color",
+      "default": "#1a3d22"
+    },
+    {
+      "type": "color",
+      "id": "pcc_border_color",
+      "label": "Widget Border Color",
+      "default": "#d0e8d0"
+    },
+    {
+      "type": "range",
+      "id": "pcc_border_width",
+      "label": "Widget Border Width",
+      "min": 0,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Widget Content"
+    },
+    {
+      "type": "text",
+      "id": "smile_public_key",
+      "label": "Smile.io Public API Key",
+      "info": "Optional fallback if widget events don't fire. Find this in Smile.io → Settings → API."
+    },
+    {
+      "type": "text",
+      "id": "club_name",
+      "label": "Club Name",
+      "default": "PHARMATE CLUB"
+    },
+    {
+      "type": "text",
+      "id": "points_label",
+      "label": "Points Label",
+      "default": "pill points"
+    },
+    {
+      "type": "text",
+      "id": "tier1_name",
+      "label": "Tier 1 Name",
+      "default": "Silver"
+    },
+      {
+    "id":"tier1-color",
+    "type":"color",
+    "label":"Silver Badge & Bar Color",
+    "default":"#9ca3af"
+    },
+    {
+      "type": "number",
+      "id": "tier1_pts",
+      "label": "Tier 1 Points Threshold",
+      "default": 500
+    },
+    {
+      "type": "text",
+      "id": "tier2_name",
+      "label": "Tier 2 Name",
+      "default": "Gold"
+    },
+      {
+    "id":"tier2-color",
+    "type":"color",
+    "label":"Gold Badge & Bar Color",
+    "default":"#d4af37"
+    },
+    {
+      "type": "number",
+      "id": "tier2_pts",
+      "label": "Tier 2 Points Threshold",
+      "default": 1000
+    },
+    {
+      "type": "text",
+      "id": "tier3_name",
+      "label": "Tier 3 Name",
+      "default": "Platinum"
+    },
+      {
+    "id":"tier3-color",
+    "type":"color",
+    "label":"Platinum Badge & Bar Color",
+    "default":"#7c8080"
+    },
+    {
+      "type": "number",
+      "id": "tier3_pts",
+      "label": "Tier 3 Points Threshold",
+      "default": 2000
+    },
+    {
+      "type": "text",
+      "id": "expiry_label",
+      "label": "Points Expiry Text",
+      "info": "Shown below the upgrade message. E.g. 'Points expire:' (date auto-filled from Smile.io) or 'Points expire: 31 Jan 2026'. Leave blank to hide."
+    },
+    {
+      "type": "number",
+      "id": "tier2_spend",
+      "label": "Gold Spend Threshold ($)",
+      "default": 5000,
+      "info": "Amount customer must spend to maintain Gold. Match your Smile.io setting."
+    },
+    {
+      "type": "number",
+      "id": "tier3_spend",
+      "label": "Platinum Spend Threshold ($)",
+      "default": 15000,
+      "info": "Amount customer must spend to maintain Platinum. Match your Smile.io setting."
+    },
+    {
+      "type": "url",
+      "id": "redeem_link",
+      "label": "Redeem Points Link"
+    },
+    {
+      "type": "text",
+      "id": "redeem_text",
+      "label": "Redeem Points Button Text",
+      "default": "Redeem points"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Loyalty Reward"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,108 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "smile-landing-page": {
+      "type": "smile-landing-page",
+      "settings": {}
+    },
+    "mini_banner_RcjfB6": {
+      "type": "mini-banner",
+      "settings": {
+        "rounded_corners": true,
+        "desktop_image_height": "300px",
+        "mobile_image_height": "350px",
+        "media_type": "image",
+        "label": "Your Prescription for Savings!",
+        "heading": "Pharmacor Loyalty Points Program",
+        "text": "",
+        "button_label": "Start Earning Points",
+        "button_aria_label": "",
+        "button_link": "shopify://collections/rx",
+        "image_desktop": "shopify://shop_images/hreinfeld_A_close-up_of_multiple_glass_vials_filled_with_a_ligh_578fc0c7-7c2a-4f39-8b52-79a8f3a63193.png",
+        "content_alignment_desktop": "center",
+        "content_alignment_mobile": "center",
+        "block_alignmen": "center",
+        "section_background": "#000000",
+        "color_label": "#3c7af6",
+        "color_text": "#ffffff",
+        "button_background": "#ffffff",
+        "color_button_label": "#5a9d62",
+        "color_button_border": "#ffffff",
+        "hover_button_background": "#000000",
+        "color_hover_button_label": "#ffffff",
+        "color_hover_button_border": "#ffffff",
+        "overlay": "rgba(0,0,0, 0.3)",
+        "container_width": "1952px",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "1736913235796f9db1": {
+      "type": "apps",
+      "blocks": {
+        "smile_io_smile_landing_page_how_it_works_kCTtN3": {
+          "type": "shopify://apps/smile-io/blocks/smile-landing-page-how-it-works/2fae4e25-1841-4ea2-bc02-bd548478c4f6",
+          "settings": {
+            "primary_colour": "#333",
+            "secondary_colour": "#fff",
+            "title_text": "How it works",
+            "step1_heading_text": "Shop",
+            "step1_description_text": "Login to start earning straight away.",
+            "step2_heading_text": "Earn",
+            "step2_description_text": "Earn 1 point for every $1 dollar spent.",
+            "step3_heading_text": "Redeem",
+            "step3_description_text": "Redeem points for discounts on your next purchase."
+          }
+        }
+      },
+      "block_order": [
+        "smile_io_smile_landing_page_how_it_works_kCTtN3"
+      ],
+      "settings": {
+        "container_width": "inherit",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "image_with_text_6PL7ea": {
+      "type": "image-with-text",
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "center",
+        "enable_animation": false,
+        "image": "shopify://shop_images/AdobeStock_1169841031.jpg",
+        "image_background": "#5a9d62",
+        "label": "Text label",
+        "heading": "Shop. Earn. Save.",
+        "text_content": "<p>At Pharmacor, we value your partnership and believe in rewarding your loyalty. That’s why we’ve introduced the <strong>Pharmacor Loyalty Points Program</strong>—a simple and rewarding way to save more as you shop.</p><h3>Why Join?</h3><ul><li><strong>Automatic Enrollment</strong>: Start earning points immediately—no sign-up required.</li><li><strong>Flexible Savings</strong>: Apply points to your account whenever it suits you.</li><li><strong>Exclusive Benefits</strong>: Be the first to access special promotions and offers for loyal customers.</li></ul><p>Start earning rewards today—every purchase brings you closer to incredible savings. It’s our way of saying thank you for choosing Pharmacor!</p><p><strong>Pharmacor Loyalty Points: Shop. Earn. Save.</strong></p><p>Ready to make every dollar count? Contact your account manager or log in to your dashboard to start redeeming your points now!</p>",
+        "button_label": "Shop Now",
+        "button_aria_label": "Button label",
+        "button_url": "shopify://collections/rx",
+        "button_type": "primary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    }
+  },
+  "order": [
+    "smile-landing-page",
+    "mini_banner_RcjfB6",
+    "1736913235796f9db1",
+    "image_with_text_6PL7ea"
+  ]
+}

@@ -1,0 +1,1353 @@
+{% comment %}
+  Section: Welcome Dashboard
+  Description: Personalized dashboard for returning customers with dynamic data and theme-editable fields
+{% endcomment %}
+
+<div class="welcome-box">
+  {% comment %} {% render 'collection-list',product:product %} {% endcomment %}
+
+  <div class="collections-list-wrapper">
+    <div class="filters_home">
+      {%- assign active_filters_size = 0 -%}
+      {%- assign filters_type = section.settings.filters_type -%}
+
+      {%- for filter in collection.filters -%}
+        {%- case filter.type -%}
+          {%- when 'list', 'boolean' -%}
+            {%- assign active_filters_size = active_filters_size | plus: filter.active_values.size -%}
+          {%- when 'price_range' -%}
+            {%- if filter.min_value.value > 0 or filter.max_value.value < filter.range_max -%}
+              {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                {%- assign active_filters_size = active_filters_size | plus: 1 -%}
+              {%- endif -%}
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+
+      {% comment %}
+        {% for block in section.blocks %}
+            {% assign collection = collections[block.settings.collection] %}
+        {%endfor %}
+      {% endcomment %}
+      <div class="collection__header-row sort_with_icons">
+        {%- render 'product-filters-and-sort-bar', product_list: collection, without_filter_button: true -%}
+        {% comment %}  {% endcomment %}
+
+        <div class="sort_with_icons">
+          <div class="grid-lists-iconss" bis_skin_checked="1">
+            <div class="grd_btn grid-view-btn iocns" bis_skin_checked="1">
+              <svg width="29" height="30" viewBox="0 0 29 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect y="0.480835" width="7.65067" height="7.65067" fill="#30623D"></rect>
+                <rect y="11.1516" width="7.65067" height="7.65067" fill="#30623D"></rect>
+                <rect y="21.8223" width="7.65067" height="7.65067" fill="#30623D"></rect>
+                <rect x="10.6707" y="0.480835" width="7.65067" height="7.65067" fill="#30623D"></rect>
+                <rect x="10.6708" y="11.1516" width="7.65067" height="7.65067" fill="#30623D"></rect>
+                <rect x="10.6708" y="21.8223" width="7.65067" height="7.65067" fill="#30623D"></rect>
+                <rect x="21.3414" y="0.480835" width="7.65067" height="7.65067" fill="#30623D"></rect>
+                <rect x="21.3413" y="11.1516" width="7.65067" height="7.65067" fill="#30623D"></rect>
+                <rect x="21.3413" y="21.8223" width="7.65067" height="7.65067" fill="#30623D"></rect>
+              </svg>
+            </div>
+            <div class="list-view-btn active iocns" bis_skin_checked="1">
+              <span>
+                <svg width="37" height="29" viewBox="0 0 37 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="7.70667" y="0.480713" width="28.992" height="4.40385" fill="#30623D"></rect>
+                  <circle cx="2.20193" cy="2.68264" r="2.20193" fill="#30623D"></circle>
+                  <rect x="7.70667" y="12.2243" width="28.992" height="4.40385" fill="#30623D"></rect>
+                  <circle cx="2.20193" cy="14.4263" r="2.20193" fill="#30623D"></circle>
+                  <rect x="7.70667" y="23.9679" width="28.992" height="4.40385" fill="#30623D"></rect>
+                  <circle cx="2.20193" cy="26.1698" r="2.20193" fill="#30623D"></circle>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list_of_collections">
+        <div class="grid_data">
+          <div
+            class="collection__items js-grid-wrapper custom-collection-page-tabcontent custom-collection-content"
+            aria-busy="true"
+            data-grid-col="3"
+            id="dynamic"
+          >
+            {% paginate collection.products by 120 %}
+              {% for product in collection.products %}
+                <div class="collection__item" data-filter-item data-titl="{{ current_collection.title }}">
+                  {% render 'product-card', product: product %}
+                </div>
+              {% endfor %}
+              {% if paginate.pages > 1 %}
+                {{ paginate | default_pagination }}
+              {% endif %}
+            {% endpaginate %}
+          </div>
+          <div class="text-center">
+            <button class="btn loadMore">Load More</button>
+          </div>
+        </div>
+
+        <div id="custom" class="custom-collection-page-tabcontent">
+          <style>
+            .custom-btn-boxes{border: 2px solid #30623d!important;
+              padding-top: 20px!important;
+              padding-bottom: 20px!important;
+              cursor: pointer!important;}
+                  .accordion__item.product-filters__form-item{display: none!important;}
+            .custom-collection-content{display: grid !important;
+              grid-template-columns: 1fr 1fr 1fr!important;}
+            .nav-tabs {
+              overflow: hidden;
+            }
+
+            .nav-tabs button {
+              background: transparent;
+              float: left;
+              border: none;
+              cursor: pointer;
+              padding: 10px 30px;margin-right: 6px;
+              font-size: 16px;
+              transition: 0.3s;border: 2px solid #30623d;
+              border-radius: 30px;
+              margin-bottom: 10px !important;
+            }
+
+            .nav-tabs button:hover {
+              background: #30623d;
+              color: #fff;
+            }
+
+            .nav-tabs button.active-tab {
+              background: #30623d;
+              color: #fff;
+            }
+            .tab-section {
+              display: none;
+            }
+            .list_of_collections{background: transparent!important;
+              padding: 12px!important;}
+          </style>
+
+          <div class="nav-tabs">
+            <button class="tab-btn active-tab" onclick="showTab(event, 'mainCollection')">
+              {% if section.settings.custom_name != blank %}
+                {{ section.settings.custom_name }}
+              {% else %}
+                {{ collection.title }}
+              {% endif %}
+            </button>
+
+            {% for block in section.blocks %}
+              {% assign block_collection = collections[block.settings.collection] %}
+              <button class="tab-btn" onclick="showTab(event, 'custom{{ block.id }}')">
+                {% if block.settings.custom_name != blank -%}
+                  {{- block.settings.custom_name -}}
+                {%- else %}
+                  {{ block_collection.title -}}
+                {%- endif %}
+              </button>
+            {% endfor %}
+            {% comment %}
+              <button
+                class="tab-btn myhidden"
+                onclick="showTab(event, 'custom-all')"
+              >
+                Filter Products
+              </button>
+            {% endcomment %}
+          </div>
+          <div class="custom-cart-list-main">
+            <div class="custom_labels">
+              <div class="custom-list-image">Image</div>
+              <div class="custom-list-product-name">Product Name</div>
+              <div class="custom-list-wholesaler">
+                <div style="width: 50%;">Wholesaler</div>
+                <div style="width: 50%;">Strength/Pack Size</div>
+              </div>
+              {% if customer %}
+                <div class="custom-list-price">Price</div>
+
+                <div class="custom-list-quantity">Quantity</div>
+          
+              {% else %}
+                <div class="custom-list-product-info">Product Info</div>
+              {% endif %}
+            </div>
+
+            <!-- First tab: main collection -->
+            <div
+              id="mainCollection"
+              class="my-collection-list-tabcontent custom-product-parent tab-section"
+              style="display:block"
+            >
+              <div class="custom-product-card-list" style="width:100%;">
+                <div class="custom-product-card-list-wrap custom-collection-list" id="custom-products">
+                  {% paginate collection.products by 120 %}
+                    {% for product in collection.products %}
+                      {% render 'list-item', product: product, section: section, title: collection %}
+                    {% endfor %}
+
+                    {% if paginate.pages > 1 %}
+                      {{ paginate | default_pagination }}
+                    {% endif %}
+                  {% endpaginate %}
+                </div>
+                <div class="text-center">
+                  <button id="loadMore-main" class="loadMore btn">{{ section.settings['load-more'] }}</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loop tabs -->
+            {% for block in section.blocks %}
+              {% assign block_collection = collections[block.settings.collection] %}
+              {% if block_collection %}
+                <div id="custom{{ block.id }}" class="my-collection-list-tabcontent custom-product-parent tab-section">
+                  <div class="custom-product-card-list" style="width: 100%;">
+                    <div class="custom-product-card-list-wrap custom-collection-list" id="custom-products">
+                      {% paginate block_collection.products by 120 %}
+                        {% for product in block_collection.products %}
+                          {% render 'list-item', product: product, section: section, title: block_collection %}
+                        {% endfor %}
+
+                        {% if paginate.pages > 1 %}
+                          {{ paginate | default_pagination }}
+                        {% endif %}
+                      {% endpaginate %}
+                    </div>
+                    <div class="text-center">
+                      <button id="loadMore-{{ block.id }}" class="loadMore btn">
+                        {{ section.settings['load-more'] }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+
+            {% comment %}
+                  <div
+                id="custom-all"
+                class="my-collection-list-tabcontent tab-section"
+                style="display: none"
+              >
+                <div class="custom-product-card-list allproductss custom-product-parent" style="width: 100%;">
+                  <div class="custom-product-card-list-wrap">
+                    {%- for product in collections['all'].products -%}
+                      {% render 'list-item', product: product, section: section, title: 'All Products' %}
+                    {%- endfor -%}
+                  </div>
+                </div>
+              </div>
+            {% endcomment %}
+          </div>
+        </div>
+
+        <style>
+            .custom-collection-list .customitem {
+            display: none;
+          }
+          .custom-collection-content .collection__item{display: none;}
+          {% comment %} .myhidden {
+            display: none !important;
+          } {% endcomment %}
+        </style>
+
+        {% comment %}
+          <div class="text-center">
+            <a href="{{ section.settings.btn_link }}" class="btn">{{ section.settings.btn_text }}</a>
+          </div>
+        {% endcomment %}
+      </div>
+    </div>
+
+    <script>
+      document.getElementById('searchInput').addEventListener('input', function () {
+        var searchVal = this.value.trim().toLowerCase();
+        var products = document.querySelectorAll('.custom-main-inner-wrap');
+
+        products.forEach(function (product) {
+          var title = product.getAttribute('data-title').toLowerCase();
+
+          if (searchVal === '' || title.includes(searchVal)) {
+            product.style.display = 'block';
+          } else {
+            product.style.display = 'none';
+          }
+        });
+      });
+    </script>
+
+    {% comment %}
+      <script>
+      document.getElementById("searchInput").addEventListener("input", function() {
+        var searchVal = this.value.trim();
+        var allTabs = document.querySelectorAll(".nav-tabs .tab-btn");
+        var allProductsBtn = document.querySelector(".nav-tabs .tab-btn[onclick*='custom-all']");
+
+        if (searchVal.length > 0) {
+          // sab tabs hide karo
+          allTabs.forEach(function(btn) {
+            btn.classList.add("myhidden");
+            btn.classList.remove("active-tab");
+          });
+
+          // All Products ko dikhana aur activate karna
+          allProductsBtn.classList.remove("myhidden");
+          allProductsBtn.classList.add("active-tab");
+
+          // uska click trigger bhi karo
+          allProductsBtn.click();
+
+        } else {
+          // sab tabs wapas show karo
+          allTabs.forEach(function(btn, index) {
+            btn.classList.remove("myhidden");
+            btn.classList.remove("active-tab");
+          });
+
+          // pehli tab ko wapas active aur click karo
+          let firstTab = allTabs[0];
+          firstTab.classList.add("active-tab");
+          firstTab.click();
+
+          // All Products tab ko wapas hide karo
+          allProductsBtn.classList.add("myhidden");
+          allProductsBtn.classList.remove("active-tab");
+        }
+      });
+
+
+      </script>
+    {% endcomment %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        let wrapper = document.querySelector('#dynamic'); // product wrapper
+        if (!wrapper) return;
+        let items = wrapper.querySelectorAll('.collection__item');
+        let loadMoreBtn = document.querySelector('.loadMore');
+        let visible = 100;
+
+        // sab ko hide kar do (CSS se bhi kar sakte ho)
+        items.forEach((item) => (item.style.display = 'none'));
+
+        // pehle 6 show karo
+        for (let i = 0; i < visible && i < items.length; i++) {
+          items[i].style.display = 'block';
+        }
+
+        if (!loadMoreBtn) return;
+
+        // button hide karo agar products 6 ya usse kam hain
+        if (items.length <= visible) {
+          loadMoreBtn.style.display = 'none';
+        }
+
+        // button click par aur 6 show karo
+        loadMoreBtn.addEventListener('click', function () {
+          let nextVisible = visible + 100;
+          for (let i = visible; i < nextVisible && i < items.length; i++) {
+            items[i].style.display = 'block';
+          }
+          visible = nextVisible;
+
+          if (visible >= items.length) {
+            loadMoreBtn.style.display = 'none';
+          }
+        });
+      });
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        let parents = document.querySelectorAll('.custom-product-parent');
+
+        parents.forEach(function (parent) {
+          let items = parent.querySelectorAll('.customitem');
+          let loadMoreBtn = parent.querySelector('.loadMore');
+          let visible = 100;
+
+          // sabko hide kardo
+          items.forEach((item) => (item.style.display = 'none'));
+
+          // pehle 6 show
+          for (let i = 0; i < visible && i < items.length; i++) {
+            items[i].style.display = 'block';
+          }
+
+          if (!loadMoreBtn) return;
+
+          loadMoreBtn.addEventListener('click', function () {
+            // alert("Load More clicked ✅");
+            let nextVisible = visible + 100;
+            for (let i = visible; i < nextVisible && i < items.length; i++) {
+              items[i].style.display = 'block';
+            }
+            visible = nextVisible;
+
+            if (visible >= items.length) {
+              loadMoreBtn.style.display = 'none';
+            }
+          });
+
+          if (items.length <= 100) {
+            loadMoreBtn.style.display = 'none';
+          }
+        });
+      });
+    </script>
+
+    <script>
+      $('.grid_data').hide();
+      $('.list-view-btn').click(function () {
+        // Activate only the clicked list view button
+        $('.list-view-btn').removeClass('active');
+        $('.grid-view-btn').removeClass('active');
+        $(this).addClass('active');
+
+        // Toggle views
+        $('.grid_data').hide();
+        $('.custom-collection-page-tabcontent').show();
+      });
+
+      $('.grid-view-btn').click(function () {
+        // Activate only the clicked grid view button
+        $('.grid-view-btn').removeClass('active');
+        $('.list-view-btn').removeClass('active');
+        $(this).addClass('active');
+
+        // Toggle views
+        $('.grid_data').show();
+        $('.collection__items').show(); // optional: if you use this elsewhere
+        $('.custom-collection-page-tabcontent').hide();
+      });
+    </script>
+    {% comment %}  {% endcomment %}
+  </div>
+  <script>
+    $('.facets input[data-search]').on('keyup', function() {
+            var searchVal = $(this).val();
+            var filterItems = $('[data-filter-item]');
+            if ( searchVal != '' ) {
+            filterItems.addClass('hidden');
+            $('[data-filter-item][data-filter-name*="' + searchVal.toLowerCase() + '"]').removeClass('hidden');
+            } else {
+            filterItems.removeClass('hidden');
+            }
+            });
+
+        var loc = window.location.pathname;
+            $("#searchInput").keyup(function() {
+            var tvalue = $(this).val();
+            console.log(tvalue);
+        });
+  </script>
+  <style>
+      .sort_with_icons .sort .sort__select{
+      width:fit-content
+    }
+      input#searchInput {
+        border: none !important;
+        padding: 0px !important;
+        height: fit-content !important;
+        line-height: normal;
+        max-height: fit-content;
+        min-height: 30px;
+    }
+      .custom_product-section img
+      {
+            height: 150px !important;
+        object-fit: contain;
+      }
+
+      .welcome-box  .collection__items {
+        display: grid !important;
+        grid-template-columns:1fr
+    }
+     .welcome-box .collection__items .collection__item
+     {
+        {% comment %} display: block; {% endcomment %}
+    }
+      @media only screen and (max-width: 1250px) {
+      .custom_product-section {
+        overflow-y: hidden;
+      }
+    }
+  </style>
+  <script>
+    function showTab(e, tabId) {
+      let sections = document.getElementsByClassName('tab-section');
+      for (let i = 0; i < sections.length; i++) {
+        sections[i].style.display = 'none';
+      }
+
+      let buttons = document.getElementsByClassName('tab-btn');
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('active-tab');
+      }
+
+      const targetSection = document.getElementById(tabId);
+      if (targetSection) targetSection.style.display = 'block';
+      e.currentTarget.classList.add('active-tab');
+    }
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.custom-product-card-list-wrap .custom_product-section').forEach(function (card) {
+        const container = card.querySelector('.product-quantity__container');
+        if (!container) return;
+
+        const input = container.querySelector('.product-quantity__input2');
+        const btnDecrease = container.querySelector('[data-quantity-decrease]');
+        const btnIncrease = container.querySelector('[data-quantity-increase]');
+        const addToCartInput = card.querySelector('.add-to-card-input');
+        if (!input || !btnDecrease || !btnIncrease || !addToCartInput) return;
+
+        const min = parseInt(input.min) || 1;
+        const max = parseInt(input.max) || Infinity;
+
+        function syncValue() {
+          addToCartInput.value = input.value;
+        }
+
+        // Decrease button
+        btnDecrease.addEventListener('click', function () {
+          let value = parseInt(input.value);
+          if (isNaN(value)) value = min;
+          if (value > min) {
+            input.value = value - 1;
+          } else {
+            input.value = ''; // allow empty instead of min
+          }
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+          syncValue();
+        });
+
+        // Increase button
+        btnIncrease.addEventListener('click', function () {
+          let value = parseInt(input.value);
+          if (isNaN(value)) value = 0;
+          if (value < max) {
+            input.value = value + 1;
+          } else {
+            input.value = max;
+          }
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+          syncValue();
+        });
+
+        // Allow clearing with Backspace
+        input.addEventListener('keydown', function (e) {
+          // Backspace key = 8, Delete = 46
+          if ((e.key === 'Backspace' || e.key === 'Delete') && input.value.length === 1) {
+            // clear value completely
+            input.value = '';
+            e.preventDefault(); // prevent browser from re-filling min
+            syncValue();
+          }
+        });
+
+        // On manual typing
+        input.addEventListener('input', function () {
+          if (input.value === '') {
+            syncValue();
+            return;
+          }
+          input.value = input.value.replace(/[^\d]/g, '');
+          let value = parseInt(input.value);
+          if (!isNaN(value)) {
+            if (value > max) value = max;
+            input.value = value;
+          }
+          syncValue();
+        });
+
+        // Keep blank after blur
+        input.addEventListener('blur', syncValue);
+
+        syncValue();
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+        function handleDropdownChange(dropdown) {
+            var myparent = dropdown.closest('.custom-main-inner-wrap');
+            var selectedValues = [];
+            myparent.find('.custom_dropdown').each(function () {
+                selectedValues.push($(this).val());
+            });
+            var combinedValue = selectedValues.join("-").toLowerCase().replace(/\s+/g, "-").replace(/[/\.]/g, "-");
+            setTimeout(function () {
+                var variantElement = myparent.find("." + combinedValue);
+                if (variantElement.length) {
+                    var myvariantid = variantElement.attr("myvarientid");
+                    var myvariantprice = variantElement.attr("varienrprice");
+                    var myvariantcompareprice = variantElement.attr("varienrcompprice");
+                    var myvariantprofit = variantElement.attr("variantprofit");
+                    var myvariantquantity = variantElement.attr("varientquentity");
+                    //alert(myvariantid);
+                console.log(myvariantprice);
+    var myvariantprice = parseFloat((variantElement.attr("varienrprice") || "0").replace(/[^0-9.]/g, ""));
+    var myvariantcompareprice = parseFloat((variantElement.attr("varienrcompprice") || "0").replace(/[^0-9.]/g, ""));
+
+    if (myvariantcompareprice > 0 && myvariantcompareprice > myvariantprice) {
+        var savingPercent = ((myvariantcompareprice - myvariantprice) / myvariantcompareprice) * 100;
+
+        var finalSaving = Math.round(savingPercent);
+        if (finalSaving <= 0) {
+            finalSaving = 1;
+        }
+        myparent.find(".custom-sale-pricee").html("Saving: " + finalSaving + "%");
+        myparent.find(".price__discount").contents().filter(function() {
+            return this.nodeType === 3;
+        }).first().replaceWith(finalSaving + "% ");
+    }
+
+
+
+                    myparent.find(".my-add-to-cart-value").val(myvariantid);
+                    {% comment %} myparent.find(".custom_your-price").html(myvariantprice); {% endcomment %}
+                    {% comment %} myparent.find(".custom_list-price").html(myvariantcompareprice); {% endcomment %}
+                       myparent.find(".price-item.price-item--sale").html("$" + myvariantprice);
+                     myparent.find(".data-wpd-hide.price-item.price-item--regular").html("$" + myvariantcompareprice);
+                   //myparent.find(".custom-quantity-items").html("Stock:" + myvariantquantity);
+                   // myparent.find(".custom_profit").html("Saving:" + myvariantprofit);
+                    myparent.find("#my-variant-profit").val(myvariantprofit);
+                    //myparent.find(".custom-variant-stock").html("Stock" + ":" + " " + myvariantquantity);
+
+                     if (myvariantquantity > 0) {
+                              myparent.find(".custom-quantity-items").html("Stock: " + myvariantquantity);
+                          } else {
+                             // myparent.find(".custom-quantity-items").html(""); // kuch bhi show nahi hoga
+                          }
+                      if (myvariantquantity > 0) {
+                        //myparent.find('.custom_add_to-Cart_button').show();
+                        //myparent.find('.product-sold-out').hide();
+                      myparent.find('.backorder-order').css('display', 'none');
+                    } else {
+                        //myparent.find('.custom_add_to-Cart_button').hide();
+                        //myparent.find('.product-sold-out').show();
+                        myparent.find('.backorder-order').css('display', 'inline-block');
+
+                    }
+                } else {
+                   // alert('No matching variant found for: ' + combinedValue);
+                }
+            }, 50);
+        }
+
+        // Attach change event listener
+        $(document).on('change', '.custom_dropdown', function () {
+            handleDropdownChange($(this));
+        });
+
+        // Apply logic on page reload
+        $('.custom_dropdown').each(function () {
+            handleDropdownChange($(this));
+        });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      $('.custom-list-product-info').click(function () {
+        var mysecondparent = $(this).parent().parent().next();
+        $(mysecondparent).removeClass('custom-hidden-class');
+      });
+      $('.custom-close-pop').click(function () {
+        $(this).parent().parent().addClass('custom-hidden-class');
+      });
+
+      $('.mysimple-close').click(function () {
+        $(this).parent().addClass('custom-hidden-class');
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      function handleDropdownChange() {
+        const selectedValue = $('#mySelect').val();
+        $('.custom-list-wholesaler option').prop('selected', false); // Deselect all options
+
+        $('.custom-list-wholesaler option').each(function () {
+          const optionValue = $(this).val();
+          if (selectedValue === optionValue) {
+            // Find the parent container of the matching option
+            const parentContainer = $(this).closest('.custom-list-wholesaler');
+            // Select the matching option
+            var custmvalue = $(parentContainer).parent().find('option').val();
+            //console.log(custmvalue);
+            parentContainer.val(optionValue);
+          }
+        });
+
+        setTimeout(function () {
+          $('.custom-list-wholesaler').trigger('change');
+        }, 100);
+      }
+
+      $(document).on('change', '#mySelect', function () {
+        handleDropdownChange();
+      });
+      handleDropdownChange();
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const initContainers = new WeakSet();
+
+      function initQuantity(container) {
+        if (initContainers.has(container)) return; // avoid double-binding
+        initContainers.add(container);
+
+        const input = container.querySelector('[data-quantity-input]');
+        const decreaseBtn = container.querySelector('.descrease-c') || container.querySelector('.decrease-c');
+        const increaseBtn = container.querySelector('.increase-c');
+        const addToCartInput = container.querySelector('.add-to-card-input');
+        const customValueEls = container.querySelectorAll('.custom-class-quantity');
+
+        if (!input) return;
+
+        const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+        const sync = () => {
+          const min = parseInt(input.min) || 1;
+          const rawMax = parseInt(input.max);
+          const max = Number.isFinite(rawMax) ? rawMax : Infinity;
+
+          let v = parseInt(input.value);
+          if (Number.isNaN(v)) v = min;
+          v = clamp(v, min, max);
+
+          input.value = v;
+
+          // ✅ mirror to custom-class-quantity (handle both hidden input & normal text element)
+          customValueEls.forEach((el) => {
+            if (el.tagName === 'INPUT') {
+              el.value = v;
+            } else {
+              el.textContent = v;
+            }
+          });
+
+          // ✅ mirror to hidden/extra input if present
+          if (addToCartInput) {
+            addToCartInput.value = v;
+            addToCartInput.dispatchEvent(new Event('input', { bubbles: true }));
+            addToCartInput.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        };
+
+        // start at 1 (or respect existing) then sync everything
+        if (!input.value) input.value = 1;
+        sync();
+
+        decreaseBtn?.addEventListener('click', (e) => {
+          e.preventDefault();
+          const min = parseInt(input.min) || 1;
+          let v = parseInt(input.value) || min;
+          if (v > min) {
+            input.value = v - 1;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            sync();
+          }
+        });
+
+        increaseBtn?.addEventListener('click', (e) => {
+          e.preventDefault();
+          const rawMax = parseInt(input.max);
+          const max = Number.isFinite(rawMax) ? rawMax : Infinity;
+          let v = parseInt(input.value) || 1;
+          if (v < max) {
+            input.value = v + 1;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            sync();
+          }
+        });
+
+        // manual typing
+        input.addEventListener('input', sync);
+        input.addEventListener('change', sync);
+      }
+
+      document.querySelectorAll('.product-quantity__container').forEach(initQuantity);
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      $(document).on('input change', '.product-quantity__input', function () {
+        let val = $(this).val(); // current quantity
+        let $wrap = $(this).closest('.custom-variant'); // parent wrapper
+        let $customInput = $wrap.find('.custom-class-quantity');
+
+        // value copy karna
+        $customInput.val(val);
+
+        // alert bhi show karna
+        //  alert("Quantity changed: " + val);
+      });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      function updatePrice($wrap) {
+        var checkedValues = [];
+        $wrap.find('input').each(function () {
+          if ($(this).is(':checked')) {
+            var checkedValue = $(this).attr('customval');
+            let formattedValue = checkedValue.toLowerCase().replace(/\s+/g, '-');
+            checkedValues.push(formattedValue);
+          }
+        });
+        var combinedValues = checkedValues.join('-').toLowerCase();
+        if (!combinedValues) return;
+        setTimeout(function () {
+          var variantid = $wrap.find('.man-class-cont #' + combinedValues).attr('product-id');
+          var variantprice = $wrap.find('.man-class-cont #' + combinedValues).attr('variant-price');
+          var variantcompareprice = $wrap.find('.man-class-cont #' + combinedValues).attr('compare-price');
+          // alert(crvalue);
+          // alert(variantprice);
+          // alert(variantcompareprice);
+
+          $wrap.find('.cusotm-cart-id').val(variantid);
+          $wrap.closest('.product-card').find('.price-item--sale').html(variantprice);
+          $wrap
+            .closest('.product-card')
+            .find('.data-wpd-hide.price-item.price-item--regular')
+            .html(variantcompareprice);
+          var myvariantQuantity = $wrap.find('.' + combinedValues).attr('varientquentity');
+          console.log('Variant Quantity:', myvariantQuantity);
+          let $buyNowBtn = $wrap.find('.btn--buy-now');
+          let newHref = 'https://shop.pharmacor.com.au/checkout?variant=' + variantid + '&quantity=1';
+          $buyNowBtn.attr('href', newHref);
+        }, 50);
+      }
+
+      $('.custom-variant-wrap input').on('change', function () {
+        var $currentWrap = $(this).closest('.custom-variant-wrap');
+        updatePrice($currentWrap);
+      });
+      $('.custom-variant-wrap').each(function () {
+        updatePrice($(this));
+      });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      if ($(window).width() > 992) {
+        // Initial setup for hiding the custom-variant
+        $('.custom-variant').slideUp(1);
+
+        // Hover function to show/hide the custom-variant
+        function initHover() {
+          $('.collection__item, .featured-products__col, .products-thumbnails__product').hover(
+            function () {
+              $(this).find('.custom-variant').stop(true, true).slideDown(300);
+            },
+            function () {
+              $(this).find('.custom-variant').stop(true, true).slideUp(500);
+            }
+          );
+        }
+
+        initHover();
+
+        function checkURLChange() {
+          setTimeout(function () {
+            $('.custom-variant').slideUp(1);
+            initHover();
+          }, 1600);
+          initHover();
+        }
+
+        var pushState = history.pushState;
+        history.pushState = function (state) {
+          pushState.apply(history, arguments);
+          checkURLChange();
+        };
+
+        $(window).on('popstate', function () {
+          checkURLChange();
+        });
+      }
+    });
+  </script>
+
+  <script>
+    (function() {
+      document.querySelectorAll(".custom-carttt").forEach(function(el) {
+        el.addEventListener("click", function() {
+          var parentForm = $(this).closest("form");
+
+          var idimp          = resolveWholesalerVariantId(parentForm);
+          var customquantity = parentForm.find(".custom-quantity").val();
+          var subscription    = parentForm.find('[name="properties[subscription]"]').val();
+          var pickup_location    = $('[name="properties[Shipping Option]"]:checked').val();
+
+          var properties = buildWholesalerCartProperties(parentForm, idimp, {
+            "subscription": subscription,
+            "Shipping Option": pickup_location
+          });
+
+          let formobj = {
+            quantity: customquantity,
+            id: idimp,
+            properties: properties
+          };
+
+          $.ajax({
+            type: "POST",
+            url: "/cart/add.js",
+            cache: false,
+            data: formobj,
+            dataType: "json",
+            success: function() {
+              // bubble refresh
+              $('#cart-icon-bubble').load(window.location.href + " #cart-icon-bubble > *");
+
+              // drawer refresh
+              refreshCartDrawer(function(){
+                {% if settings.home-page-drawer %}
+                  $(".header__icon--cart").trigger("click");
+                  $("body").addClass("cart-open");
+                {% endif %}
+              });
+            },
+            error: function(xhr, status, error) {
+              console.log('cart add error:', error);
+            }
+          });
+        });
+      });
+
+      // -------- Drawer Refresh (Section Rendering API) ----------
+      function refreshCartDrawer(done){
+        var $drawer = $("#CartDrawer");
+        var sectionKey = $drawer.data("section-id");
+
+        $.ajax({
+          type: "GET",
+          url: "/?sections=" + encodeURIComponent(sectionKey) + "&_=" + Date.now(),
+          dataType: "json",
+          success: function(res){
+            var html = res && res[sectionKey];
+            if(html) {
+              swapDrawerHTML(html);
+              if(typeof done === "function") done();
+            } else {
+              fallbackHTML(done);
+            }
+          },
+          error: function(){
+            fallbackHTML(done);
+          }
+        });
+
+        function fallbackHTML(cb){
+          $.ajax({
+            type: "GET",
+            url: "/?section_id=cart-drawer&_=" + Date.now(),
+            dataType: "html",
+            success: function(html){
+              swapDrawerHTML(html);
+              if(typeof cb === "function") cb();
+            }
+          });
+        }
+
+        function swapDrawerHTML(newHtml){
+          var $tmp = $(newHtml);
+
+          var $newContainer = $tmp.find(".js-cart-container");
+          if($newContainer.length){
+            $drawer.find(".js-cart-container").html($newContainer.html());
+          } else {
+            var $alt = $tmp.filter(".drawer").find(".js-cart-container");
+            if($alt.length){
+              $drawer.find(".js-cart-container").html($alt.html());
+            }
+          }
+
+          var $newFooter = $tmp.find(".cart-drawer__footer");
+          if($newFooter.length){
+            $drawer.find(".cart-drawer__footer").html($newFooter.html());
+          }
+        }
+      }
+    })();
+  </script>
+  <script>
+    (function() {
+      document.querySelectorAll(".custom-btn-boxes").forEach(function(el) {
+        el.addEventListener("click", function() {
+          var parentForm = $(this).closest("form");
+
+          var idimp2          = resolveWholesalerVariantId(parentForm);
+          var customquantity2 = parentForm.find(".custom-class-quantity").val();
+          var properties2 = buildWholesalerCartProperties(parentForm, idimp2);
+
+          let formobj = {
+            quantity: customquantity2,
+            id: idimp2,
+            properties: properties2
+          };
+
+          $.ajax({
+            type: "POST",
+            url: "/cart/add.js",
+            cache: false,
+            data: formobj,
+            dataType: "json",
+            success: function() {
+              // cart bubble refresh
+              $('#cart-icon-bubble').load(window.location.href + " #cart-icon-bubble > *");
+
+              // drawer refresh
+              refreshCartDrawer(function(){
+                {% if settings.home-page-drawer %}
+                  $(".header__icon--cart").trigger("click");
+                  $("body").addClass("cart-open");
+                {% endif %}
+              });
+            },
+            error: function(xhr, status, error) {
+              console.log('cart add error:', error);
+            }
+          });
+        });
+      });
+
+      // -------- Drawer Refresh (Section Rendering API) ----------
+      function refreshCartDrawer(done){
+        var $drawer = $("#CartDrawer");
+        var sectionKey = $drawer.data("section-id");
+
+        $.ajax({
+          type: "GET",
+          url: "/?sections=" + encodeURIComponent(sectionKey) + "&_=" + Date.now(),
+          dataType: "json",
+          success: function(res){
+            var html = res && res[sectionKey];
+            if(html) {
+              swapDrawerHTML(html);
+              if(typeof done === "function") done();
+            } else {
+              fallbackHTML(done);
+            }
+          },
+          error: function(){
+            fallbackHTML(done);
+          }
+        });
+
+        function fallbackHTML(cb){
+          $.ajax({
+            type: "GET",
+            url: "/?section_id=cart-drawer&_=" + Date.now(),
+            dataType: "html",
+            success: function(html){
+              swapDrawerHTML(html);
+              if(typeof cb === "function") cb();
+            }
+          });
+        }
+
+        function swapDrawerHTML(newHtml){
+          var $tmp = $(newHtml);
+
+          var $newContainer = $tmp.find(".js-cart-container");
+          if($newContainer.length){
+            $drawer.find(".js-cart-container").html($newContainer.html());
+          } else {
+            var $alt = $tmp.filter(".drawer").find(".js-cart-container");
+            if($alt.length){
+              $drawer.find(".js-cart-container").html($alt.html());
+            }
+          }
+
+          var $newFooter = $tmp.find(".cart-drawer__footer");
+          if($newFooter.length){
+            $drawer.find(".cart-drawer__footer").html($newFooter.html());
+          }
+        }
+      }
+    })();
+  </script>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Collection Grid",
+  "settings": [
+    {
+      "type": "select",
+      "id": "filters_type",
+      "label": "Filters type",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "Sidebar"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "horizontal",
+      "info": "Used only for desktop"
+    },
+    {
+      "type": "text",
+      "id": "load-more",
+      "label": "Load More Button Text",
+      "default": "Load More"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "See All Products"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "custom_name",
+      "label": "Custom Collection Name"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
+          "type": "text",
+          "id": "custom_name",
+          "label": "Custom Collection Name"
+        },
+        {
+          "type": "select",
+          "id": "variant_picker",
+          "label": "Variant picker",
+          "options": [
+            {
+              "value": "radio",
+              "label": "Buttons"
+            },
+            {
+              "value": "select",
+              "label": "Dropdown"
+            }
+          ],
+          "default": "radio"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Collection Grid"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  $(".serach_btn").on("click", function() {
+      var searchValue = $("#searchInput").val().trim();
+      var searchLower = searchValue.toLowerCase();
+
+      // 1️⃣ For .collection__item
+      $(".collection__item").each(function() {
+          var title = $(this).find('.product-card__title').text().toLowerCase();
+          if (title.includes(searchLower)) {
+              $(this).show();
+          } else {
+              $(this).hide();
+          }
+      });
+
+      // 2️⃣ For .custom_product-section
+      $(".custom_product-section,.custom-main-inner-wrap").each(function() {
+          var title = $(this).find('.product-name').text().toLowerCase();
+          if (title.includes(searchLower)) {
+              $(this).show();
+          } else {
+              $(this).hide();
+          }
+      });
+  });
+  {% comment %}  {% endcomment %}
+   const optionMenu = document.querySelector(".select-menu");
+  if (optionMenu) {
+    const selectBtn = optionMenu.querySelector(".select-btn"),
+      options = optionMenu.querySelectorAll(".option"),
+      sBtn_text = optionMenu.querySelector(".sBtn-text");
+
+    selectBtn.addEventListener("click", () =>
+      optionMenu.classList.toggle("active")
+    );
+
+    options.forEach((option) => {
+      option.addEventListener("click", () => {
+        let selectedOption = option.querySelector(".option-text").innerText;
+        sBtn_text.innerText = selectedOption;
+
+        optionMenu.classList.remove("active");
+      });
+    });
+  }
+</script>
+<style>
+  .select-menu {
+    max-width: 330px;
+    margin: 50px auto;
+  }
+  .select-menu .select-btn {
+    display: flex;
+    height: 55px;
+    background: #fff;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 8px;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .select-menu .options {
+    position: absolute;
+    width: 330px;
+    overflow-y: auto;
+    max-height: 295px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation-name: fadeInDown;
+    -webkit-animation-name: fadeInDown;
+    animation-duration: 0.35s;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 0.35s;
+    -webkit-animation-fill-mode: both;
+  }
+  .select-menu .options .option {
+    display: flex;
+    height: 55px;
+    cursor: pointer;
+    padding: 0 16px;
+    border-radius: 8px;
+    align-items: center;
+    background: #fff;
+  }
+  .select-menu .options .option:hover {
+    background: #f2f2f2;
+  }
+  .select-menu .options .option i {
+    font-size: 25px;
+    margin-right: 12px;
+  }
+  .select-menu .options .option .option-text {
+    font-size: 18px;
+    color: #333;
+  }
+
+  .select-btn i {
+    font-size: 25px;
+    transition: 0.3s;
+  }
+
+  .select-menu.active .select-btn i {
+    transform: rotate(-180deg);
+  }
+  .select-menu.active .options {
+    display: block;
+    opacity: 0;
+    z-index: 10;
+    animation-name: fadeInUp;
+    -webkit-animation-name: fadeInUp;
+    animation-duration: 0.4s;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 0.4s;
+    -webkit-animation-fill-mode: both;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      transform: translate3d(0, 30px, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+  }
+  @keyframes fadeInDown {
+    from {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+    to {
+      transform: translate3d(0, 20px, 0);
+      opacity: 0;
+    }
+  }
+</style>
+
+<style>
+  /* Sorting dropdown */
+  .custom-sorting {
+    margin-bottom: 20px;
+  }
+  .custom-sorting label {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+
+  /* Products grid */
+  .custom-product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .product-item {
+    width: calc(25% - 20px);
+    box-sizing: border-box;
+    border: 1px solid #eee;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .product-item img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .product-item h3 {
+    font-size: 16px;
+    margin: 10px 0 5px;
+  }
+
+  .product-item p {
+    font-weight: bold;
+    color: #333;
+  }
+</style>

@@ -1,0 +1,453 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "default-page": {
+      "type": "page-template",
+      "disabled": true,
+      "settings": {
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "loyality_section_9jnEJC": {
+      "type": "loyality-section",
+      "name": "Loyalty Reward",
+      "settings": {
+        "pcc_widget_bg": "#eef6ee",
+        "pcc_label_color": "#30623d",
+        "pcc_badge_bg": "#30623d",
+        "pcc_badge_text_color": "#ffffff",
+        "pcc_badge_dot_color": "#b2e78a",
+        "pcc_points_color": "#1a3d22",
+        "pcc_points_label_color": "#30623d",
+        "pcc_bar_track_color": "#daeeda",
+        "pcc_bar_fill_color": "#30623d",
+        "pcc_bar_dot_color": "#a8cba8",
+        "pcc_footer_border_color": "#d0e8d0",
+        "pcc_redeem_btn_color": "#1a3d22",
+        "pcc_to_label_color": "#666666",
+        "pcc_to_pts_color": "#1a3d22",
+        "pcc_border_color": "#d0e8d0",
+        "pcc_border_width": 0,
+        "smile_public_key": "",
+        "club_name": "PHARMACOR REWARDS",
+        "points_label": "pill points",
+        "tier1_name": "Silver",
+        "tier1-color": "#b3b0b0",
+        "tier1_pts": 0,
+        "tier2_name": "Gold",
+        "tier2-color": "#bb8a0d",
+        "tier2_pts": 5000,
+        "tier3_name": "Platinum",
+        "tier3-color": "#000000",
+        "tier3_pts": 15000,
+        "expiry_label": "",
+        "tier2_spend": 5000,
+        "tier3_spend": 15000,
+        "redeem_link": "#loyality-collection",
+        "redeem_text": "Loyalty Redemption Products"
+      }
+    },
+    "custom_loyalty_program_f4Kd7W": {
+      "type": "custom-loyalty-program",
+      "blocks": {
+        "benefit_aapnm9": {
+          "type": "benefit",
+          "settings": {
+            "sub-title": "Tier 01",
+            "title": "Silver",
+            "description": "1 point per $1 spend, 500 joining points, no price/stock/merch perks",
+            "link": "shopify://collections/all",
+            "link_text": "Earn Now",
+            "icon": "shopify://shop_images/image_1.png",
+            "icons": "shopify://shop_images/image_1.png",
+            "bg_color": "#f0fae8"
+          }
+        },
+        "benefit_VHMm4y": {
+          "type": "benefit",
+          "settings": {
+            "sub-title": "Tier 02",
+            "title": "Gold",
+            "description": "2 points per $1, 1,000 joining points, access to better price, free stock worth $500, merch worth $100 (charger, prescription basket, water bottles), Gondola exclusive",
+            "link": "#",
+            "link_text": "SEE BENEFITS",
+            "icon": "shopify://shop_images/Untitled2.png",
+            "icons": "shopify://shop_images/Untitled2.png",
+            "bg_color": "#d1f1b9"
+          }
+        },
+        "benefit_TEUChE": {
+          "type": "benefit",
+          "settings": {
+            "sub-title": "Tier 03",
+            "title": "Platinum",
+            "description": "5 points per $1, 2,000 joining points, access to better price, free stock worth $1,000, merch worth $500 (charger, prescription basket, T-shirt), TV for Pharmacy exclusive",
+            "link": "shopify://collections/all",
+            "link_text": "EARN NOW",
+            "icon": "shopify://shop_images/Untitled33.png",
+            "icons": "shopify://shop_images/Untitled33.png",
+            "bg_color": "#b2e78a"
+          }
+        }
+      },
+      "block_order": [
+        "benefit_aapnm9",
+        "benefit_VHMm4y",
+        "benefit_TEUChE"
+      ],
+      "disabled": true,
+      "name": "Custom Loyalty Program",
+      "settings": {
+        "sub_heading": "SPEND AND EARN",
+        "main_heading": "PHARMACOR <br> REWARDS",
+        "decoration": "Earn pill points with every purchase, unlock free stock, exclusive prices, merch and more."
+      }
+    },
+    "vip_tiers_table_4MbPWL": {
+      "type": "vip-tiers-table",
+      "blocks": {
+        "tier_yaYNkc": {
+          "type": "tier",
+          "settings": {
+            "rank": "1",
+            "plan_title": "Silver",
+            "points_per_dollar": "1",
+            "joining_points": "500",
+            "price": "<p>–</p>",
+            "stock": "<p>–</p>",
+            "merchandise": "<p>–</p>",
+            "exclusive": "<p>–</p>",
+            "level": "level-one"
+          }
+        },
+        "tier_2nd_U3mLBW": {
+          "type": "tier-2nd",
+          "settings": {
+            "rank": "2",
+            "plan_title": "Gold",
+            "points_per_dollar": "2",
+            "joining_points": "1,000",
+            "price": "<p>Access to<br/>better price</p>",
+            "stock": "<p>Free Stock<br/>worth</p>",
+            "price-text": "$500",
+            "merchandise": "<p>(Charger, prescription<br/>basket, water bottles)</p>",
+            "price-text-m": "Worth $100",
+            "exclusive": "<p>–</p>",
+            "level": "level-two"
+          }
+        },
+        "tier_3rd_98DMwB": {
+          "type": "tier-3rd",
+          "settings": {
+            "rank": "3",
+            "plan_title": "Patinum",
+            "points_per_dollar": "5",
+            "joining_points": "2,000",
+            "price": "<p>Access to<br/>better price</p>",
+            "stock": "<p>Free Stock<br/>worth</p>",
+            "price-text": "$1000",
+            "merchandise": "<p>(Charger, prescription<br/>basket, T-shirt)</p>",
+            "price-text-m": "Worth $500",
+            "exclusive": "<p>Chance to<br/>Win - APP<br/>Conference<br/>Package</p>",
+            "level": "level-three"
+          }
+        }
+      },
+      "block_order": [
+        "tier_yaYNkc",
+        "tier_2nd_U3mLBW",
+        "tier_3rd_98DMwB"
+      ],
+      "disabled": true,
+      "name": "VIP Tiers Table",
+      "settings": {
+        "table_title": "Benefits"
+      }
+    },
+    "pharmacor_rewards_4EnmeL": {
+      "type": "pharmacor-rewards",
+      "name": "Pharmacor Rewards",
+      "settings": {
+        "title": "The Loyalty Program",
+        "subtitle": "",
+        "description": "Earn pill points with every purchase, unlock free stock, exclusive prices, merch and more.",
+        "pill_logo": "shopify://shop_images/pharmacor-rewards.png",
+        "pill_logo_alt": "Pharmacor Rewards Logo",
+        "greeting_name": "Hi Grove Plaza,",
+        "greeting_message": "Make every purchase count — your Pill Points are already stacking up.",
+        "tier_1_name": "Silver",
+        "tier_1_range": "$0 - $4,999",
+        "tier_2_name": "Gold",
+        "tier_2_range": "$5000 - $14,999",
+        "tier_3_name": "Platinum",
+        "tier_3_range": "$15000 or more"
+      }
+    },
+    "pharmacor_benefits_kgjNcX": {
+      "type": "pharmacor-benefits",
+      "name": "Pharmacor Benefits",
+      "settings": {
+        "title": "Member-only Benefits",
+        "description": "Each time you level up, so will your benefits! Here's what you can expect each year, according to your tier.",
+        "tier_1_name": "Silver",
+        "tier_1_range": "$0 - $4,999",
+        "tier_2_name": "Gold",
+        "tier_2_range": "$5000 - $14,999",
+        "tier_3_name": "Platinum",
+        "tier_3_range": "$15000 or more",
+        "row_1_label": "Points Per Dollar Spend",
+        "row_1_silver_img": "shopify://shop_images/silver-tag.png",
+        "row_1_silver_value": "1",
+        "row_1_gold_img": "shopify://shop_images/gold-tag_1.png",
+        "row_1_gold_value": "3",
+        "row_1_platinum_img": "shopify://shop_images/New_Project_3.png",
+        "row_1_platinum_value": "5",
+        "row_2_label": "Upgrading Points",
+        "row_2_silver_img": "shopify://shop_images/silver-tag.png",
+        "row_2_silver_value": "500",
+        "row_2_gold_img": "shopify://shop_images/gold-tag_1.png",
+        "row_2_gold_value": "1000",
+        "row_2_platinum_img": "shopify://shop_images/New_Project_3.png",
+        "row_2_platinum_value": "2000",
+        "row_3_label": "Offers",
+        "row_3_gold_img": "shopify://shop_images/gold-tag_1.png",
+        "row_3_gold_value": "Exclusive Offers",
+        "row_3_platinum_img": "shopify://shop_images/New_Project_3.png",
+        "row_3_platinum_value": "Exclusive Offers",
+        "row_4_label": "Stock",
+        "row_4_gold_img": "shopify://shop_images/gold-tag_1.png",
+        "row_4_gold_value": "Stock Boost",
+        "row_4_platinum_img": "shopify://shop_images/New_Project_3.png",
+        "row_4_platinum_value": "Stock Boost",
+        "row_5_label": "Merchandise",
+        "row_5_gold_img": "shopify://shop_images/gold-tag_1.png",
+        "row_5_gold_value": "Gold Reward Box",
+        "row_5_platinum_img": "shopify://shop_images/New_Project_3.png",
+        "row_5_platinum_value": "Platinum Reward Box"
+      }
+    },
+    "pharmacor_how_it_works_Y3J44Q": {
+      "type": "pharmacor-how-it-works",
+      "name": "How It Works",
+      "settings": {
+        "title": "How It Works",
+        "subtitle": "Simple steps to earn rewards and enjoy exclusive perks",
+        "step_1_title": "Earn Pill Points",
+        "step_1_text": "Earn pill points for every dollar spent on the Pharmacor Portal.",
+        "step_2_title": "Redeem Points",
+        "step_2_text": "Redeem pill points on eligible stock.",
+        "step_3_title": "Unlock More Perks",
+        "step_3_text": "Progress to different levels and enjoy different perks.",
+        "footer_text": "",
+        "footer_highlight": "",
+        "cta_button_text": "Make your points work - Redeem for stock and more",
+        "cta_button_link": ""
+      }
+    },
+    "loyality_collection_NJ8P4M": {
+      "type": "loyality-collection",
+      "blocks": {
+        "collection_item_3KQEjX": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "bonus-lines",
+            "custom_name": "",
+            "variant_picker": "radio"
+          }
+        },
+        "collection_item_iaHMeC": {
+          "type": "collection_item",
+          "disabled": true,
+          "settings": {
+            "collection": "blood-and-electrolytes",
+            "custom_name": "",
+            "variant_picker": "radio"
+          }
+        }
+      },
+      "block_order": [
+        "collection_item_3KQEjX",
+        "collection_item_iaHMeC"
+      ],
+      "name": "Loyality Collection",
+      "settings": {
+        "pcc_widget_bg": "#eef6ee",
+        "pcc_label_color": "#30623d",
+        "pcc_badge_bg": "#30623d",
+        "pcc_badge_text_color": "#ffffff",
+        "pcc_badge_dot_color": "#b2e78a",
+        "pcc_points_color": "#1a3d22",
+        "pcc_points_label_color": "#30623d",
+        "pcc_bar_track_color": "#daeeda",
+        "pcc_bar_fill_color": "#30623d",
+        "pcc_bar_dot_color": "#a8cba8",
+        "pcc_footer_border_color": "#d0e8d0",
+        "pcc_redeem_btn_color": "#1a3d22",
+        "pcc_to_label_color": "#666666",
+        "pcc_to_pts_color": "#1a3d22",
+        "pcc_border_color": "#d0e8d0",
+        "pcc_border_width": 0,
+        "smile_public_key": "",
+        "club_name": "PHARMATE CLUB",
+        "points_label": "pill points",
+        "tier1_name": "Silver",
+        "tier1-color": "",
+        "tier1_pts": 500,
+        "tier2_name": "Gold",
+        "tier2-color": "",
+        "tier2_pts": 1000,
+        "tier3_name": "Platinum",
+        "tier3-color": "",
+        "tier3_pts": 2000,
+        "tier2_spend": 5000,
+        "tier3_spend": 15000,
+        "redeem_link": "",
+        "redeem_text": "Redeem points",
+        "filters_type": "horizontal",
+        "heading": "Loyalty Redemption Products",
+        "manage_orders_title": "Manage Orders",
+        "order-history-1": "Manage Orders",
+        "orders_link": "",
+        "order-history-2": "Reorder",
+        "reorder_link": "",
+        "order-history-3": "Manage Subscriptions",
+        "subscriptions_link": "",
+        "benefits_title": "Benefits",
+        "benefits_text": "Unlock extra savings and convenience with",
+        "benefits_title-1": "Loyalty Rewards",
+        "loyalty_link": "",
+        "benefits_title-2": "Savings Extras",
+        "savings_link": "",
+        "contact_title": "Contact Us",
+        "contact_title-description": "We’re here to help, contact us anytime with your enquiries",
+        "chat_link": "",
+        "contact-us-1": "Chat with our Bot",
+        "email_link": "",
+        "contact-us-2": "Email Us",
+        "email_link2": "",
+        "contact-us-3": "Call Us",
+        "call_link1": "",
+        "contact-us-4": "Whats App",
+        "call_link22": "",
+        "load-more": "Load More",
+        "btn_text": "See All Products",
+        "btn_link": "shopify://collections/bonus-lines"
+      }
+    },
+    "custom_faqs_jhG9XJ": {
+      "type": "custom-faqs",
+      "blocks": {
+        "faq_6edjhM": {
+          "type": "faq",
+          "settings": {
+            "question": "1. How do I join Pharmacor Rewards?",
+            "answer": "There's nothing you need to do! You're already enrolled in Pharmacor Rewards through your Pharmacor Portal account. Simply place eligible orders through the portal to start earning Pill Points automatically."
+          }
+        },
+        "faq_PkqfEn": {
+          "type": "faq",
+          "settings": {
+            "question": "2. How do I earn Pill Points?",
+            "answer": "You earn Pill Points every time you purchase eligible products through the Pharmacor Portal.<br><br>\n\n<b>Points earned by tier:</b><br>\n• Silver – 1 Pill Point per $1 spent<br>\n• Gold – 3 Pill Points per $1 spent<br>\n• Platinum – 5 Pill Points per $1 spent<br>"
+          }
+        },
+        "faq_BzNz8A": {
+          "type": "faq",
+          "settings": {
+            "question": "3. How do I move up a tier?",
+            "answer": "Your tier is based on your total eligible spend during the calendar year (January–December).<br><br>\n<b>Annual eligible spend:</b><br>\n• Silver – Under $5,000<br>\n• Gold – $5,000 to $14,999<br>\n• Platinum – $15,000 or more<br>\nAs soon as you reach the required spend, you'll automatically move into the higher tier."
+          }
+        },
+        "faq_Wmqrpw": {
+          "type": "faq",
+          "settings": {
+            "question": "4. How long do I keep my tier?",
+            "answer": "Once you reach Gold or Platinum, you'll keep that tier for the rest of the current calendar\nyear and the entire following calendar year. At the end of that period, you'll need to\nre-qualify based on your eligible spend.\n<br><br>\n<b>Example: </b>If you reach Gold in August 2026, you'll keep Gold until 31 December 2027. During 2027, you'll need to spend enough to qualify for Gold again in 2028."
+          }
+        },
+        "faq_aXBx3j": {
+          "type": "faq",
+          "settings": {
+            "question": "5. What can I redeem my Pill Points for?",
+            "answer": "Pill Points can be redeemed on eligible Pharmacor stock.<br><br>\n<b>100 Pill Points = $1 in redemption value.</b><br><br>\nThe more points you save, the more value you can redeem on future purchases."
+          }
+        },
+        "faq_YPz474": {
+          "type": "faq",
+          "settings": {
+            "question": "6. What extra benefits do Gold and Platinum members receive?",
+            "answer": "In addition to earning more Pill Points per dollar spent, Gold and Platinum members\nreceive extra rewards, including:<br>\n• Exclusive promotional offers<br>\n• Stock Boost rewards<br>\n• Tier upgrade bonuses<br>\n• Exclusive member-only promotions throughout the year<br><br>\nAdditional benefits may be introduced throughout the program."
+          }
+        },
+        "faq_XRiQFy": {
+          "type": "faq",
+          "settings": {
+            "question": "7. Do my Pill Points expire?",
+            "answer": "Yes. Your entire Pill Points balance expires at once after 12 months of inactivity. Any\neligible account activity (such as placing an eligible order or redeeming points) resets the\nexpiry date. Your points do not expire individually—your balance simply remains active as long as your account continues to have activity."
+          }
+        },
+        "faq_7BALbk": {
+          "type": "faq",
+          "settings": {
+            "question": "8. What happens if I return or cancel an order?",
+            "answer": "If an eligible order is cancelled, refunded or credited, any Pill Points earned from that\npurchase will be adjusted or removed from your account. Your tier progress may also be\nupdated if the returned order affects your eligible annual spend."
+          }
+        },
+        "faq_4xxB94": {
+          "type": "faq",
+          "settings": {
+            "question": "9. Can I redeem only part of my Pill Points balance?",
+            "answer": "Yes. You can choose how many available Pill Points you'd like to redeem on eligible\npurchases, subject to any minimum redemption requirements."
+          }
+        },
+        "faq_kFTCqr": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "question": "10. I just placed an order — why haven't my points updated yet?",
+            "answer": "Points are typically applied once your order is confirmed and processed. If your balance hasn't updated within a few business days, reach out to the Pharmacor support team and we'll sort it out."
+          }
+        }
+      },
+      "block_order": [
+        "faq_6edjhM",
+        "faq_PkqfEn",
+        "faq_BzNz8A",
+        "faq_Wmqrpw",
+        "faq_aXBx3j",
+        "faq_YPz474",
+        "faq_XRiQFy",
+        "faq_7BALbk",
+        "faq_4xxB94",
+        "faq_kFTCqr"
+      ],
+      "name": "Custom FAQ Accordion",
+      "settings": {
+        "heading": "FAQS",
+        "bg_color": "#f3f8f8"
+      }
+    }
+  },
+  "order": [
+    "default-page",
+    "loyality_section_9jnEJC",
+    "custom_loyalty_program_f4Kd7W",
+    "vip_tiers_table_4MbPWL",
+    "pharmacor_rewards_4EnmeL",
+    "pharmacor_benefits_kgjNcX",
+    "pharmacor_how_it_works_Y3J44Q",
+    "loyality_collection_NJ8P4M",
+    "custom_faqs_jhG9XJ"
+  ]
+}

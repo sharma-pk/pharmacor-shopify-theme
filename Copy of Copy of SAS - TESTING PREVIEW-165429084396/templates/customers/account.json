@@ -1,0 +1,97 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "1736820029b0bcea8a": {
+      "type": "apps",
+      "blocks": {
+        "smile_io_smile_points_on_account_page_LhFPPa": {
+          "type": "shopify://apps/smile-io/blocks/smile-points-on-account-page/2fae4e25-1841-4ea2-bc02-bd548478c4f6",
+          "settings": {
+            "primary_colour": "#ffffff",
+            "secondary_colour": "#5a9d62",
+            "preview_scenario": "can_afford_reward",
+            "show_icon": false,
+            "show_points_label": true,
+            "cannot_afford_reward_body_text": "<p>You’ve got [points_balance]. Earn more to redeem rewards.</p>",
+            "can_afford_reward_body_text": "<p>You’ve got [points_balance]! Redeem them for rewards.</p>",
+            "ways_to_earn_button_text": "View ways to earn",
+            "ways_to_redeem_button_text": "View ways to redeem"
+          }
+        }
+      },
+      "block_order": [
+        "smile_io_smile_points_on_account_page_LhFPPa"
+      ],
+      "disabled": true,
+      "settings": {
+        "container_width": "inherit",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "loyality_section_VDdwWL": {
+      "type": "loyality-section",
+      "name": "Loyalty Reward",
+      "settings": {
+        "pcc_widget_bg": "#eef6ee",
+        "pcc_label_color": "#30623d",
+        "pcc_badge_bg": "#30623d",
+        "pcc_badge_text_color": "#ffffff",
+        "pcc_badge_dot_color": "#b2e78a",
+        "pcc_points_color": "#1a3d22",
+        "pcc_points_label_color": "#30623d",
+        "pcc_bar_track_color": "#daeeda",
+        "pcc_bar_fill_color": "#30623d",
+        "pcc_bar_dot_color": "#a8cba8",
+        "pcc_footer_border_color": "#d0e8d0",
+        "pcc_redeem_btn_color": "#1a3d22",
+        "pcc_to_label_color": "#666666",
+        "pcc_to_pts_color": "#1a3d22",
+        "pcc_border_color": "#d0e8d0",
+        "pcc_border_width": 0,
+        "smile_public_key": "",
+        "club_name": "PHARMACOR REWARDS",
+        "points_label": "pill points",
+        "tier1_name": "Silver",
+        "tier1-color": "#9ca3af",
+        "tier1_pts": 0,
+        "tier2_name": "Gold",
+        "tier2-color": "#d4af37",
+        "tier2_pts": 5000,
+        "tier3_name": "Platinum",
+        "tier3-color": "#7c8080",
+        "tier3_pts": 15000,
+        "expiry_label": "",
+        "tier2_spend": 5000,
+        "tier3_spend": 15000,
+        "redeem_link": "shopify://pages/loyalty-program",
+        "redeem_text": "Redeem points"
+      }
+    },
+    "account": {
+      "type": "account-template",
+      "settings": {
+        "page_heading_color": "#000000",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    }
+  },
+  "order": [
+    "1736820029b0bcea8a",
+    "loyality_section_VDdwWL",
+    "account"
+  ]
+}

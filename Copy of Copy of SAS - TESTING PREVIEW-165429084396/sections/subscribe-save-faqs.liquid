@@ -1,0 +1,142 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Subscribe & Save — FAQs
+	FAQ items are theme-editor blocks — add/edit/reorder/remove anytime without touching code.
+------------------------------------------------------------------------------
+{%- endcomment -%}
+{%- style -%}
+.sasf-page { width: 92%; max-width: 800px; margin: 0 auto; padding-bottom: 60px; }
+.sasf-heading { text-align: center; font-size: 30px; font-weight: 700; color: #30623D; text-transform: uppercase; margin: 0 0 20px; }
+
+.sasf-item { border-bottom: 1px solid #cfe0d3; }
+.sasf-item__question {
+  width: 100%; text-align: left; background: none; border: none; padding: 18px 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font-size: 16px; font-weight: 500; cursor: pointer; color: #222;
+}
+.sasf-item__arrow { transition: transform .2s ease; flex: 0 0 auto; color: #30623D; font-size: 18px; }
+.sasf-item.is-open .sasf-item__arrow { transform: rotate(90deg); }
+.sasf-item__answer {
+  max-height: 0; overflow: hidden; transition: max-height .2s ease;
+  font-size: 14px; color: #556; padding: 0 8px;
+}
+.sasf-item.is-open .sasf-item__answer { padding-bottom: 16px; }
+{%- endstyle -%}
+
+<div class="sasf-page">
+  <h2 class="sasf-heading">{{ section.settings.heading | default: 'FAQs' }}</h2>
+
+  {% for block in section.blocks %}
+    {% if block.type == 'faq_item' %}
+      <div class="sasf-item" {{ block.shopify_attributes }}>
+        <button type="button" class="sasf-item__question" data-faq-toggle>
+          <span>{{ forloop.index }}. {{ block.settings.question }}</span>
+          <span class="sasf-item__arrow">→</span>
+        </button>
+        <div class="sasf-item__answer">{{ block.settings.answer | newline_to_br }}</div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<script>
+(function () {
+  document.querySelectorAll('[data-faq-toggle]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.sasf-item');
+      const answer = item.querySelector('.sasf-item__answer');
+      const isOpen = item.classList.contains('is-open');
+      item.classList.toggle('is-open');
+      answer.style.maxHeight = isOpen ? '0' : answer.scrollHeight + 'px';
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+	"name": "Subscribe & Save — FAQs",
+	"settings": [
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Heading",
+			"default": "FAQs"
+		}
+	],
+	"blocks": [
+		{
+			"type": "faq_item",
+			"name": "FAQ item",
+			"settings": [
+				{
+					"type": "text",
+					"id": "question",
+					"label": "Question"
+				},
+				{
+					"type": "textarea",
+					"id": "answer",
+					"label": "Answer"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Subscribe & Save — FAQs",
+			"blocks": [
+				{
+					"type": "faq_item",
+					"settings": {
+						"question": "How do I start a subscription?",
+						"answer": "On the product page, choose \"Subscribe and save\" instead of one-time purchase, pick when your first order should start, and add to cart as normal."
+					}
+				},
+				{
+					"type": "faq_item",
+					"settings": {
+						"question": "How do I get my 7th month free?",
+						"answer": "Every 6 consecutive orders on a subscription earns you the 7th month free automatically — no code needed."
+					}
+				},
+				{
+					"type": "faq_item",
+					"settings": {
+						"question": "Can I change my quantity or delivery date?",
+						"answer": "Yes — open \"Manage your subscriptions\" from your account, click Edit on the subscription, and update the date, quantity, or wholesaler account. You can choose whether the change applies to just this order or every month going forward."
+					}
+				},
+				{
+					"type": "faq_item",
+					"settings": {
+						"question": "How do I pause, skip, or cancel?",
+						"answer": "From \"Manage your subscriptions\", use Drop Now to push your next order out a month, or Edit for more options. You can cancel anytime and there's no penalty."
+					}
+				},
+				{
+					"type": "faq_item",
+					"settings": {
+						"question": "Can I switch wholesalers on a subscription?",
+						"answer": "Yes, if your account is covered by more than one wholesaler. Open Edit on the subscription and choose a different wholesaler account from the dropdown."
+					}
+				},
+				{
+					"type": "faq_item",
+					"settings": {
+						"question": "What happens if a product is out of stock?",
+						"answer": "If an item is out of stock on your scheduled delivery date, that cycle is automatically paused and pushed to the next month — you won't be charged for it."
+					}
+				},
+				{
+					"type": "faq_item",
+					"settings": {
+						"question": "What happens if I cancel and want to restart later?",
+						"answer": "Reactivating a cancelled or paused subscription resets your delivery schedule to start one month from today."
+					}
+				}
+			]
+		}
+	]
+}
+{%- endschema -%}

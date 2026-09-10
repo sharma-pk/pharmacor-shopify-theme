@@ -1,0 +1,122 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "subscribe-save-how-it-works",
+      "blocks": {
+        "month_EJBVFp": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month"
+          }
+        },
+        "month_MTMNbJ": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month"
+          }
+        },
+        "month_fFYfrX": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month"
+          }
+        },
+        "month_kMjezU": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month"
+          }
+        },
+        "month_jwffkr": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month"
+          }
+        },
+        "month_Dtb8tx": {
+          "type": "month",
+          "settings": {
+            "icon": "shopify://shop_images/medicine.png",
+            "label": "Month"
+          }
+        },
+        "feature_KAcEAi": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/timetable.png",
+            "title": "Set your delivery schedule",
+            "description": "Choose what works for you."
+          }
+        },
+        "feature_9FGNhJ": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/express-delivery.png",
+            "title": "Delivered Automatically",
+            "description": "Hassle-free, every time"
+          }
+        },
+        "feature_daTyEH": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/coin.png",
+            "title": "Save More Every Month",
+            "description": "Consistent savings with every order"
+          }
+        },
+        "feature_r3XWRi": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/recycle.png",
+            "title": "Flexible and Easy",
+            "description": "Pause ,skip or cancel anytime"
+          }
+        }
+      },
+      "block_order": [
+        "month_EJBVFp",
+        "month_MTMNbJ",
+        "month_fFYfrX",
+        "month_kMjezU",
+        "month_jwffkr",
+        "month_Dtb8tx",
+        "feature_KAcEAi",
+        "feature_9FGNhJ",
+        "feature_daTyEH",
+        "feature_r3XWRi"
+      ],
+      "settings": {
+        "heading": "How it works",
+        "tagline_icon": "shopify://shop_images/shield.png",
+        "tagline": "Reliable supply. Every time.",
+        "stock_banner_icon": "shopify://shop_images/calender.png",
+        "stock_banner_title": "1 month of stock",
+        "stock_banner_free_text": "FREE",
+        "stock_banner_description": "When you order 6 months of stock.",
+        "free_month_number": "7",
+        "free_month_icon": "shopify://shop_images/medicine.png",
+        "free_month_label": "Month 7",
+        "free_month_subtext": "On us, based on your usage",
+        "dots": "···",
+        "equals": "="
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

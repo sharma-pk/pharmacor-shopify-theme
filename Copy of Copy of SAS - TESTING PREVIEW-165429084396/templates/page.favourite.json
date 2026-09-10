@@ -1,0 +1,93 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "default-page": {
+      "type": "page-template",
+      "disabled": true,
+      "settings": {
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "account_template_7etFbt": {
+      "type": "account-template",
+      "disabled": true,
+      "custom_css": [
+        ".account__col.account__col--details {display: none;}",
+        ".h4.account__subheading {display: none;}",
+        "@media (min-width: 992px) {.account .account__col.account__col--orders {width: 100%;}"
+      ],
+      "name": "Account template",
+      "settings": {
+        "page_heading_color": "#000000",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "favourites_ApMzGx": {
+      "type": "Favourites",
+      "blocks": {
+        "collection_item_eBaxXn": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "all",
+            "custom_name": "Favourite",
+            "variant_picker": "select"
+          }
+        }
+      },
+      "block_order": [
+        "collection_item_eBaxXn"
+      ],
+      "name": "Favourites",
+      "settings": {
+        "filters_type": "horizontal",
+        "heading": "Favourite",
+        "manage_orders_title": "Manage Orders",
+        "order-history-1": "Manage Orders",
+        "orders_link": "",
+        "order-history-2": "Reorder",
+        "reorder_link": "",
+        "order-history-3": "Manage Subscriptions",
+        "subscriptions_link": "",
+        "benefits_title": "Benefits",
+        "benefits_text": "Unlock extra savings and convenience with",
+        "benefits_title-1": "Loyalty Rewards",
+        "loyalty_link": "",
+        "benefits_title-2": "Savings Extras",
+        "savings_link": "",
+        "contact_title": "Contact Us",
+        "contact_title-description": "We’re here to help, contact us anytime with your enquiries",
+        "chat_link": "",
+        "contact-us-1": "Chat with our Bot",
+        "email_link": "",
+        "contact-us-2": "Email Us",
+        "email_link2": "",
+        "contact-us-3": "Call Us",
+        "call_link1": "",
+        "contact-us-4": "Whats App",
+        "call_link22": "",
+        "load-more": "Load More",
+        "btn_text": "See All Products",
+        "btn_link": "shopify://collections/all"
+      }
+    }
+  },
+  "order": [
+    "default-page",
+    "account_template_7etFbt",
+    "favourites_ApMzGx"
+  ]
+}
