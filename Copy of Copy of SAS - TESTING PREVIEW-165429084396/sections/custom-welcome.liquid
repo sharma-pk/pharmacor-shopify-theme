@@ -350,7 +350,7 @@
         {% endif %}
       {% endfor %}
 
-      {% comment %} {% if soonest_days <= 7 %} {% endcomment %}
+      {% if soonest_days < 9999 %}
         <div class="sas-upcoming-banner">
           <div class="text_label">
           <span class="sas-upcoming-banner__icon">
@@ -371,7 +371,7 @@
         </div>
           <a href="/pages/subscriptions" class="sas-upcoming-banner__view">View details</a>
         </div>
-      {% comment %} {% endif %} {% endcomment %}
+      {% endif %}
      </div>
 
 

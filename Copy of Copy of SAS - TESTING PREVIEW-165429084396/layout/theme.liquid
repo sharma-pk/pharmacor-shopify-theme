@@ -623,7 +623,7 @@ window.productData = {
           /* AUTO APPLY TODAY if cart has items but no date saved */
           if (!savedDate && cart.items.length > 0) {
  
-            const today = new Date().toISOString().split("T")[0];
+            const today = formatDateDMY(new Date()); // local calendar, not UTC
  
             $("#delivery-date").val(today);
  
@@ -788,7 +788,7 @@ window.productData = {
 
         /* No date saved but cart has items → auto-set today */
         if (!savedDate) {
-          var today = new Date().toISOString().split("T")[0];
+          var today = formatDateDMY(new Date()); // local calendar, not UTC
           savedDate = today;
           saveOrderDate(today);
           console.log("📅 Order Date auto-set to today:", today);
@@ -3228,7 +3228,13 @@ document.addEventListener('click', function(e) {
   var pendingItemKey = null;
   var pendingVariantId = null;
 
-  function formatDate(d) { return d.toISOString().split('T')[0]; }
+  // Local calendar, not UTC — toISOString() recorded the chosen start date a day early.
+  function formatDate(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
   function firstOfNextMonth() {
     var d = new Date();
     return formatDate(new Date(d.getFullYear(), d.getMonth() + 1, 1));
