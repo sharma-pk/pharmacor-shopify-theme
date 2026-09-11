@@ -278,6 +278,49 @@
     word-break: break-word;
   }
 
+  /* Strength on its own line under the product name, a step down so the name still leads. */
+  .sub-card__strength {
+    display: block;
+    margin-top: 2px;
+    font-weight: 500;
+    font-size: 16px;
+    color: #4a4a46;
+  }
+
+  /* Marks a future-dated card so a rep sees the date was deliberate, not a mis-send. */
+  .sub-card__badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    vertical-align: 2px;
+    white-space: nowrap;
+  }
+  .sub-card__badge--pending {
+    color: #7a5200;
+    background: #fdf0d5;
+    border: 1px solid #e8c987;
+  }
+  .sub-card td p.sub-card__meta--ordered {
+    font-size: 15px;
+    color: #6b6b66 !important;
+  }
+
+  /* Pending-drop warning inside the Edit order popup. */
+  .sub-modal__desc--warn {
+    color: #7a5200;
+    background: #fdf0d5;
+    border: 1px solid #e8c987;
+    border-radius: 4px;
+    padding: 8px 10px;
+  }
+  .sub-modal__desc--warn[hidden] {
+    display: none;
+  }
+
   .sub-card__cycle {
     text-align: center;
   }
@@ -1121,6 +1164,19 @@
                 {% endcase %}
               {% endif %}
 
+              {%- comment -%} Set here, not in DATES, because the row's data attributes below need it. {%- endcomment -%}
+              {% assign sub_start = item.booked_start_date | default: item.current_date %}
+              {% assign sub_ordered = item.order_created_date | default: item.current_date %}
+              {% assign first_drop_pending = false %}
+              {% if status_class == 'active' and sub_start != blank %}
+                {% assign sub_start_ts = sub_start | date: '%s' %}
+                {% assign now_ts = 'now' | date: '%s' %}
+                {% assign start_offset = sub_start_ts | minus: now_ts %}
+                {% if start_offset > 0 %}
+                  {% assign first_drop_pending = true %}
+                {% endif %}
+              {% endif %}
+
               {% comment %}
                 ==================================================
                 SUBSCRIPTION ROW
@@ -1139,6 +1195,10 @@
                 data-quantity="{{ item.quantity | default: 1 }}"
 
                 data-next-billing="{{ item.next_billing }}"
+
+                {%- comment -%} Read by the Drop Now popup, which names the order it will cancel. {%- endcomment -%}
+                data-first-drop-pending="{% if first_drop_pending %}true{% else %}false{% endif %}"
+                data-first-drop-date="{% if first_drop_pending %}{{ sub_start }}{% endif %}"
 
                 data-signup-day="{{ item.signup_day }}"
                 data-billing-anchor-day="{{ item.billing_anchor_day }}"
@@ -1164,6 +1224,10 @@
 
                     {% if brand_label != blank %}
                       – {{ brand_label }}
+                    {% endif %}
+
+                    {% if item.variant_title != blank %}
+                      <span class="sub-card__strength">{{ item.variant_title }}</span>
                     {% endif %}
                   </p>
 
@@ -1207,10 +1271,21 @@
                   {% endcomment %}
 
                   {% if status_class == 'active' %}
+                    {%- comment -%} sub_start / sub_ordered / first_drop_pending are set above the row. {%- endcomment -%}
                     <p class="sub-card__meta">
-                      Start Date:
-                      {{ item.current_date | date: '%d/%m/%Y' }}
+                      {% if first_drop_pending %}First Drop:{% else %}Start Date:{% endif %}
+                      {{ sub_start | date: '%d/%m/%Y' }}
+                      {% if first_drop_pending %}
+                        <span class="sub-card__badge sub-card__badge--pending">Pending</span>
+                      {% endif %}
                     </p>
+
+                    {% if first_drop_pending and sub_ordered != blank %}
+                      <p class="sub-card__meta sub-card__meta--ordered">
+                        Ordered:
+                        {{ sub_ordered | date: '%d/%m/%Y' }}
+                      </p>
+                    {% endif %}
 
                     <p class="sub-card__meta">
                       Next Drop:
@@ -1367,6 +1442,9 @@
       <label>Change Date</label>
       <input type="date" id="subB-date">
     </div>
+
+    {%- comment -%} Shown only while a first drop is pending; both buttons below cancel it. {%- endcomment -%}
+    <p class="sub-modal__desc sub-modal__desc--warn" id="subB-drop-note" hidden></p>
 
     <button type="button" class="sub-btn sub-modal__btn-full" id="subB-skip">Skip next drop</button>
     <button type="button" class="sub-btn sub-btn--primary sub-modal__btn-full" id="subB-keep">Keep next drop</button>
@@ -1551,6 +1629,14 @@
     const CYCLE_LENGTH = 6;
     const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+    // Local-calendar yyyy-mm-dd; toISOString() would roll the date back a day (AEST is +10).
+    function toLocalISO(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
     function formatFreeDate(dateStr) {
       const d = new Date(dateStr + 'T00:00:00');
 
@@ -1568,7 +1654,12 @@
 
       const freeDate = new Date(nextBillingStr + 'T00:00:00');
 
+      // Clamp to the month's last day; setMonth() alone overflows (31 Jan -> 3 Mar).
+      const freeAnchorDay = freeDate.getDate();
+      freeDate.setDate(1);
       freeDate.setMonth(freeDate.getMonth() + monthsToFree);
+      const freeLastDay = new Date(freeDate.getFullYear(), freeDate.getMonth() + 1, 0).getDate();
+      freeDate.setDate(Math.min(freeAnchorDay, freeLastDay));
 
       const dots = card.querySelectorAll('.sub-cycle-dot:not(.is-free)');
 
@@ -1585,7 +1676,7 @@
       const heading = card.querySelector('.sub-card__cycle-heading');
 
       if (heading) {
-        heading.textContent = `Next Free Month – ${formatFreeDate(freeDate.toISOString().split('T')[0])}`;
+        heading.textContent = `Next Free Month – ${formatFreeDate(toLocalISO(freeDate))}`;
       }
 
       const dateEl = card.querySelector('.sub-next-drop-date');
@@ -1914,6 +2005,21 @@
         pauseBtn.style.display = card.dataset.status === 'active' ? '' : 'none';
       }
 
+      // Both buttons place an order today, and cancel the pending one — say so up front.
+      const dropNote = document.getElementById('subB-drop-note');
+
+      if (dropNote) {
+        const pending = card.dataset.firstDropPending === 'true';
+
+        dropNote.hidden = !pending;
+
+        if (pending) {
+          dropNote.textContent =
+            `First drop ${formatDisplay(card.dataset.firstDropDate)} hasn't been sent. ` +
+            `Both options below cancel it and place a new order today.`;
+        }
+      }
+
       document.getElementById('subModalB').classList.add('is-open');
     }
 
@@ -1985,13 +2091,18 @@
 
         console.log('Days phrase:', daysPhrase);
 
-        document.getElementById(
-          'subDrop-desc'
-        ).textContent = `Your next order is scheduled for ${nextDate} — that's ${daysPhrase}.`;
+        // A pending first drop is replaced: the queued order is cancelled, so say so plainly.
+        const firstDropPending = card.dataset.firstDropPending === 'true';
 
-        document.getElementById(
-          'subDrop-note'
-        ).textContent = `Do you still want your next drop ${daysPhrase}, or should we skip it since we're dropping one today?`;
+        const firstDropDate = firstDropPending ? formatDisplay(card.dataset.firstDropDate) : null;
+
+        document.getElementById('subDrop-desc').textContent = firstDropPending
+          ? `Your first drop is scheduled for ${firstDropDate} and hasn't been sent yet. Dropping now will cancel that order and place a new one today.`
+          : `Your next order is scheduled for ${nextDate} — that's ${daysPhrase}.`;
+
+        document.getElementById('subDrop-note').textContent = firstDropPending
+          ? `Your next drop after that is ${nextDate}. Keep it, or skip it?`
+          : `Do you still want your next drop ${daysPhrase}, or should we skip it since we're dropping one today?`;
 
         document.getElementById('subModalDrop').classList.add('is-open');
       });
